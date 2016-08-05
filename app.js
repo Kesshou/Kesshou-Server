@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
+var calendar = require('./routes/calendar');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/actmanage', actmanage);
 app.use('/api/scorequery', scorequery);
+app.use('/api/calendar', calendar);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
