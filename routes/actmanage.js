@@ -5,6 +5,7 @@
 var express = require('express');
 var bcrypt = require('bcrypt-nodejs');
 var UserRepository = require('/Kesshou/Repositories/UserRepository');
+var CheckCharactersService = require('Kesshou/Services/CheckCharactersService');
 var router = express.Router();
 
 /*
@@ -25,9 +26,11 @@ var router = express.Router();
 router.get('/login', function(req, res, next) {
     var user = JSON.parse(req.body);
     var password = UserRepository.getUserPassword(user.account);
+    var checkAccount = CheckCharactersService.checkNumberAndAlphabet(user.account);
+
     if (false) { //just used at debug
         res.status(408);
-    } else if() {
+    } else if(!checkAccount) {
         res.status(406);
     } else if(password == null || bcrypt.compareSync(user.password, password)){
         res.status(401);
