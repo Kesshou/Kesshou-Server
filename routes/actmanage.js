@@ -151,6 +151,11 @@ router.get('/updateinfo', function(req, res, next) {
     }
 
     var userInfo = UserRepository.getUserInfo(account);
+
+    if(userInfo == null) {
+        res.status(500).json({"error" : "伺服器錯誤"});
+    }
+
     var newSchoolPwd =
         (typeof(updateData.new_school_pwd) != "undefined") ? updateData.new_school_pwd : userInfo.school_pwd;
     var newNick =
