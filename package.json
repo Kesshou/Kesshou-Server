@@ -13,10 +13,13 @@
     "debug": "~2.2.0",
     "express": "~4.13.4",
     "http": "0.0.0",
+    "mariasql": "^0.2.6",
     "morgan": "~1.7.0",
+    "mysql": "^2.11.1",
     "path": "^0.12.7",
     "redis": "^2.6.2",
     "sequelize": "^3.24.0",
+    "sequelize-cli": "^2.4.0",
     "serve-favicon": "~2.3.0"
   }
 }
