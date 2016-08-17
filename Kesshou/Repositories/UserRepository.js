@@ -38,14 +38,14 @@ function createUser(email, password, userGroup, schoolAccount, schoolPwd, nick) 
 *Description:
     This function is used to update user's info.
 *Usage:
-    password: user's old password.
+    account: user's old account.
     newSchoolPwd: user's new school password(optional).
     newNick: user's new nick.
     newPassword: user's new password.
     newEmail: user's new email.
     return: if update successfully, return true, otherwise return false.
 */
-function updateUserInfo(password, newSchoolPwd, newNick, newPassword, newEmail) {
+function updateUserInfo(account, newSchoolPwd, newNick, newPassword, newEmail) {
 
     return status;
 }
@@ -56,7 +56,7 @@ function updateUserInfo(password, newSchoolPwd, newNick, newPassword, newEmail) 
     This function is used to get user's information.
 *Usage:
     account: user's account.
-    return: 
+    return:
 */
 function getUserInfo(account) {
 

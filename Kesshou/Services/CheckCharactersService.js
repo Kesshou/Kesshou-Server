@@ -12,13 +12,16 @@
     illegalCharacters: a sentence include all illegal characters which you don't want the input has.
     return: if the input contains illegal characters, return false, otherwise return true.
 */
-function checkIllegalCharacters(input, illegalCharacters = "") {
-    for (var i = 0; i < checkCode.length; i++) {
-        if(input.indexOf(checkCode[i]) < 0)
-            return false;
-    }
-    return true;
-}
+// function checkIllegalCharacters(input, illegalCharacters = "") {
+//     if(input == "") {
+//         return true;
+//     }
+//     for (var i = 0; i < checkCode.length; i++) {
+//         if(input.indexOf(checkCode[i]) < 0)
+//             return false;
+//     }
+//     return true;
+// }
 
 /*
 *Author: blackkite0206233
@@ -29,6 +32,9 @@ function checkIllegalCharacters(input, illegalCharacters = "") {
     return: if the input only has numbers and alphabets, return true, otherwise return false.
 */
 function allowNumbersAndAlphabets(input) {
+    if(input == "") {
+        return true;
+    }
     for (var i = 0; i < input.length; i++) {
         if(!(input[i] >= "0" && input[i] <= "9" ||
             input[i] >= "A" && input[i] <= "Z" ||
@@ -48,7 +54,12 @@ function allowNumbersAndAlphabets(input) {
     return: if the input matchs the format, return true, otherwise return false.
 */
 function checkEmail(input) {
-
+    var emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+    if(input.search(emailRule) != -1) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /*

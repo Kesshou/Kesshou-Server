@@ -31,7 +31,6 @@ function set(account, token) {
 *Usage:
     token: a sentence contains 20 random characters.
     reply: the user's account, if the token is not valid then the reply is "".
-
 */
 function getAccount(token) {
     cache.get(token, function(err, reply) {

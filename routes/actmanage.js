@@ -9,6 +9,15 @@ var RedisRepository = require('/Kesshou/Repositories/RedisRepository');
 var CheckCharactersService = require('Kesshou/Services/CheckCharactersService');
 var router = express.Router();
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to create a token.
+*Usage:
+    account: user's account.
+    return:
+        token: a sentence contains 20 random characters.
+*/
 function createToken(account) {
     var token = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
     while(RedisRepository.getAccount(token) != "") {
@@ -16,6 +25,20 @@ function createToken(account) {
     }
     RedisRepository.set(account, token);
     return token;
+}
+
+/*
+*Author:
+*Description:
+    This function is used to confirm user's school account and password.
+*Usage:
+    schoolAccount: user's school account.
+    schoolPwd: user's school password.
+    return:
+        if the school account and password are valid, return true, otherwise return false.
+*/
+function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
+    /*code*/
 }
 
 /*
@@ -32,18 +55,20 @@ function createToken(account) {
         token(if login successfully):
             It is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
+        error(if login failed):
+            It is a string to explain the reason of error.
 */
 router.get('/login', function(req, res, next) {
     var user = JSON.parse(req.body);
     var password = UserRepository.getUserPassword(user.account);
-    var checkAccount = CheckCharactersService.allowNumbersAndAlphabets(user.account);
+    var checkAccount = CheckCharactersService.checkEmail(user.account);
 
     if (false) { //just used at debug
-        res.status(408);
+        res.status(408).json({"error" : "Token過期"});
     } else if(!checkAccount) {
-        res.status(406);
-    } else if(password == null || bcrypt.compareSync(user.password, password)){
-        res.status(401);
+        res.status(406).json({"error" : "非法字元"});
+    } else if(!bcrypt.compareSync(user.password, password)){
+        res.status(401).json({"error" : "帳號密碼錯誤"});
     } else {
         var token = this.createToken(user.account);
         res.status(200).json({ "token" :  token});
@@ -65,6 +90,8 @@ router.get('/login', function(req, res, next) {
         token(if register successfully):
             It is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
+        error(if register failed):
+            It is a string to explain the reason of error.
 */
 router.get('/register', function(req, res, next) {
     var user = JSON.parse(req.body);
@@ -73,27 +100,28 @@ router.get('/register', function(req, res, next) {
     var schoolPwd = (typeof(user.school_pwd) != "undefined") ? user.school_pwd : "";
 
     var checkEmail = CheckCharactersService.checkEmail(user.email);
-    var checkSchoolAccount = CheckCharactersService.checkIllegalCharacters(schoolAccount);
-    var checkSchoolPwd = CheckCharactersService.checkIllegalCharacters(schoolPwd);
-    var checkNick = CheckCharactersService.checkIllegalCharacters(user.nick);
+    var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
+    var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
+    var checkNick = CheckCharactersService.allowNumbersAndAlphabets(user.nick);
     var checkUserGroup = CheckCharactersService.checkData(user.user_group,
          ["student", "graduated", "outside"]);
 
     var checkAccount = UserRepository.getUserPassword(user.email);
 
-    if(!(checkEmail && checkSchoolAccount && checkSchoolPwd && checkNick)) {
-        res.status(406);
-    }
-    else if(!checkUserGroup) {
-        res.status(406);
+    if(!(checkEmail && checkSchoolAccount && checkSchoolPwd && checkNick && checkUserGroup)) {
+        res.status(406).json({"error" : "非法字元"});
+    } else if(!confirmSchoolAccAndPwd(schoolAccount, schoolPwd)) {
+        res.status(406).json({"error" : "學校驗證錯誤"});
     } else if(checkAccount != "") {
-        res.status(401);
+        res.status(401).json({"error" : "帳號已被使用"});
     } else {
         var status = UserRepository.createNewUser(user.email, hsahPassword,
              user.user_group, schoolAccount, schoolPwd, user.nick);
         if(status) {
             var token = this.createToken(user.email);
             res.status(200).json({ "token" :  token});
+        } else {
+            res.status(500).json({"error" : "伺服器錯誤"});
         }
     }
 
@@ -109,24 +137,49 @@ router.get('/register', function(req, res, next) {
         401: your account or password is wrong.
         406: the input of school doesn't exist.
         406: your inputs have some illegal chars.
+    success(if update successfully):
+        It is a string to tell you update successfully.
+    error(if update failed):
+        It is a string to explain the reason of error.
 */
 router.get('/updateinfo', function(req, res, next) {
-    var user = JSON.parse(req.body);
+    var updateData = JSON.parse(req.body);
+    var account = RedisRepository.getAccount(updateData.token);
+    if(account == ""){
+        res.status(408).json({"error" : "Token過期"});
+    }
 
-    var userInfo = UserRepository.getUserInfo()
-
+    var userInfo = UserRepository.getUserInfo(account);
     var newSchoolPwd =
-        (typeof(user.new_school_pwd) != "undefined") ? user.new_school_pwd : userInfo.school_pwd;
+        (typeof(updateData.new_school_pwd) != "undefined") ? updateData.new_school_pwd : userInfo.school_pwd;
     var newNick =
-        (typeof(user.new_nick) != "undefined") ? user.new_nick : userInfo.nick;
+        (typeof(updateData.new_nick) != "undefined") ? updateData.new_nick : userInfo.nick;
     var newPassword =
-        (typeof(user.new_password) != "undefined") ? user.new_password : userInfo.pwd;
+        (typeof(updateData.new_password) != "undefined") ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
     var newEmail =
-        (typeof(user.new_email) != "undefined") ? user.new_email : userInfo.email;
+        (typeof(updateData.new_email) != "undefined") ? updateData.new_email : userInfo.email;
 
+    var checkEmail = CheckCharactersService.checkEmail(newEmail);
+    var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
+    var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
+    var checkAccount = UserRepository.getUserPassword(newEmail);
 
-    var status = UserRepository.updateUserInfo();
-
+    if(!(checkEmail && checkSchoolPwd && newEmail)) {
+        res.status(406).json({"error" : "非法字元"});
+    } else if(!confirmSchoolAccAndPwd(userInfo.school_account, newSchoolPwd)) {
+        res.status(406).json({"error" : "學校驗證錯誤"});
+    } else if (newEmail != userInfo.email && checkAccount != "") {
+        res.status(401).json({"error" : "帳號已被使用"});
+    } else if (!bcrypt.compareSync(updateData.password, userInfo.pwd)) {
+        res.status(401).json({"error" : "帳號密碼錯誤"});
+    } else {
+        var status = UserRepository.updateUserInfo(account, newSchoolPwd, checkNick, newPassword, newEmail);
+        if(status) {
+            res.status(200).json({ "success" :  "更新成功"});
+        } else {
+            res.status(500).json({"error" : "伺服器錯誤"});
+        }
+    }
 });
 
 module.exports = router;
