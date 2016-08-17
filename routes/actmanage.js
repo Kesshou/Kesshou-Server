@@ -35,7 +35,7 @@ function createToken(account) {
     schoolAccount: user's school account.
     schoolPwd: user's school password.
     return:
-        if the school account and password are valid, return true, otherwise return false.
+        name: student's name, if the user's school account and password isn't valid, return "".
 */
 function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
     /*code*/
@@ -98,6 +98,7 @@ router.get('/register', function(req, res, next) {
     var hsahPassword = bcrypt.hashSync(user.password);
     var schoolAccount = (typeof(user.school_account) != "undefined") ? user.school_account : "";
     var schoolPwd = (typeof(user.school_pwd) != "undefined") ? user.school_pwd : "";
+    var name = (typeof(user.name) != "undefined") ? user.name : confirmSchoolAccAndPwd(schoolAccount, schoolPwd);
 
     var checkEmail = CheckCharactersService.checkEmail(user.email);
     var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
@@ -110,13 +111,13 @@ router.get('/register', function(req, res, next) {
 
     if(!(checkEmail && checkSchoolAccount && checkSchoolPwd && checkNick && checkUserGroup)) {
         res.status(406).json({"error" : "非法字元"});
-    } else if(!confirmSchoolAccAndPwd(schoolAccount, schoolPwd)) {
+    } else if(name == "") {
         res.status(406).json({"error" : "學校驗證錯誤"});
     } else if(checkAccount != "") {
         res.status(401).json({"error" : "帳號已被使用"});
     } else {
         var status = UserRepository.createNewUser(user.email, hsahPassword,
-             user.user_group, schoolAccount, schoolPwd, user.nick);
+             user.user_group, schoolAccount, schoolPwd, user.nick, name);
         if(status) {
             var token = this.createToken(user.email);
             res.status(200).json({ "token" :  token});
@@ -166,7 +167,7 @@ router.get('/updateinfo', function(req, res, next) {
 
     if(!(checkEmail && checkSchoolPwd && newEmail)) {
         res.status(406).json({"error" : "非法字元"});
-    } else if(!confirmSchoolAccAndPwd(userInfo.school_account, newSchoolPwd)) {
+    } else if(confirmSchoolAccAndPwd(userInfo.school_account, newSchoolPwd) == "") {
         res.status(406).json({"error" : "學校驗證錯誤"});
     } else if (newEmail != userInfo.email && checkAccount != "") {
         res.status(401).json({"error" : "帳號已被使用"});

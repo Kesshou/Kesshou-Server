@@ -40,9 +40,9 @@ function createUser(email, password, userGroup, schoolAccount, schoolPwd, nick) 
 *Usage:
     account: user's old account.
     newSchoolPwd: user's new school password(optional).
-    newNick: user's new nick.
-    newPassword: user's new password.
-    newEmail: user's new email.
+    newNick: user's new nick(optional).
+    newPassword: user's new password(optional).
+    newEmail: user's new email(optional).
     return: if update successfully, return true, otherwise return false.
 */
 function updateUserInfo(account, newSchoolPwd, newNick, newPassword, newEmail) {
