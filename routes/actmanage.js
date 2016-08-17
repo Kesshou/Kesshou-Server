@@ -69,8 +69,8 @@ router.get('/login', function(req, res, next) {
 router.get('/register', function(req, res, next) {
     var user = JSON.parse(req.body);
     var hsahPassword = bcrypt.hashSync(user.password);
-    var schoolAccount = (typeof(user.school_account) != "undefined") : user.school_account ? "";
-    var schoolPwd = (typeof(user.school_pwd) != "undefined") : user.school_pwd ? "";
+    var schoolAccount = (typeof(user.school_account) != "undefined") ? user.school_account : "";
+    var schoolPwd = (typeof(user.school_pwd) != "undefined") ? user.school_pwd : "";
 
     var checkEmail = CheckCharactersService.checkEmail(user.email);
     var checkSchoolAccount = CheckCharactersService.checkIllegalCharacters(schoolAccount);
@@ -111,19 +111,18 @@ router.get('/register', function(req, res, next) {
         406: your inputs have some illegal chars.
 */
 router.get('/updateinfo', function(req, res, next) {
-    if(RedisRepository.getAccount()) {
-
-    }
-}, function(req, res, next) {
     var user = JSON.parse(req.body);
-
 
     var userInfo = UserRepository.getUserInfo()
 
-    var newSchoolPwd = (typeof(user.new_school_pwd) != "undefined") : user.new_school_pwd ? "";
-    var newNick = (typeof(user.new_nick) != "undefined") : user.new_nick ? "";
-    var newPassword = (typeof(user.new_password) != "undefined") : user.new_password ? "";
-    var newEmailk = (typeof(user.new_email) != "undefined") : user.new_email ? "";
+    var newSchoolPwd =
+        (typeof(user.new_school_pwd) != "undefined") ? user.new_school_pwd : userInfo.school_pwd;
+    var newNick =
+        (typeof(user.new_nick) != "undefined") ? user.new_nick : userInfo.nick;
+    var newPassword =
+        (typeof(user.new_password) != "undefined") ? user.new_password : userInfo.pwd;
+    var newEmail =
+        (typeof(user.new_email) != "undefined") ? user.new_email : userInfo.email;
 
 
     var status = UserRepository.updateUserInfo();
