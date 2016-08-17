@@ -4,13 +4,18 @@
 */
 var redis = require('redis');
 
-var existTime = 60 * 60 * 24 * 30; // 30 days
+var existTime = 60 * 30; // 30 mins
 var cache = redis.createClient();
+
+client.on('ready',function(err){
+    console.log('ready');
+});
 
 cache.on("error", function(err) {
     console.log(err);
 });
 
+<<<<<<< HEAD
 /*
 *Author: blackkite0206233
 *Description:
@@ -37,5 +42,33 @@ function getAccount(token) {
         return reply;
     });
 }
+=======
+module.exports = {
+        /*
+        *Author: blackkite0206233
+        *Description:
+            This function is used to add a data to redis server.
+        *Usage:
+            account: the user's account.
+            token: a sentence contains 20 random characters.
+        */
+        set : function(token, account) {
+            cache.set(token, account);
+            cache.expire(account, existTime);
+        },
+        /*
+        *Author: blackkite0206233
+        *Description:
+            This function is used to check if the token is valid and get user's account from redis server.
+        *Usage:
+            token: a sentence contains 20 random characters.
+            reply: the user's account, if the token is not valid then the reply is "".
+>>>>>>> yoyo930021
 
-module.exports = RedisRepository;
+        */
+        getAccount : function(token) {
+            cache.get(token, function(err, reply) {
+                return reply;
+            });
+        }
+};
