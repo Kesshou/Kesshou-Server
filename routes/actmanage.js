@@ -7,6 +7,7 @@ var bcrypt = require('bcrypt-nodejs');
 var UserRepository = require('/Kesshou/Repositories/UserRepository');
 var RedisRepository = require('/Kesshou/Repositories/RedisRepository');
 var CheckCharactersService = require('Kesshou/Services/CheckCharactersService');
+var CheckStuWebSpider = require('Kesshou/WebSpiders/CheckStuWebSpider');
 var router = express.Router();
 
 /*
@@ -23,12 +24,12 @@ function createToken(account) {
     while(RedisRepository.getAccount(token) != "") {
         token = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
     }
-    RedisRepository.set(account, token);
+    RedisRepository.set(token, account);
     return token;
 }
 
 /*
-*Author:
+*Author: blackkite0206233
 *Description:
     This function is used to confirm user's school account and password.
 *Usage:
@@ -38,7 +39,11 @@ function createToken(account) {
         name: student's name, if the user's school account and password isn't valid, return "".
 */
 function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
-    /*code*/
+    var name;
+    CheckStuWebSpider(schoolAccount, schoolPwd, function(result){
+        name = result;
+    })
+    return name;
 }
 
 /*
