@@ -103,10 +103,10 @@ router.get('/login', function(req, res, next) {
 router.get('/register', function(req, res, next) {
     var user = req.body;
     var hsahPassword = bcrypt.hashSync(user.password);
-    var schoolAccount = (typeof(user.school_account) != "undefined") ? user.school_account : "";
-    var schoolPwd = (typeof(user.school_pwd) != "undefined") ? user.school_pwd : "";
-    var name = (typeof(user.name) != "undefined") ? user.name : confirmSchoolAccAndPwd(schoolAccount, schoolPwd);
-    
+    var schoolAccount = (user.school_account != undefined) ? user.school_account : "";
+    var schoolPwd = (user.school_pwd != undefined) ? user.school_pwd : "";
+    var name = (user.name != undefined) ? user.name : confirmSchoolAccAndPwd(schoolAccount, schoolPwd);
+
     var checkEmail = CheckCharactersService.checkEmail(user.email);
     var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
     var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
@@ -114,17 +114,18 @@ router.get('/register', function(req, res, next) {
     var checkUserGroup = CheckCharactersService.checkData(user.user_group,
          ["student", "graduated", "outside"]);
 
-    var checkAccount = UserRepository.getUserPassword(user.email);
+    var checkAccount = UserRepository.getUserPassword(user.email);//should use callback
 
     if(!(checkEmail && checkSchoolAccount && checkSchoolPwd && checkNick && checkUserGroup)) {
         res.status(406).json({"error" : "非法字元"});
     } else if(name == "") {
         res.status(406).json({"error" : "學校驗證錯誤"});
-    } else if(checkAccount != null {
+    } else if(checkAccount != undefined) {
         res.status(401).json({"error" : "帳號已被使用"});
     } else {
         var status = UserRepository.createNewUser(user.email, hsahPassword,
-             user.user_group, schoolAccount, schoolPwd, user.nick, name);
+             user.user_group, schoolAccount, schoolPwd, user.nick, name);//should use callback
+
         if(status) {
             var token = this.createToken(user.email);
             res.status(200).json({ "token" :  token});
@@ -164,13 +165,13 @@ router.get('/updateinfo', function(req, res, next) {
     }
 
     var newSchoolPwd =
-        (typeof(updateData.new_school_pwd) != "undefined") ? updateData.new_school_pwd : userInfo.school_pwd;
+        (typeof(updateData.new_school_pwd) != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
     var newNick =
-        (typeof(updateData.new_nick) != "undefined") ? updateData.new_nick : userInfo.nick;
+        (typeof(updateData.new_nick) != undefined) ? updateData.new_nick : userInfo.nick;
     var newPassword =
-        (typeof(updateData.new_password) != "undefined") ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
+        (typeof(updateData.new_password) != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
     var newEmail =
-        (typeof(updateData.new_email) != "undefined") ? updateData.new_email : userInfo.email;
+        (typeof(updateData.new_email) != undefined) ? updateData.new_email : userInfo.email;
 
     var checkEmail = CheckCharactersService.checkEmail(newEmail);
     var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
