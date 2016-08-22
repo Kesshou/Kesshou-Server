@@ -44,7 +44,7 @@ module.exports = {
             }
         }
         return true;
-    }
+    },
 
     /*
     *Author: blackkite0206233
@@ -61,7 +61,7 @@ module.exports = {
         } else {
             return false;
         }
-    }
+    },
 
     /*
     *Author: blackkite0206233

@@ -1,11 +1,11 @@
 {
   "development": {
     "username": "root",
-    "password": "1234",
+    "password": "u,4aup3vm0 ",
     "database": "DaanX",
     "host": "127.0.0.1",
     "dialect": "mariadb",
-    "port":"32768"
+    "port":"3306"
   },
   "test": {
     "username": "root",

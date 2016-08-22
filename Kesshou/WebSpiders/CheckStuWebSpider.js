@@ -3,7 +3,7 @@ var cheerio=require("cheerio");
 var fs = require("fs");
 var iconv = require('iconv-lite');
 
-module.exports = 
+module.exports = {
         /*
         *Author: yoyo930021
         *Description:
@@ -57,5 +57,6 @@ module.exports =
                     }
                 }
             });
-            
+
         }
+}

@@ -7,7 +7,7 @@ var redis = require('redis');
 var existTime = 60 * 30; // 30 mins
 var cache = redis.createClient();
 
-client.on('ready',function(err){
+cache.on('ready',function(err){
     console.log('ready');
 });
 
@@ -28,6 +28,7 @@ module.exports = {
             cache.set(token, account);
             cache.expire(account, existTime);
         },
+
         /*
         *Author: blackkite0206233
         *Description:

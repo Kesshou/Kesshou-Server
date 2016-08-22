@@ -4,10 +4,12 @@
 */
 var express = require('express');
 var bcrypt = require('bcrypt-nodejs');
-var UserRepository = require('/Kesshou/Repositories/UserRepository');
-var RedisRepository = require('/Kesshou/Repositories/RedisRepository');
-var CheckCharactersService = require('Kesshou/Services/CheckCharactersService');
-var CheckStuWebSpider = require('Kesshou/WebSpiders/CheckStuWebSpider');
+
+var UserRepository = require('../Kesshou/Repositories/UserRepository');
+var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
+var CheckCharactersService = require('../Kesshou/Services/CheckCharactersService');
+var CheckStuWebSpider = require('../Kesshou/WebSpiders/CheckStuWebSpider');
+
 var router = express.Router();
 
 /*
@@ -99,37 +101,7 @@ router.get('/login', function(req, res, next) {
             It is a string to explain the reason of error.
 */
 router.get('/register', function(req, res, next) {
-    var user = JSON.parse(req.body);
-    var hsahPassword = bcrypt.hashSync(user.password);
-    var schoolAccount = (typeof(user.school_account) != "undefined") ? user.school_account : "";
-    var schoolPwd = (typeof(user.school_pwd) != "undefined") ? user.school_pwd : "";
-    var name = (typeof(user.name) != "undefined") ? user.name : confirmSchoolAccAndPwd(schoolAccount, schoolPwd);
-
-    var checkEmail = CheckCharactersService.checkEmail(user.email);
-    var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
-    var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
-    var checkNick = CheckCharactersService.allowNumbersAndAlphabets(user.nick);
-    var checkUserGroup = CheckCharactersService.checkData(user.user_group,
-         ["student", "graduated", "outside"]);
-
-    var checkAccount = UserRepository.getUserPassword(user.email);
-
-    if(!(checkEmail && checkSchoolAccount && checkSchoolPwd && checkNick && checkUserGroup)) {
-        res.status(406).json({"error" : "非法字元"});
-    } else if(name == "") {
-        res.status(406).json({"error" : "學校驗證錯誤"});
-    } else if(checkAccount != "") {
-        res.status(401).json({"error" : "帳號已被使用"});
-    } else {
-        var status = UserRepository.createNewUser(user.email, hsahPassword,
-             user.user_group, schoolAccount, schoolPwd, user.nick, name);
-        if(status) {
-            var token = this.createToken(user.email);
-            res.status(200).json({ "token" :  token});
-        } else {
-            res.status(500).json({"error" : "伺服器錯誤"});
-        }
-    }
+    res.send("aaa");
 
 });
 

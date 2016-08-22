@@ -4,7 +4,7 @@
 */
 
 
-var models  = require('../models');
+var models  = require('../../models');
 
 module.exports = {
     /*
@@ -58,8 +58,8 @@ module.exports = {
             debug(error.toString());
             return false;
         });
-        
-        
+
+
     },
 
     /*
