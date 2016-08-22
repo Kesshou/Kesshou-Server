@@ -11,17 +11,17 @@ router.get('/announce', function(req, res, next) {
 });
 
 router.post('/announce', function(req, res, next) {
-    var newAnnounce = json.parse(req.body);
+    var newAnnounce = req.body;
 
 });
 
 router.put('/announce', function(req, res, next) {
-    var updateAnnounce = json.parse(req.body);
+    var updateAnnounce = req.body;
 
 });
 
 router.delete('/announce', function(req, res, next) {
-    var deleteAnnounce = json.parse(req.body);
+    var deleteAnnounce = req.body;
 
 });
 
