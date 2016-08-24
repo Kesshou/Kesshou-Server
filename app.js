@@ -9,11 +9,8 @@ var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
-<<<<<<< HEAD
 var calendar = require('./routes/calendar');
-=======
 var announcementdisplay = require('./routes/announcementdisplay');
->>>>>>> 887f00ce252d13e193d8a7cd257f9d3f83357de6
 
 var app = express();
 
@@ -38,11 +35,8 @@ app.use(function(req, res, next) {
     }
 });
 app.use('/api/scorequery', scorequery);
-<<<<<<< HEAD
 app.use('/api/calendar', calendar);
-=======
 app.use('/api/announcementdisplay', announcementdisplay);
->>>>>>> 887f00ce252d13e193d8a7cd257f9d3f83357de6
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
