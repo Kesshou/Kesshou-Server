@@ -6,12 +6,27 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.4.1",
     "body-parser": "~1.15.1",
+    "cheerio": "^0.20.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",
-    "jade": "~1.11.0",
+    "express-generator": "^4.13.4",
+    "http": "0.0.0",
+    "iconv-lite": "^0.4.13",
+    "mariasql": "^0.2.6",
     "morgan": "~1.7.0",
+    "mysql": "^2.11.1",
+    "path": "^0.12.7",
+    "redis": "^2.6.2",
+    "request": "^2.74.0",
+    "sequelize": "^3.24.0",
+    "sequelize-cli": "^2.4.0",
     "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "supertest": "^2.0.0"
   }
 }
