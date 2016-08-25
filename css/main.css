@@ -1,0 +1,136 @@
+@import url("webfont.css");
+
+body {
+    font-family: 'NOTO Sans TC', sans-serif;
+    font-size: 16px;
+    left: 0;
+    margin: 0;
+    color: white;
+    overflow: scroll;
+    position: relative;
+}
+
+.sidebar {
+    color: ghostwhite;
+    position: fixed;
+    left: -285px;
+    background-color: #4d4d4d;
+    height: 100%;
+    width: 285px;
+}
+
+.sidebar ul {
+    border-top: 1px solid #636366;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar li {
+    border-bottom: 1px solid #636366;
+    border-top: 1px solid #636366;
+    line-height: 45px;
+    padding-bottom: 3px;
+    padding-left: 20px;
+    padding-top: 3px;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.icon-menu {
+  color: #fff;
+  cursor: pointer;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-top: 25px;
+  text-decoration: none;
+  width: 5%;
+}
+
+.icon-close {
+  cursor: pointer;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.icon-close span{
+    line-height: 45px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+.container div{
+    display: inline;
+    float: left;
+    
+}
+
+h1,h2,h3,h4,h5,h6{
+    color: #ffffff;
+}
+
+.ins{
+    background-color: #984600;
+}
+.img{
+    background-color: coral;
+}
+.buttons{
+    background-color: forestgreen;
+}
+
+#screen{
+    text-align: center;
+}
+
+#main{
+    background-color: #691791;
+    width: 100%;
+    height: 100%;
+}
+
+#past{
+    background-color: #1d79d3;
+    width: 100%;
+    height: 100%;
+}
+
+#works{
+    background-color: darkorange;
+    width: 100%;
+    height: 100%;
+}
+
+#new{
+    background-color: gold;
+    width: 100%;
+    height: 100%;
+}
+
+#other{
+    background-color: deepskyblue;
+    width: 100%;
+    height: 100%;
+}
+
+#download{
+    background-color: deeppink;
+    width: 100%;
+    height: 100%;
+}
+
+#qna{
+    background-color: chocolate;
+    width: 100%;
+    height: 100%;
+}
+
+#about{
+    background-color: #e3c341;
+    width: 100%;
+    height: 100%;
+}
