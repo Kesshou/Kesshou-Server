@@ -9,8 +9,8 @@ var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
-var calendar = require('./routes/calendar');
 var announcementdisplay = require('./routes/announcementdisplay');
+var forum = require('./routes/forum');
 
 var app = express();
 
@@ -35,8 +35,8 @@ app.use(function(req, res, next) {
     }
 });
 app.use('/api/scorequery', scorequery);
-app.use('/api/calendar', calendar);
 app.use('/api/announcementdisplay', announcementdisplay);
+app.use('/api/forum', forum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -69,5 +69,6 @@ app.use(function(err, req, res, next) {
     // });
 });
 
+app.listen(3000);
 
 module.exports = app;
