@@ -5,13 +5,17 @@
 
 var models  = require('../../models');
 
+var getAnnouncement = function(type) {
+
+}
+
+var getCollection = function(user) {
+
+}
+
 module.exports = {
 
-    getAnnouncement:function(type) {
+    getAnnouncement: getAnnouncement,
 
-    },
-
-    getCollection:function(user) {
-
-    }
+    getCollection: getCollection
 };

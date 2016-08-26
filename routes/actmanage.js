@@ -42,7 +42,7 @@ function createToken(account) {
 */
 function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
     var name;
-    CheckStuWebSpider(schoolAccount, schoolPwd, function(result){
+    CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, function(result){
         name = result;
     })
     return name;
@@ -123,9 +123,8 @@ router.get('/register', function(req, res, next) {
     } else if(checkAccount != undefined) {
         res.status(401).json({"error" : "帳號已被使用"});
     } else {
-        var status = UserRepository.createNewUser(user.email, hsahPassword,
+        var status = UserRepository.createUser(user.email, hsahPassword,
              user.user_group, schoolAccount, schoolPwd, user.nick, name);//should use callback
-
         if(status) {
             var token = this.createToken(user.email);
             res.status(200).json({ "token" :  token});
