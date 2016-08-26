@@ -7,10 +7,10 @@ var bodyParser = require('body-parser');
 
 var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
+var forum = require('./routes/forum');
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
-var forum = require('./routes/forum');
 
 var app = express();
 
@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api/forum', forum);
 app.use('/api/actmanage', actmanage);
 
 app.use(function(req, res, next) {
@@ -36,7 +37,6 @@ app.use(function(req, res, next) {
 });
 app.use('/api/scorequery', scorequery);
 app.use('/api/announcementdisplay', announcementdisplay);
-app.use('/api/forum', forum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,10 +1,9 @@
 var express = require('express');
-var bcrypt = require('bcryptjs');
 
 var router = express.Router();
 
 router.get('/students', function (req, res, next) {
-
+  console.log('OAO');
 })
 
 router.get('/graduate', function (req, res, next) {
