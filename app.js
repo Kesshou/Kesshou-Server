@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
     if(RedisRepository.getAccount(token)) {
         next();
     } else {
-        res.redirect('/api/actmanage/login');
+        res.status(408).json({"error" : "token過期"});
     }
 });
 app.use('/api/scorequery', scorequery);
