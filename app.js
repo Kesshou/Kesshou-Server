@@ -9,7 +9,7 @@ var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
-var announcementdisplay = require('./routes/announcementdisplay');
+//var announcementdisplay = require('./routes/announcementdisplay');
 
 var app = express();
 
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/actmanage', actmanage);
+app.use('/actmanage', actmanage);
 
 app.use(function(req, res, next) {
     var token = json.parse(req.body).token;
@@ -33,8 +33,8 @@ app.use(function(req, res, next) {
         res.status(408).json({"error" : "token過期"});
     }
 });
-app.use('/api/scorequery', scorequery);
-app.use('/api/announcementdisplay', announcementdisplay);
+app.use('/scorequery', scorequery);
+//app.use('/announcementdisplay', announcementdisplay);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

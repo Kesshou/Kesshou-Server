@@ -63,6 +63,6 @@ var checkStuAccount = function(stu_id, stu_pwd, callback) {
 }
 
 module.exports = {
-    
-    checkStuAccount: checkStuAccount;
+
+    checkStuAccount: checkStuAccount
 }

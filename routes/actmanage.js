@@ -65,7 +65,7 @@ function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
         error(if login failed):
             It is a string to explain the reason of error.
 */
-router.get('/login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
     var user = req.body;
     var password = UserRepository.getUserPassword(user.account);
     var checkAccount = CheckCharactersService.checkEmail(user.account);
@@ -100,7 +100,7 @@ router.get('/login', function(req, res, next) {
         error(if register failed):
             It is a string to explain the reason of error.
 */
-router.get('/register', function(req, res, next) {
+router.post('/register', function(req, res, next) {
     var user = req.body;
     var hsahPassword = bcrypt.hashSync(user.password);
     var schoolAccount = (user.school_account != undefined) ? user.school_account : "";
@@ -150,7 +150,7 @@ router.get('/register', function(req, res, next) {
     error(if update failed):
         It is a string to explain the reason of error.
 */
-router.get('/updateinfo', function(req, res, next) {
+router.put('/updateinfo', function(req, res, next) {
     var updateData = req.body;
     var account = RedisRepository.getAccount(updateData.token);
     if(account == ""){
