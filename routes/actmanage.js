@@ -60,10 +60,9 @@ function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
             406: your inputs have some illegal chars.
             408: your token was expired.(just used at debug)
         token(if login successfully):
-            It is a string which was produced by random and it was used to confirmed whether
+            it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
-        error(if login failed):
-            It is a string to explain the reason of error.
+        error(if login failed): it is a string to explain the reason of error.
 */
 router.post('/login', function(req, res, next) {
     var user = req.body;
@@ -95,10 +94,9 @@ router.post('/login', function(req, res, next) {
             406: the input of school doesn't exist.
             406: your inputs have some illegal chars.
         token(if register successfully):
-            It is a string which was produced by random and it was used to confirmed whether
+            it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
-        error(if register failed):
-            It is a string to explain the reason of error.
+        error(if register failed): it is a string to explain the reason of error.
 */
 router.post('/register', function(req, res, next) {
     var user = req.body;
@@ -145,10 +143,8 @@ router.post('/register', function(req, res, next) {
         401: your account or password is wrong.
         406: the input of school doesn't exist.
         406: your inputs have some illegal chars.
-    success(if update successfully):
-        It is a string to tell you update successfully.
-    error(if update failed):
-        It is a string to explain the reason of error.
+    success(if update successfully): it is a string to tell you update successfully.
+    error(if update failed): it is a string to explain the reason of error.
 */
 router.put('/updateinfo', function(req, res, next) {
     var updateData = req.body;

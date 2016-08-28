@@ -5,9 +5,19 @@
 
 var models  = require('../../models');
 
-var getAnnouncement = function(field, type) {
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to return the announcement found by specific field and value.
+*Usage:
+    field: the field which you want to designate.
+    value: the value which you hope the field's value is match
+    return:
+        news: the ammounce which was found.
+*/
+var getAnnouncement = function(field, value) {
     var whereObj = {};
-    whereObj[field] = type;
+    whereObj[field] = value;
     var news = models.News.findAll({ where: whereObj }).then(function(result) {
         return result;
     })
@@ -21,6 +31,15 @@ var getAnnouncement = function(field, type) {
     return news;
 }
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to return the announcement collected by user.
+*Usage:
+    user: the user's id.
+    return:
+        news: the ammounce which was found.
+*/
 var getCollection = function(user) {
     var newsIDs = models.News_collection.findOne({ where: {user_id: user} }).then(function(result) {
         return result.get('news_id');

@@ -16,12 +16,7 @@ var router = express.Router();
     return:
         status code:
             200: register successfully.
-        title:
-            The announcement's title.
-        content:
-            The announcement's content.
-        date:
-            The announcement's release date.
+        announce: the announcement shich was found.
 */
 router.get('/announce', function(req, res, next) {
     var announce;

@@ -1,3 +1,7 @@
+/*
+*Author: yoyo930021
+*Description: This file is used to check if the student is exist.
+*/
 var request = require("request");
 var cheerio = require("cheerio");
 var fs = require("fs");
@@ -8,9 +12,9 @@ var iconv = require('iconv-lite');
 *Description:
     This function is used to check student exist.
 *Usage:
-    stu_id : student system account.
-    stu_pwd : student system password.
-    callback : then do.
+    stu_id: student system account.
+    stu_pwd: student system password.
+    callback: then do.
 */
 var checkStuAccount = function(stu_id, stu_pwd, callback) {
 
