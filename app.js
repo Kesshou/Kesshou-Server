@@ -9,7 +9,7 @@ var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
-//var announcementdisplay = require('./routes/announcementdisplay');
+var announcementdisplay = require('./routes/announcementdisplay');
 
 var app = express();
 
@@ -34,7 +34,7 @@ app.use(function(req, res, next) {
     }
 });
 app.use('/scorequery', scorequery);
-//app.use('/announcementdisplay', announcementdisplay);
+app.use('/announcementdisplay', announcementdisplay);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

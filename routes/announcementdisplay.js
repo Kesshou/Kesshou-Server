@@ -5,6 +5,7 @@
 var express = require('express');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 var AnnounceRepository = require('../Kesshou/Repositories/AnnounceRepository');
+var UserRepository = require('../Kesshou/Repositories/UserRepository');
 var router = express.Router();
 
 /*
@@ -26,14 +27,13 @@ router.get('/announce', function(req, res, next) {
     var announce;
     var type = req.type;
     if(type != "collect") {
-        announce = AnnounceRepository.getAnnouncement(type);
+        announce = AnnounceRepository.getAnnouncement("sort", type);
     } else {
-        var user = RedisRepository.getAccount(req.token);
-        announce = AnnounceRepository.getCollection(user);
+        var account = RedisRepository.getAccount(req.token);
+        var userID = UserRepository.getUserInfo(account)
+        announce = AnnounceRepository.getCollection(userID);
     }
-    res.status(200).json({"title" : announce.title,
-                                        "content" : announce.content,
-                                        "date" : announce.release_date});
+    res.status(200).json({"announce" : announce});
 });
 
 module.exports = router;
