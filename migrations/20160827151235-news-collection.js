@@ -9,19 +9,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            news_key: {
+            student_id: {
                 allowNull: false,
                 type: Sequelize.INTEGER
             },
-            type: {
-                allowNull: false,
-                type: Sequelize.STRING
-            },
-            file_name: {
-                allowNull: false,
-                type: Sequelize.STRING
-            },
-            file_src: {
+            news_id: {
                 allowNull: false,
                 type: Sequelize.STRING
             },
@@ -37,6 +29,6 @@ module.exports = {
     },
 
     down: function(queryInterface, Sequelize) {
-        return queryInterface.dropTable('news_file');
+        return queryInterface.dropTable('news_collection');
     }
 };
