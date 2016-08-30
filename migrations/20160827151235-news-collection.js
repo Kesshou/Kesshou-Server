@@ -2,7 +2,7 @@
 
 module.exports = {
     up: function(queryInterface, Sequelize) {
-        return queryInterface.createTable('news_file', {
+        return queryInterface.createTable('news_collection', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
