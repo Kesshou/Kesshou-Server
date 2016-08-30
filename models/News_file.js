@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-    var Account = sequelize.define('News_file', {
+    var News_file = sequelize.define('News_file', {
         news_key: DataTypes.INTEGER,
         type: DataTypes.STRING,
         file_name: DataTypes.INTEGER,
