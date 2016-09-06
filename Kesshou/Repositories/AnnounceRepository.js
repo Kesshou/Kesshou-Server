@@ -2,8 +2,8 @@
 *Author: blackkite0206233
 *Description: This file is used to control the announcement data.
 */
-
-var models  = require('../../models');
+var Promise = require('bluebird');
+var models  = Promise.promisifyAll(require('../../models'));
 
 /*
 *Author: blackkite0206233
@@ -16,19 +16,33 @@ var models  = require('../../models');
         news: the ammounce which was found.
 */
 var getAnnouncement = function(field, value) {
-    var whereObj = {};
-    whereObj[field] = value;
-    var news = models.News.findAll({ where: whereObj }).then(function(result) {
-        return result;
-    })
-    var i = news.length;
-    while(i--) {
-        news.file = models.News_file.findAll({ where: {news_key: news[news.length - i - 1].key} }).
-        then(function(result) {
-            return result;
+    return new Promise(function(reslove, reject) {
+        var whereObj = {};
+        whereObj[field] = value;
+        models.News.findAll({ where: whereObj }).then(function(result) {
+            //var news = result;
+            /*for (var i=0; i < news.length; i ++) {
+                models.News_file.findAll({ where: {news_key: news[i].key} })
+                .then(function(result) {
+                    news.file = result;
+                });
+            }
+            */
+            Promise.each(getAnnouncementFile(result))
+                .then(function(result) {
+                    reslove(result);
+                });
         })
-    }
-    return news;
+    });
+}
+
+var getAnnouncementFile(news) {
+    return new Promise(function(reslove, reject) {
+        models.News_file.findAll({ where: {news_key: news.key} })
+            .All(function(result){
+                news.file = result;
+            });
+    });
 }
 
 /*
@@ -41,17 +55,15 @@ var getAnnouncement = function(field, value) {
         news: the ammounce which was found.
 */
 var getCollection = function(user) {
-    var newsIDs = models.News_collection.findOne({ where: {user_id: user} }).then(function(result) {
-        return result.get('news_id');
-    })
-    var newsID = newsIDs.split(",");
-
-    var news = new Array();
-    var i = newsID.length;
-    while(i--) {
-        news[newsID.length - i - 1] = This.getAnnouncement("news_id", newsID[newsID.length - i - 1]);
-    }
-    return news;
+    return new Promise(function(reslove, reject) {
+        models.News_collection.findOne({ where: {user_id: user} }).then(function(result) {
+            var newsID = result.split(",");
+            var news = new Array();
+            for(i = 0; i < newsID.length; i ++) {
+                news[i] = This.getAnnouncement("news_id", newsID[i]);
+            }
+        });
+    });
 }
 
 module.exports = {

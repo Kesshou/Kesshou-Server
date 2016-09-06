@@ -2,7 +2,8 @@
 *Author: blackkite0206233
 *Description: This file is used to control the redis server.
 */
-var redis = require('redis');
+var Promise =require('bluebird');
+var redis = Promise.promisifyAll(require('redis'));
 
 var existTime = 60 * 30; // 30 mins
 var cache = redis.createClient();
@@ -38,8 +39,10 @@ var set = function(token, account) {
 
 */
 var getAccount = function(token) {
-    cache.get(token, function(err, reply) {
-        return reply;
+    return new Promise(function(reslove, reject) {
+        cache.getAsync(token)
+            .then(reslove)
+            .catch(reject);
     });
 }
 
