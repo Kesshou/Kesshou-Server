@@ -32,10 +32,11 @@ var set = function(token, account) {
 /*
 *Author: blackkite0206233
 *Description:
-    This function is used to check if the token is valid and get user's account from redis server.
+    This function is used to check if the token is valid and get user's account from redis server.  Used promise.
 *Usage:
     token: a sentence contains 20 random characters.
-    reply: the user's account, if the token is not valid then the reply is "".
+    return: account.
+    reject: error.
 
 */
 var getAccount = function(token) {

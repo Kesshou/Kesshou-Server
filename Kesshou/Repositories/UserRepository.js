@@ -4,13 +4,16 @@
 */
 var Promise = require('bluebird');
 var models  = Promise.promisifyAll(require('../../models'));
+
 /*
 *Author: blackkite0206233,yoyo930021
 *Description:
-    This function is used to get the use's password.
+    This function is used to get the use's password.  Used promise.
 *Usage:
     account: user's account(email).
-    return: user's password, if the account doen't exist, return "".
+    return:
+        resolve: user's password.
+        reject: "帳號有誤".
 */
 var getUserPassword = function(account, oldAccount) {
     return new Promise(function(resolve, reject) {
@@ -32,7 +35,7 @@ var getUserPassword = function(account, oldAccount) {
 /*
 *Author: blackkite0206233,yoyo930021
 *Description:
-    This function is used to create a new user.
+    This function is used to create a new user.  Used promise.
 *Usage:
     email: user's email(account).
     password: user's password.
@@ -40,7 +43,9 @@ var getUserPassword = function(account, oldAccount) {
     schoolAccount: user's school account(optional).
     schoolPwd: user's school password(optional).
     nick: user's nick.
-    return: if create successfully, return true, otherwise return false.
+    return:
+        resolve:
+        reject: error.
 */
 var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name) {
     return new Promise(function(resolve, reject) {
@@ -72,7 +77,7 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
 /*
 *Author: blackkite0206233,yoyo930021
 *Description:
-    This function is used to update user's info.
+    This function is used to update user's info.  Used promise.
 *Usage:
     account: user's old account.
     newSchoolPwd: user's new school password(optional).
@@ -80,7 +85,9 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
     newPassword: user's new password.
     newEmail: user's new email.
     newName: user's new name.
-    return: if update successfully, return true, otherwise return false.
+    return:
+        resolve:
+        reject: error.
 */
 var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newEmail, newName) {
     return new Promise(function(resolve, reject){
@@ -104,10 +111,12 @@ var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newE
 /*
 *Author: blackkite0206233,yoyo930021
 *Description:
-    This function is used to get user's information.
+    This function is used to get user's information.  Used promise.
 *Usage:
     account: user's account.
-    return: if update successfully, return a Object, otherwise return null.
+    return:
+        resolve: user's infomation.
+        reject: error.
 */
 var getUserInfo = function (account) {
     return new Promise(function(resolve, reject) {

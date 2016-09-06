@@ -15,7 +15,7 @@ var router = express.Router();
 
 /*
 *Author: blackkite0206233
-*Description: A function used to get an unused token. Used promise.
+*Description: A function used to get an unused token.  Used promise.
 *Usage:
     resolve: token;
 */
@@ -37,7 +37,7 @@ var getUnusedToken = function() {
 /*
 *Author: blackkite0206233
 *Description:
-    This function is used to create a token. Used promise.
+    This function is used to create a token.  Used promise.
 *Usage:
     account: user's account.
     return:
@@ -52,32 +52,6 @@ var createToken = function(account) {
             });
     })
 }
-
-/*
-*Author: blackkite0206233
-*Description:
-    This function is used to confirm user's school account and password. Used promise.
-*Usage:
-    schoolAccount: user's school account.
-    schoolPwd: user's school password.
-    return:
-        resolve(if the user's school account and password is valid): student's name,
-        reject(if the user's school account and password isn't valid): "學校驗證錯誤".
-*/
-
-/*
-function confirmSchoolAccAndPwd(schoolAccount, schoolPwd) {
-    return new Promise(function(resolve, reject) {
-        CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, function(result){
-        .then(function(result) {
-            resolve(result);
-        })    if(result == "") {
-                reject("學校驗證錯誤")
-            }
-        });
-    });
-}
-*/
 
 /*
 *Author: blackkite0206233
