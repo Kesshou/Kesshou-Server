@@ -20,16 +20,16 @@ var router = express.Router();
     resolve: token;
 */
 var getUnusedToken = function() {
+    console.log("尋找未使用的token");
     var token = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
     return new Promise(function(resolve, reject) {
-        RedisRepository.getAccount(token)
-            .then(function(result){
-                if(result == null) {
-                    resolve(token);
-                } else {
-                    getUnusedToken().then(resolve);
-                };
-            })
+        RedisRepository.getAccount(token).then(function(result){
+            if(result == null) {
+                resolve(token);
+            } else {
+                getUnusedToken().then(resolve);
+            };
+        })
     });
 }
 
@@ -44,12 +44,12 @@ var getUnusedToken = function() {
         resolve: token.
 */
 var createToken = function(account) {
+    console.log("建立token");
     return new Promise(function(resolve, reject) {
-        getUnusedToken()
-            .then(function(result) {
-                RedisRepository.set(result, account);
-                resolve(result);
-            });
+        getUnusedToken().then(function(result) {
+            RedisRepository.set(result, account);
+            resolve(result);
+        });
     })
 }
 
@@ -72,26 +72,35 @@ var createToken = function(account) {
 router.post('/login', function(req, res, next) {
     var user =  req.body;
 
-    CheckCharactersService.checkEmail(user.account)
-    .then(function(){
-        UserRepository.getUserPassword(user.account, "")
-        .then(function() {
-            if(undefined == user.password || !bcrypt.compareSync(user.password, password)) {
+    CheckCharactersService.checkEmail(user.account).then(function() {
+            return UserRepository.getUserPassword(user.account, "");
+        }).then(function(result) {
+            console.log("無非法字元");
+            console.log("帳號正確");
+            console.log(result);
+            if(undefined == user.password || !bcrypt.compareSync(user.password, result)) {
                 res.status(401).json({"error" : "密碼錯誤"});
             } else {
-                this.createToken(user.account)
+                console.log("密碼正確");
+                createToken(user.account)
                 .then(function(result) {
                     res.status(200).json({ "token" :  result});
                 });
             }
         })
         .catch(function(error) {
-            res.status(401).json({"error" : error});
+            switch (error) {
+                case "非法字元":
+                    res.status(406).json({"error" : error});
+                    break;
+                case "帳號有誤":
+                    res.status(401).json({"error" : error});
+                    break;
+                default:
+                    res.status(500).json({"error" : error});
+                    break;
+            }
         });
-    })
-    .catch(function(error) {
-        res.status(406).json({"error" : error});
-    });
 });
 
 /*
@@ -127,33 +136,22 @@ router.post('/register', function(req, res, next) {
     var checkNick = CheckCharactersService.allowNumbersAndAlphabets(user.nick);
     var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "outside"]);
 
-    Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkUserGroup])
-    .then(function() {
-        CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name)
-        .then(function(result) {
-            var userName = result;
-            UserRepository.getUserPassword(user.email, "")
-            .then(function(result) {
-                res.status(401).json({"error" : "帳號已被使用"});
-            })
-            .catch(function(error) {
-                UserRepository.createUser(user.email, hsahPassword, user.user_group, schoolAccount, schoolPwd, user.nick, userName)
-                .then(function() {
-                    createToken(user.account)
-                    .then(function(result) {
-                        res.status(200).json({ "token" :  result});
-                    });
-                })
-                .catch(function(error) {
-                    res.status(500).json({"error" : error});
-                });
+    Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkUserGroup]).then(function() {
+        return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name);
+    }).then(function(result) {
+        var userName = result;
+        UserRepository.getUserPassword(user.email, "").then(function(result) {
+            res.status(401).json({"error" : "帳號已被使用"});
+        }).catch(function(error) {
+            UserRepository.createUser(user.email, hsahPassword, user.user_group, schoolAccount, schoolPwd, user.nick, userName).then(function() {
+                return createToken(user.email);
+            }).then(function(result) {
+                res.status(200).json({ "token" :  result});
+            }).catch(function(error) {
+                res.status(500).json({"error" : error});
             });
-        })
-        .catch(function(error) {
-            res.status(406).json({"error" : error});
         });
-    })
-    .catch(function(error) {
+    }).catch(function(error) {
         res.status(406).json({"error" : error});
     });
 });
@@ -176,58 +174,58 @@ router.post('/register', function(req, res, next) {
 router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
 
-    RedisRepository.getAccount(updateData.token)
-    .then(function(result) {
-        UserRepository.getUserInfo(result)
-        .then(function(result) {
-            var userInfo = result;
-            var newSchoolPwd = (updateData.new_school_pwd != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
-            var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfo.nick;
-            var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
-            var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
+    RedisRepository.getAccount(updateData.token).then(function(result) {
+        return UserRepository.getUserInfo(result);
+    }).then(function(result) {
+        var userInfo = result;
+        var newSchoolPwd = (updateData.new_school_pwd != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
+        var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfo.nick;
+        var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
+        var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
 
-            var checkEmail = CheckCharactersService.checkEmail(newEmail);
-            var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
-            var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
+        var checkEmail = CheckCharactersService.checkEmail(newEmail);
+        var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
+        var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
 
-            if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
-                res.status(401).json({"error" : "帳號密碼錯誤"});
-            } else {
-                Promise.all([checkEmail, checkSchoolPwd, checkNick])
-                .then(function() {
-                    CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name)
-                    .then(function(result) {
-                        var newName = result;
-                        UserRepository.getUserPassword(newEmail, userInfo.email)
-                        .then(function(result) {
-                            res.status(401).json({"error" : "帳號已被使用"});
-                        })
-                        .catch(function(error) {
-                            UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName)
-                            .then(function() {
-                                RedisRepository.set(updateData.token, userInfo.email);
-                                res.status(200).json({ "success" :  "更新成功"});
-                            })
-                            .catch(function(error) {
-                                res.status(500).json({"error" : error});
-                            });
-                        });
-                    })
-                    .catch(function(error) {
-                        res.status(406).json({"error" : error});
+        if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
+            res.status(401).json({"error" : "帳號密碼錯誤"});
+        } else {
+            Promise.all([checkEmail, checkSchoolPwd, checkNick]).then(function() {
+                return CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name);
+            }).then(function(result) {
+                var newName = result;
+                UserRepository.getUserPassword(newEmail, userInfo.email).then(function(result) {
+                    res.status(401).json({"error" : "帳號已被使用"});
+                }).catch(function(error) {
+                    UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName).then(function() {
+                        RedisRepository.set(updateData.token, userInfo.email);
+                        res.status(200).json({ "success" :  "更新成功"});
+                    }).catch(function(error) {
+                        res.status(500).json({"error" : error});
                     });
-                })
-                .catch(function(error) {
-                    res.status(406).json({"error" : error});
                 });
-            }
-        })
-        .catch(function(error) {
-            res.status(500).json({"error" : error});
-        });
+            }).catch(function(error) {
+                switch (error) {
+                    case "非法字元":
+                    case "學校驗證錯誤":
+                        res.status(406).json({"error" : error});
+                        break;
+                    default:
+                        res.status(500).json({"error" : error});
+                        break;
+                }
+            });
+        }
     })
     .catch(function(error) {
-        res.status(408).json({"error" : error});
+        switch (error) {
+            case "token過期":
+                res.status(408).json({"error" : error});
+                break;
+            default:
+                res.status(500).json({"error" : error});
+                break;
+        }
     });
 });
 

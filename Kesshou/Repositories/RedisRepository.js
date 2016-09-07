@@ -26,7 +26,7 @@ cache.on("error", function(err) {
 */
 var set = function(token, account) {
     cache.set(token, account);
-    cache.expire(account, existTime);
+    cache.expire(token, existTime);
 }
 
 /*
@@ -40,10 +40,14 @@ var set = function(token, account) {
 
 */
 var getAccount = function(token) {
-    return new Promise(function(reslove, reject) {
-        cache.getAsync(token)
-            .then(reslove)
-            .catch(reject);
+    return new Promise(function(resolve, reject) {
+        cache.getAsync(token).then(function(result) {
+            if(result != null) {
+                resolve(result);
+            } else {
+                reject("token過期");
+            }
+        });
     });
 }
 

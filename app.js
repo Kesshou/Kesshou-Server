@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
-var actmanage = require('./routes/actmanage')
+var actmanage = require('./routes/actmanage');
 //var scorequery = require('./routes/scorequery');
 //var announcementdisplay = require('./routes/announcementdisplay');
 
