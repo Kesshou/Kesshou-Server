@@ -20,6 +20,19 @@ var getAnnouncement = function(field, value) {
         var whereObj = {};
         whereObj[field] = value;
         models.News.findAll({ where: whereObj }).then(function(result) {
+            var announce = result;
+            var promises = [];
+            for(var i = 0; i < announce.length; i++) {
+                promises.push(getAnnouncementFile(announce[i]));
+            }
+            Promise.all(promises).then(function(result) {
+                resolve(announce);
+            })
+            // Promise.map(announce, function(announce, index) {
+            //     return getAnnouncementFile(announce);
+            // }).then(function(result) {
+            //
+            // });
             //var news = result;
             /*for (var i=0; i < news.length; i ++) {
                 models.News_file.findAll({ where: {news_key: news[i].key} })
@@ -28,20 +41,23 @@ var getAnnouncement = function(field, value) {
                 });
             }
             */
-            Promise.each(getAnnouncementFile(result))
-                .then(function(result) {
-                    reslove(result);
-                });
+            // Promise.each(getAnnouncementFile(result))
+            //     .then(function(result) {
+            //         reslove(result);
+            //     });
         })
     });
 }
 
-var getAnnouncementFile(news) {
+var getAnnouncementFile = function(news) {
     return new Promise(function(reslove, reject) {
-        models.News_file.findAll({ where: {news_key: news.key} })
-            .All(function(result){
-                news.file = result;
-            });
+        models.News_file.findAll({ where: {news_key: news.key} }).then(function(result) {
+            news.file = result;
+            resolve();
+        }).catch(function(error) {
+            news.file = "";
+            resolve();
+        });
     });
 }
 
@@ -59,9 +75,17 @@ var getCollection = function(user) {
         models.News_collection.findOne({ where: {user_id: user} }).then(function(result) {
             var newsID = result.split(",");
             var news = new Array();
+            var promises = [];
             for(i = 0; i < newsID.length; i ++) {
-                news[i] = This.getAnnouncement("news_id", newsID[i]);
+                promises.push(This.getAnnouncement("news_id", newsID[i]).then(function(result) {
+                    news[i] = result;
+                }));
             }
+            Promise.all(promises).then(function() {
+                resolve(news);
+            }).catch(function(error) {
+                reject(error);
+            })
         });
     });
 }
