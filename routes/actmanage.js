@@ -24,10 +24,10 @@ var getUnusedToken = function() {
     var token = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
     return new Promise(function(resolve, reject) {
         RedisRepository.getAccount(token).then(function(result){
-            if(result == null) {
-                resolve(token);
-            } else {
+            if(result) {
                 getUnusedToken().then(resolve);
+            } else {
+                resolve(token);
             };
         })
     });
@@ -175,57 +175,55 @@ router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
 
     RedisRepository.getAccount(updateData.token).then(function(result) {
-        return UserRepository.getUserInfo(result);
-    }).then(function(result) {
-        var userInfo = result;
-        var newSchoolPwd = (updateData.new_school_pwd != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
-        var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfo.nick;
-        var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
-        var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
+        if(result) {
+            UserRepository.getUserInfo(result).then(function(result) {
+                var userInfo = result;
+                var newSchoolPwd = (updateData.new_school_pwd != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
+                var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfonick;
+                var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
+                var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
 
-        var checkEmail = CheckCharactersService.checkEmail(newEmail);
-        var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
-        var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
+                var checkEmail = CheckCharactersService.checkEmail(newEmail);
+                var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
+                var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
 
-        if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
-            res.status(401).json({"error" : "帳號密碼錯誤"});
-        } else {
-            Promise.all([checkEmail, checkSchoolPwd, checkNick]).then(function() {
-                return CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name);
-            }).then(function(result) {
-                var newName = result;
-                UserRepository.getUserPassword(newEmail, userInfo.email).then(function(result) {
-                    res.status(401).json({"error" : "帳號已被使用"});
-                }).catch(function(error) {
-                    UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName).then(function() {
-                        RedisRepository.set(updateData.token, userInfo.email);
-                        res.status(200).json({ "success" :  "更新成功"});
+                if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
+                    res.status(401).json({"error" : "帳號密碼錯誤"});
+                } else {
+                    Promise.all([checkEmail, checkSchoolPwd, checkNick]).then(function() {
+                        return CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name);
+                    }).then(function(result) {
+                        var newName = result;
+                        UserRepository.getUserPassword(newEmail, userInfo.email).then(function(result) {
+                            res.status(401).json({"error" : "帳號已被使用"});
+                        }).catch(function(error) {
+                            UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName).then(function() {
+                                RedisRepository.set(updateData.token, userInfo.email);
+                                res.status(200).json({ "success" :  "更新成功"});
+                            }).catch(function(error) {
+                                res.status(500).json({"error" : error});
+                            });
+                        });
                     }).catch(function(error) {
-                        res.status(500).json({"error" : error});
+                        switch (error) {
+                            case "非法字元":
+                            case "學校驗證錯誤":
+                                res.status(406).json({"error" : error});
+                                break;
+                            default:
+                                res.status(500).json({"error" : error});
+                                break;
+                        }
                     });
-                });
-            }).catch(function(error) {
-                switch (error) {
-                    case "非法字元":
-                    case "學校驗證錯誤":
-                        res.status(406).json({"error" : error});
-                        break;
-                    default:
-                        res.status(500).json({"error" : error});
-                        break;
                 }
-            });
-        }
-    })
-    .catch(function(error) {
-        switch (error) {
-            case "token過期":
-                res.status(408).json({"error" : error});
-                break;
-            default:
+            }).catch(function(error) {
                 res.status(500).json({"error" : error});
-                break;
+            });
+        } else {
+            res.status(408).json({"error" : "token過期"});
         }
+    }).catch(function(error) {
+        res.status(500).json({"error" : error});
     });
 });
 
