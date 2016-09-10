@@ -139,11 +139,20 @@ router.post('/register', function(req, res, next) {
     Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkUserGroup]).then(function() {
         return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name);
     }).then(function(result) {
-        var userName = result;
+        var userName = result[0];
+        var userClass = "";
+        var entranceTime = "";
+        var finishYear = "";
+        if(user.user_group == "student") {
+            userClass = result[1];
+            entranceTime = result[2];
+            finishYear = result[3];
+        }
         UserRepository.getUserPassword(user.email, "").then(function(result) {
             res.status(401).json({"error" : "帳號已被使用"});
         }).catch(function(error) {
-            UserRepository.createUser(user.email, hsahPassword, user.user_group, schoolAccount, schoolPwd, user.nick, userName).then(function() {
+            UserRepository.createUser(user.email, hsahPassword, user.user_group, schoolAccount,
+                schoolPwd, user.nick, userName, userClass, entranceTime, finishYear).then(function() {
                 return createToken(user.email);
             }).then(function(result) {
                 res.status(200).json({ "token" :  result});

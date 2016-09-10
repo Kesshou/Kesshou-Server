@@ -19,6 +19,7 @@ var iconv = require('iconv-lite');
     return:
         resolve(if student is exist): student's name.
         reject(if student isn't exist): "學校驗證錯誤".
+*TODO: return student's class and entrance time.
 */
 var checkStuAccount = function(stu_id, stu_pwd, name) {
     return new Promise(function(resolve, reject) {
@@ -61,7 +62,7 @@ var checkStuAccount = function(stu_id, stu_pwd, name) {
                                 reject("學校驗證錯誤");
                             } else {
                                 var $ = cheerio.load(iconv.decode(new Buffer(body, "binary"), "Big5"));
-                                resolve($("b").eq(4).text().substr(3));
+                                resolve($("b").eq(4).text().substr(3)); //TODO: resolve([$("b").eq(4).text().substr(3), class, entranceTime, finishYear]);
                             }
                         });
                     } else {

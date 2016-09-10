@@ -8,6 +8,8 @@ module.exports = function(sequelize, DataTypes) {
     school_pwd: DataTypes.STRING,
     name: DataTypes.STRING,
     nick: DataTypes.STRING,
+    class: DataTypes.STRING,
+    entranceTime: DataTypes.STRING,
     finish_year: DataTypes.INTEGER
   }, {
     classMethods: {

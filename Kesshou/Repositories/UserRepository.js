@@ -44,24 +44,27 @@ var getUserPassword = function(account, oldAccount) {
         resolve:
         reject: error.
 */
-var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name) {
+var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, entranceTime, finishYear) {
     return new Promise(function(resolve, reject) {
         models.Group.findOne({ where: {comment: userGroup} }).then(function(group){
-            var NewAccount={
-                email:email,
-                pwd:password,
-                group_id:group.get("id"),
-                school_account:schoolAccount,
-                school_pwd:schoolPwd,
-                nick:nick,
-                name:name
+            var NewAccount = {
+                email: email,
+                pwd: password,
+                group_id: group.get("id"),
+                school_account: schoolAccount,
+                school_pwd: schoolPwd,
+                nick: nick,
+                name: name,
+                class: userClass,
+                entranceTime: entranceTime,
+                finish_year: finishYear
             };
             models.Account.create(NewAccount).then(function(account) {
                 resolve();
             }).catch(function(error) {
                 reject(error);
             });
-        }).catch(function(error){
+        }).catch(function(error) {
             reject(error);
         });
     });

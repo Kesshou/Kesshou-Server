@@ -34,6 +34,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      class: {
+        type: Sequelize.STRING
+      },
+      entranceTime: {
+        type: Sequelize.STRING
+      },
       finish_year: {
         type: Sequelize.INTEGER
       },
