@@ -20,15 +20,24 @@ var router = express.Router();
 */
 router.get('/announce', function(req, res, next) {
     var announce;
-    var type = req.type;
-    if(type != "collect") {
-        announce = AnnounceRepository.getAnnouncement("sort", type);
+    var sort = req.body.sort;
+    if(sort != "collect") {
+        AnnounceRepository.getAnnouncement("sort", sort).then(function(result) {
+            res.status(200).json({"announce" : result});
+        }).catch(function(error) {
+            res.status(500).json({"error" : error});
+        });
     } else {
-        var account = RedisRepository.getAccount(req.token);
-        var userID = UserRepository.getUserInfo(account)
-        announce = AnnounceRepository.getCollection(userID);
+        // RedisRepository.getAccount(req.token).then(function(result) {
+        //     return UserRepository.getUserInfo(result);
+        // }).then(function(result) {
+        //     return AnnounceRepository.getCollection(result);
+        // }).then(function(result) {
+        //     res.status(200).json({"announce" : result});
+        // }).catch(function(error) {
+        //     res.status(500).json({"error" : error});
+        // });
     }
-    res.status(200).json({"announce" : announce});
 });
 
 module.exports = router;

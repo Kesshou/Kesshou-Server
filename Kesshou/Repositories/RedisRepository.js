@@ -42,11 +42,7 @@ var set = function(token, account) {
 var getAccount = function(token) {
     return new Promise(function(resolve, reject) {
         cache.getAsync(token).then(function(result) {
-            if(result != null) {
                 resolve(result);
-            } else {
-                reject("token過期");
-            }
         });
     });
 }

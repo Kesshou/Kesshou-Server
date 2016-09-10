@@ -20,12 +20,9 @@ var getUserPassword = function(account, oldAccount) {
         if(oldAccount == account) {
             reject("old");
         } else {
-            models.Account.findOne({ where: {email: account} })
-            .then(function(result){
+            models.Account.findOne({ where: {email: account} }).then(function(result){
                 resolve(result.get("pwd"));
-            })
-            .catch(function(error) {
-                //debug(error.toString());
+            }).catch(function(error) {
                 reject("帳號有誤");
             });
         }
@@ -49,8 +46,7 @@ var getUserPassword = function(account, oldAccount) {
 */
 var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name) {
     return new Promise(function(resolve, reject) {
-        models.Group.findOne({ where: {comment: userGroup} })
-        .then(function(group){
+        models.Group.findOne({ where: {comment: userGroup} }).then(function(group){
             var NewAccount={
                 email:email,
                 pwd:password,
@@ -59,16 +55,13 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
                 school_pwd:schoolPwd,
                 nick:nick,
                 name:name
-            }
-            models.Account.create(NewAccount)
-            .then(function(account) {
+            };
+            models.Account.create(NewAccount).then(function(account) {
                 resolve();
-            })
-            .catch(function(error) {
+            }).catch(function(error) {
                 reject(error);
             });
-        })
-        .catch(function(error){
+        }).catch(function(error){
             reject(error);
         });
     });
@@ -91,17 +84,11 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
 */
 var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newEmail, newName) {
     return new Promise(function(resolve, reject){
-        models.Account.findOne({where: {email: account}})
-        .then(function(result){
-            result.update({school_pwd: newSchoolPwd, nick: newNick, pwd: newPassword, email: newEmail, name: newName})
-            .then(function(result){
-                resolve();
-            })
-            .catch(function(error){
-                reject(error);
-            });
-        })
-        .catch(function(error){
+        models.Account.findOne({ where: {email: account} }).then(function(result){
+            return result.update({school_pwd: newSchoolPwd, nick: newNick, pwd: newPassword, email: newEmail, name: newName});
+        }).then(function(result){
+            resolve();
+        }).catch(function(error){
             reject(error);
         });
     });
@@ -120,11 +107,9 @@ var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newE
 */
 var getUserInfo = function (account) {
     return new Promise(function(resolve, reject) {
-        models.Account.findOne({where:{email:account}})
-        .then(function(result){
-            resolve(result);
-        })
-        .catch(function(error){
+        models.Account.findOne({ where: {email: account} }).then(function(result) {
+            resolve(result.get());
+        }).catch(function(error) {
             reject(error);
         });
     });
