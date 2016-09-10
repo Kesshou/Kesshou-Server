@@ -10,6 +10,7 @@ var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 var actmanage = require('./routes/actmanage');
 //var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
+var qanda = require('./routes/QandA');;
 
 var app = express();
 
@@ -31,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // })
 
 app.use('/actmanage', actmanage);
-
+app.use('/qanda', qanda);
 app.use(function(req, res, next) {
     var token =req.body.token;
     RedisRepository.getAccount(token).then(function(result) {

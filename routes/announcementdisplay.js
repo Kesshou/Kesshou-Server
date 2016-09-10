@@ -17,6 +17,7 @@ var router = express.Router();
         status code:
             200: register successfully.
         announce: the announcement shich was found.
+        error: the reason of error.
 */
 router.get('/announce', function(req, res, next) {
     var announce;
