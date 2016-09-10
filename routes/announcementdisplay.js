@@ -20,23 +20,23 @@ var router = express.Router();
 */
 router.get('/announce', function(req, res, next) {
     var announce;
-    var type = req.type;
-    if(type != "collect") {
-        AnnounceRepository.getAnnouncement("sort", type).then(function(result) {
-            res.status(200).json({"announce" : announce});
+    var sort = req.body.sort;
+    if(sort != "collect") {
+        AnnounceRepository.getAnnouncement("sort", sort).then(function(result) {
+            res.status(200).json({"announce" : result});
         }).catch(function(error) {
             res.status(500).json({"error" : error});
         });
     } else {
-        RedisRepository.getAccount(req.token).then(function(result) {
-            return UserRepository.getUserInfo(result);
-        }).then(function(result) {
-            return AnnounceRepository.getCollection(result);
-        }).then(function(result) {
-            res.status(200).json({"announce" : announce});
-        }).catch(function(error) {
-            res.status(500).json({"error" : error});
-        });
+        // RedisRepository.getAccount(req.token).then(function(result) {
+        //     return UserRepository.getUserInfo(result);
+        // }).then(function(result) {
+        //     return AnnounceRepository.getCollection(result);
+        // }).then(function(result) {
+        //     res.status(200).json({"announce" : result});
+        // }).catch(function(error) {
+        //     res.status(500).json({"error" : error});
+        // });
     }
 });
 

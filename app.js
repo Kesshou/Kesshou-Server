@@ -36,6 +36,7 @@ app.use(function(req, res, next) {
     var token =req.body.token;
     RedisRepository.getAccount(token).then(function(result) {
         if(result) {
+            console.log("token正確");
             next();
         } else {
             res.status(408).json({"error" : "token過期"});

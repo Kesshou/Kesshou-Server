@@ -55,7 +55,7 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
                 school_pwd:schoolPwd,
                 nick:nick,
                 name:name
-            }
+            };
             models.Account.create(NewAccount).then(function(account) {
                 resolve();
             }).catch(function(error) {
