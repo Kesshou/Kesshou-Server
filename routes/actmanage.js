@@ -64,6 +64,7 @@ var createToken = function(account) {
             401: your account or password is wrong.
             406: your inputs have some illegal chars.
             408: your token was expired.(just used at debug)
+            500: server error.
         token(if login successfully):
             it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.

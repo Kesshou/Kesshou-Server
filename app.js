@@ -8,8 +8,9 @@ var bodyParser = require('body-parser');
 var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
-//var scorequery = require('./routes/scorequery');
+var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
+var attitudestatus = require('./routes/attitudestatus');
 var qanda = require('./routes/QandA');;
 
 var app = express();
@@ -32,7 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // })
 
 app.use('/actmanage', actmanage);
+app.use('/announcementdisplay', announcementdisplay);
 app.use('/qanda', qanda);
+
 app.use(function(req, res, next) {
     var token =req.body.token;
     RedisRepository.getAccount(token).then(function(result) {
@@ -44,8 +47,8 @@ app.use(function(req, res, next) {
         }
     });
 });
-//app.use('/scorequery', scorequery);
-app.use('/announcementdisplay', announcementdisplay);
+app.use('/scorequery', scorequery);
+app.use('/attitudestatus', attitudestatus);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

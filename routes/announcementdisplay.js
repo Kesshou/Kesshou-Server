@@ -16,7 +16,7 @@ var router = express.Router();
     return:
         status code:
             200: register successfully.
-        announce: the announcement shich was found.
+        announce: the announcement which was found.
         error: the reason of error.
 */
 router.get('/announce', function(req, res, next) {
@@ -29,7 +29,7 @@ router.get('/announce', function(req, res, next) {
             res.status(500).json({"error" : error});
         });
     } else {
-        // RedisRepository.getAccount(req.token).then(function(result) {
+        // RedisRepository.getAccount(req.body.token).then(function(result) {
         //     return UserRepository.getUserInfo(result);
         // }).then(function(result) {
         //     return AnnounceRepository.getCollection(result);
