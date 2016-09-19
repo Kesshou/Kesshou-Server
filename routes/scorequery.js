@@ -15,7 +15,7 @@ var router = express.Router();
 *Usage:
     return:
         status code:
-            200: login successfully.
+            200: get history score successfully.
             500: server error.
         absentState: an array, each item contains type, credit, score, makeup(optional), retake(optional), and qualify.
         error: it is a string to explain the reason of error.
@@ -38,11 +38,11 @@ router.get('/historyscore', function(req, res, next) {
 /*
 *Author: blackkite0206233
 *Description:
-    This function is the API which was used to return history score.
+    This function is the API which was used to return sectional exam score.
 *Usage:
     return:
         status code:
-            200: login successfully.
+            200: get sectional exam score successfully.
             500: server error.
         absentState: an array, each item contains first_section, second_section, last_section, performance, and average.
         error: it is a string to explain the reason of error.

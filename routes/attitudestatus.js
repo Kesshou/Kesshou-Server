@@ -15,7 +15,7 @@ var router = express.Router();
 *Usage:
     return:
         status code:
-            200: login successfully.
+            200: get attituds status successfully.
             500: server error.
         attitudeStatus: contains date, item, and text.
         error: it is a string to explain the reason of error.
