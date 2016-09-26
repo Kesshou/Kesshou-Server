@@ -3,7 +3,7 @@
 *Description: This file is used to control the redis server.
 */
 var Promise =require('bluebird');
-var UserRepository = require('./Kesshou/Repositories/UserRepository');
+var UserRepository = require('./UserRepository');
 var redis = Promise.promisifyAll(require('redis'));
 
 var existTime = 60 * 30; // 30 mins
@@ -66,5 +66,5 @@ module.exports = {
 
         getAccount: getAccount,
 
-        getSchoolData: getSchoolData;
+        getSchoolData: getSchoolData
 };
