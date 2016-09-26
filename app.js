@@ -26,13 +26,6 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', function(req, res, next){
-//     var a = [{"name" : "aaa", "age" : "1"},
-//                     {"name" : "bbb", "age" : "2"},
-//                     {"name" : "ccc", "age" : "3"}];
-//     console.log(a.length);
-// })
-
 app.use('/actmanage', actmanage);
 app.use('/announcementdisplay', announcementdisplay);
 app.use('/qanda', qanda);

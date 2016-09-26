@@ -37,9 +37,6 @@ module.exports = {
       class: {
         type: Sequelize.STRING
       },
-      entranceTime: {
-        type: Sequelize.STRING
-      },
       finish_year: {
         type: Sequelize.INTEGER
       },
