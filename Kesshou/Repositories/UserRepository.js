@@ -21,9 +21,42 @@ var getUserPassword = function(account, oldAccount) {
             reject("old");
         } else {
             models.Account.findOne({ where: {email: account} }).then(function(result){
-                resolve(result.get("pwd"));
+                if(result) {
+                    resolve(result.get("pwd"));
+                } else {
+                    reject("帳號有誤");
+                }
             }).catch(function(error) {
                 reject("帳號有誤");
+            });
+        }
+    });
+}
+
+/*
+*Author: blackkite0206233,yoyo930021
+*Description:
+    This function is used to check if database has the same nick.  Used promise.
+*Usage:
+    nick: user's nick.
+    oldNick: if it didn't has oldNick, it is "".
+    return:
+        resolve:
+        reject: "暱稱已被使用".
+*/
+var checkSameNick = function(nick, oldNick) {
+    return new Promise(function(resolve, reject) {
+        if(nick == oldNick) {
+            resolve();
+        } else {
+            models.Account.findOne({ where: {nick: nick} }).then(function(result) {
+                if(result) {
+                    reject("暱稱已被使用");
+                } else {
+                    resolve();
+                }
+            }).catch(function(error) {
+                resolve();
             });
         }
     });
@@ -44,7 +77,7 @@ var getUserPassword = function(account, oldAccount) {
         resolve:
         reject: error.
 */
-var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, entranceTime, finishYear) {
+var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, finishYear) {
     return new Promise(function(resolve, reject) {
         models.Group.findOne({ where: {comment: userGroup} }).then(function(group){
             var NewAccount = {
@@ -56,7 +89,6 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
                 nick: nick,
                 name: name,
                 class: userClass,
-                entranceTime: entranceTime,
                 finish_year: finishYear
             };
             models.Account.create(NewAccount).then(function(account) {
@@ -122,6 +154,8 @@ var getUserInfo = function (account) {
 module.exports = {
 
     getUserPassword: getUserPassword,
+
+    checkSameNick: checkSameNick,
 
     createUser: createUser,
 

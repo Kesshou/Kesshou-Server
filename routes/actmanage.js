@@ -8,6 +8,7 @@ var bcrypt = require('bcrypt-nodejs');
 
 var UserRepository = require('../Kesshou/Repositories/UserRepository');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
+var ClassRepository = require('../Kesshou/Repositories/ClassRepository');
 var CheckCharactersService = require('../Kesshou/Services/CheckCharactersService');
 var CheckStuWebSpider = require('../Kesshou/WebSpiders/CheckStuWebSpider');
 
@@ -20,7 +21,6 @@ var router = express.Router();
     resolve: token;
 */
 var getUnusedToken = function() {
-    console.log("尋找未使用的token");
     var token = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
     return new Promise(function(resolve, reject) {
         RedisRepository.getAccount(token).then(function(result){
@@ -44,7 +44,6 @@ var getUnusedToken = function() {
         resolve: token.
 */
 var createToken = function(account) {
-    console.log("建立token");
     return new Promise(function(resolve, reject) {
         getUnusedToken().then(function(result) {
             RedisRepository.set(result, account);
@@ -76,15 +75,10 @@ router.post('/login', function(req, res, next) {
     CheckCharactersService.checkEmail(user.account).then(function() {
             return UserRepository.getUserPassword(user.account, "");
         }).then(function(result) {
-            console.log("無非法字元");
-            console.log("帳號正確");
-            console.log(result);
             if(undefined == user.password || !bcrypt.compareSync(user.password, result)) {
                 res.status(401).json({"error" : "密碼錯誤"});
             } else {
-                console.log("密碼正確");
-                createToken(user.account)
-                .then(function(result) {
+                createToken(user.account).then(function(result) {
                     res.status(200).json({ "token" :  result});
                 });
             }
@@ -134,31 +128,43 @@ router.post('/register', function(req, res, next) {
     var checkEmail = CheckCharactersService.checkEmail(user.email);
     var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
     var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
-    var checkNick = CheckCharactersService.allowNumbersAndAlphabets(user.nick);
-    var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "outside"]);
+    var checkNick = CheckCharactersService.checkIllegalChar(user.nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
+    var checkName = CheckCharactersService.checkIllegalChar(name, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
+    var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "night"]);
 
-    Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkUserGroup]).then(function() {
+    Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkName, checkUserGroup]).then(function() {
         return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name);
     }).then(function(result) {
-        var userName = result[0];
-        var userClass = "";
-        var entranceTime = "";
+        var stuClass = "";
         var finishYear = "";
         if(user.user_group == "student") {
-            userClass = result[1];
-            entranceTime = result[2];
-            finishYear = result[3];
+            name = result[0];
+            stuClass = result[1];
         }
         UserRepository.getUserPassword(user.email, "").then(function(result) {
             res.status(401).json({"error" : "帳號已被使用"});
         }).catch(function(error) {
-            UserRepository.createUser(user.email, hsahPassword, user.user_group, schoolAccount,
-                schoolPwd, user.nick, userName, userClass, entranceTime, finishYear).then(function() {
+            UserRepository.checkSameNick(user.nick, "").then(function(result) {
+                return ClassRepository.getFinishYear(stuClass);
+            }).then(function(result) {
+                if(user.user_group == "student") {
+                    finishYear = result;
+                }
+                return UserRepository.createUser(user.email, hsahPassword, user.user_group,
+                    schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
+            }).then(function() {
                 return createToken(user.email);
             }).then(function(result) {
                 res.status(200).json({ "token" :  result});
             }).catch(function(error) {
-                res.status(500).json({"error" : error});
+                switch (error) {
+                    case "暱稱已被使用":
+                        res.status(401).json({"error" : error});
+                        break;
+                    default:
+                        res.status(500).json({"error" : error});
+                        break;
+                }
             });
         });
     }).catch(function(error) {
@@ -189,13 +195,13 @@ router.put('/updateinfo', function(req, res, next) {
             UserRepository.getUserInfo(result).then(function(result) {
                 var userInfo = result;
                 var newSchoolPwd = (updateData.new_school_pwd != undefined) ? updateData.new_school_pwd : userInfo.school_pwd;
-                var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfonick;
+                var newNick = (updateData.new_nick != undefined) ? updateData.new_nick : userInfo.nick;
                 var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
                 var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
 
                 var checkEmail = CheckCharactersService.checkEmail(newEmail);
                 var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
-                var checkNick = CheckCharactersService.allowNumbersAndAlphabets(newNick);
+                var checkNick = CheckCharactersService.checkIllegalChar(newNick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
 
                 if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
                     res.status(401).json({"error" : "帳號密碼錯誤"});
@@ -207,11 +213,20 @@ router.put('/updateinfo', function(req, res, next) {
                         UserRepository.getUserPassword(newEmail, userInfo.email).then(function(result) {
                             res.status(401).json({"error" : "帳號已被使用"});
                         }).catch(function(error) {
-                            UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName).then(function() {
+                            UserRepository.checkSameNick(newNick, userInfo.nick).then(function(result) {
+                                return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
+                            }).then(function() {
                                 RedisRepository.set(updateData.token, userInfo.email);
                                 res.status(200).json({ "success" :  "更新成功"});
                             }).catch(function(error) {
-                                res.status(500).json({"error" : error});
+                                switch (error) {
+                                    case "暱稱已被使用":
+                                        res.status(401).json({"error" : error});
+                                        break;
+                                    default:
+                                        res.status(500).json({"error" : error});
+                                        break;
+                                }
                             });
                         });
                     }).catch(function(error) {
