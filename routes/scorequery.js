@@ -29,9 +29,10 @@ router.get('/historyscore', function(req, res, next) {
         var schoolPwd = result.school_pwd;
         return ScoreWebSpiders.getHistoryScore(schoolAccount, schoolPwd, grade, semester);
     }).then(function(result) {
-        res.status(200).json("score" : result);
+        res.status(200).json({"score" : result});
     }).catch(function(error) {
-        res.status(500).json("error" : error);
+        console.log(error);
+        res.status(500).json({"error" : error});
     });
 });
 
@@ -55,9 +56,9 @@ router.get('/sectionalexamscore', function(req, res, next) {
         var schoolPwd = result.school_pwd;
         return ScoreWebSpiders.getSectionalExamScore(schoolAccount, schoolPwd, semester);
     }).then(function(result) {
-        res.status(200).json("score" : result);
+        res.status(200).json({"score" : result});
     }).catch(function(error) {
-        res.status(500).json("error" : error);
+        res.status(500).json({"error" : error});
     });
 })
 
