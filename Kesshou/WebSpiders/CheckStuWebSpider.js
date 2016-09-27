@@ -61,7 +61,7 @@ var checkStuAccount = function(stu_id, stu_pwd, name) {
                                 reject("學校驗證錯誤");
                             } else {
                                 var $ = cheerio.load(iconv.decode(new Buffer(body, "binary"), "Big5"));
-                                resolve($("b").eq(4).text().substr(3));
+                                resolve([$("b").eq(4).text().substr(3), $("b").eq(1).text().substr(4, 4)]);
                             }
                         });
                     } else {

@@ -33,6 +33,29 @@ var allowNumbersAndAlphabets = function(input) {
 /*
 *Author: blackkite0206233
 *Description:
+    This function is used to check if the sentence has illegal characters.  Used promise.
+*Usage:
+    input: a sentence which you want to check.
+    check: an array has illegal characters.
+    return:
+        resolve:
+        reject: "非法字元".
+*/
+var checkIllegalChar = function(input, checkArray) {
+    return new Promise(function(resolve, reject) {
+        for(var i = 0; i < checkArray.length; i++){
+            if(input.indexOf(checkArray[i]) != -1) {
+                reject("非法字元");
+            }
+        }
+        resolve();
+    });
+
+}
+
+/*
+*Author: blackkite0206233
+*Description:
     This function is used to check Email's format.  Used promise.
 *Usage:
     input: an email which you want to check.
@@ -77,6 +100,8 @@ var checkData = function(input, checkData) {
 
 module.exports = {
     allowNumbersAndAlphabets: allowNumbersAndAlphabets,
+
+    checkIllegalChar: checkIllegalChar,
 
     checkEmail: checkEmail,
 

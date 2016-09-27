@@ -8,8 +8,11 @@ var bodyParser = require('body-parser');
 var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
 var actmanage = require('./routes/actmanage');
-//var scorequery = require('./routes/scorequery');
+var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
+var attitudestatus = require('./routes/attitudestatus');
+var qanda = require('./routes/QandA');
+var curriculum = require('./routes/curriculum');
 
 var app = express();
 
@@ -23,14 +26,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', function(req, res, next){
-//     var a = [{"name" : "aaa", "age" : "1"},
-//                     {"name" : "bbb", "age" : "2"},
-//                     {"name" : "ccc", "age" : "3"}];
-//     console.log(a.length);
-// })
-
 app.use('/actmanage', actmanage);
+app.use('/announcementdisplay', announcementdisplay);
+app.use('/qanda', qanda);
 
 app.use(function(req, res, next) {
     var token =req.body.token;
@@ -43,8 +41,9 @@ app.use(function(req, res, next) {
         }
     });
 });
-//app.use('/scorequery', scorequery);
-app.use('/announcementdisplay', announcementdisplay);
+app.use('/scorequery', scorequery);
+app.use('/attitudestatus', attitudestatus);
+app.use('/curriculum', curriculum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

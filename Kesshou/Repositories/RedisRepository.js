@@ -3,6 +3,7 @@
 *Description: This file is used to control the redis server.
 */
 var Promise =require('bluebird');
+var UserRepository = require('./UserRepository');
 var redis = Promise.promisifyAll(require('redis'));
 
 var existTime = 60 * 30; // 30 mins
@@ -47,9 +48,23 @@ var getAccount = function(token) {
     });
 }
 
+var getSchoolData = function(token) {
+    return new Promise(function(resolve, reject) {
+        getAccount(token).then(function(result) {
+            return UserRepository.getUserInfo(result);
+        }).then(function(result) {
+            resolve(result);
+        }).catch(function(error) {
+            reject(error);
+        })
+    });
+}
+
 module.exports = {
 
         set: set,
 
-        getAccount: getAccount
+        getAccount: getAccount,
+
+        getSchoolData: getSchoolData
 };

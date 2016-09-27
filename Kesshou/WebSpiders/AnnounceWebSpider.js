@@ -5,7 +5,6 @@ var request = Promise.promisifyAll(require("request"));
 var iconv = require("iconv-lite");
 var cheerio = require("cheerio");
 var urlencode = require('urlencode');
-var bcrypt = require('bcrypt-nodejs');
 //var Sequelize = require('sequelize');
 //var sequelize = new Sequelize('DaanX', 'root', 'u,4aup3vm0 ', {host : '127.0.0.1', port : '3306', dialect : 'mariadb'});
 var models = Promise.promisifyAll(require('../../models'));
@@ -98,64 +97,10 @@ var getNewsParser = function ($) {
 
 }
 
-// var News = sequelize.define('News', {
-//     // auto increment, primaryKey, unique
-//     id : {type : Sequelize.INTEGER, autoIncrement : true, primaryKey : true, unique : true},
-//
-//     // comment
-//     title : {type : Sequelize.STRING, comment : 'Task title'},
-//
-//     // allow null
-//     description : {type : Sequelize.TEXT, allowNull : true},
-//
-//     // default value
-//     deadline : {type : Sequelize.DATE, defaultValue : Sequelize.NOW}
-// });
-
-
 var keyNotExist=0;
 var keyNotExistLimit=15;
 
 var keySave=33349;
-
-
-/*
-*Author: blackkite0206233
-*Description: A function used to get an unused key.  Used promise.
-*Usage:
-    resolve: key;
-*/
-// var getUnusedToken = function() {
-//     console.log("尋找未使用的key");
-//     var key = bcrypt.genSaltSync(40).toString('base64').substr(7, 20);
-//     return new Promise(function(resolve, reject) {
-//         models.News.findOne({ where: {key: key} }).then(function(result){
-//             if(result) {
-//                 getUnusedToken().then(resolve);
-//             } else {
-//                 resolve(token);
-//             };
-//         })
-//     });
-// }
-
-
-/*
-*Author: blackkite0206233
-*Description:
-    This function is used to create a key.  Used promise.
-*Usage:
-    return:
-        resolve: key.
-*/
-// var createKey = function() {
-//     console.log("建立key");
-//     return new Promise(function(resolve, reject) {
-//         getUnusedKey().then(function(result) {
-//             resolve(result);
-//         });
-//     })
-// }
 
 var repeater = function (startKey) {
     return checkNewsExist(startKey).then(function ($) {
@@ -202,30 +147,6 @@ var repeater = function (startKey) {
                     }
                 });
             });
-            // createKey().then(function(result) {
-            //     var promises = [];
-            //     for(var i = 0; i < newsOne.img.length; i++) {
-            //         var img = {
-            //             "file_src" : newsOne.img[i],
-            //             "news_key" : result,
-            //             "type" : "img"
-            //         };
-            //         promises.push(models.News_file.create(img));
-            //     }
-            //     for(var i = 0; i < newsOne.file.length; i++) {
-            //         var file = {
-            //             "file_src" : newsOne.file[i][1],
-            //             "news_key" : result,
-            //             "type" : "file",
-            //             "file_name" : newsOne.file[i][0]
-            //         };
-            //         promises.push(models.News_file.create(file));
-            //     }
-            //     var news = {
-            //         ""
-            //     }
-            //     models.News.create(news)
-            // });
         });
         return repeater(startKey+1);
     }).catch(function () {
