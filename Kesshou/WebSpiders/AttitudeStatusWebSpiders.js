@@ -44,7 +44,7 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
                 var attitudeStatu = {};
                 var sub = rows.eq(i).children();
                 var date = sub.eq(3).text().trim();
-                attitudeStatu.date = parseInt(date.substr(0, 3)).toString() + date.substr(3).replace(".", "/").replace(".", "/");
+                attitudeStatu.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
                 attitudeStatu.item = sub.eq(5).text().trim();
                 attitudeStatu.text = sub.eq(6).text().trim();
                 attitudeStatus.push(attitudeStatu);
