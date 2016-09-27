@@ -3,7 +3,7 @@
 *Description: This file is the API of curriculum.
 */
 var express = require('express');
-var AttitudeStatusWebSpiders = require('../Kesshou/WebSpiders/CurriculumWebSpider');
+var CurriculumWebSpider = require('../Kesshou/WebSpiders/CurriculumWebSpider');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 
 var router = express.Router();
@@ -23,13 +23,14 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     var token = req.body.token;
     RedisRepository.getSchoolData(token).then(function(result) {
-        var schoolAccount = result.school_account;
-        var schoolPwd = result.school_pwd;
-        return CurriculumWebSpider.getCurriculum(schoolAccount, schoolPwd);
+        var stuClass = result.class;
+        var finishYear = result.finish_year;
+        var Class = stuClass.substr(0, 2) + finishYear + stuClass.substr(3);
+        return CurriculumWebSpider.getCurriculum(Class);
     }).then(function(result) {
-        res.status(200).json("curriculum" : result);
+        res.status(200).json({"curriculum" : result});
     }).catch(function(error) {
-        res.status(500).json("error" : error);
+        res.status(500).json({"error" : error});
     });
 });
 
