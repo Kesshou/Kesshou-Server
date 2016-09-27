@@ -27,9 +27,10 @@ router.get('/', function(req, res, next) {
         var schoolPwd = result.school_pwd;
         return AttitudeStatusWebSpiders.getAttitudeStatus(schoolAccount, schoolPwd);
     }).then(function(result) {
-        res.status(200).json("attitudeStatus" : result);
+        res.status(200).json({"attitudeStatus" : result});
     }).catch(function(error) {
-        res.status(500).json("error" : error);
+        console.log(error);
+        res.status(500).json({"error" : error});
     });
 });
 
