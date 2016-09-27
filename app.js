@@ -11,6 +11,7 @@ var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
 var attitudestatus = require('./routes/attitudestatus');
+var absentstate = require('./routes/absentstate');
 var qanda = require('./routes/QandA');
 var curriculum = require('./routes/curriculum');
 
@@ -43,6 +44,7 @@ app.use(function(req, res, next) {
 });
 app.use('/scorequery', scorequery);
 app.use('/attitudestatus', attitudestatus);
+app.use('/absentstate', absentstate);
 app.use('/curriculum', curriculum);
 
 // catch 404 and forward to error handler
