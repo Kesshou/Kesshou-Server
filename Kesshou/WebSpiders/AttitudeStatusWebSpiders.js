@@ -1,0 +1,106 @@
+var Promise = require('bluebird');
+var request = Promise.promisifyAll(require("request"));
+var fs = Promise.promisifyAll(require("fs"));
+var iconv = require("iconv-lite");
+var cheerio = require("cheerio");
+var urlencode = require('urlencode');
+
+var j = request.jar();
+var ca;
+
+var getAttitudeStatus = function(schoolAccount, schoolPwd) {
+    return new Promise(function(resolve, reject) {
+        fs.readFileAsync(__dirname + "/cert/taivsca.crt").then(function(result) {
+            ca = result;
+            var formLogin = {
+                url: "https://stuinfo.taivs.tp.edu.tw/Reg_Stu.ASP",
+                form: {
+                    "txtS_NO": schoolAccount,
+                    "txtPerno": schoolPwd
+                },
+                jar: j,
+                agentOptions: {
+                    ca: ca,
+                },
+                encoding: "binary",
+                followAllRedirects: true
+            };
+            return request.postAsync(formLogin);
+        }).then(function(result) {
+            var formAttitude = {
+                url: "https://stuinfo.taivs.tp.edu.tw/ds.asp",
+                agentOptions: {
+                    ca: ca,
+                },
+                encoding: "binary",
+                jar: j
+            };
+            return request.getAsync(formAttitude);
+        }).then(function(result) {
+            var AttitudeStatus = [];
+            var AttitudeCount = {
+                smallcite: 0,
+                smallfault: 0,
+                middlecite: 0,
+                middlefault: 0,
+                bigcite: 0,
+                bigfault: 0,
+            };
+            var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"), "Big5"));
+            var rows = $("table tr");
+            for(var i = 2; i < rows.length; i++) {
+                var attitudeStatus = {};
+                var sub = rows.eq(i).children();
+                var date = sub.eq(3).text().trim();
+                attitudeStatus.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
+                attitudeStatus.item = sub.eq(5).text().trim();
+                attitudeStatus.text = sub.eq(6).text().trim();
+                AttitudeStatus.push(attitudeStatus);
+                var flag = 0;
+                for(var j = 0; j < attitudeStatus.item.length; j++) {
+                    if(attitudeStatus.item[j] == "次") {
+                        flag = 0;
+                        continue;
+                    }
+                    var num = "";
+                    if(flag == 0) {
+                        for(var k = j + 2; attitudeStatus.item[k] != "次"; k++) {
+                            num += String.fromCharCode(attitudeStatus.item.substr(k, 1).charCodeAt(0) - 65248);
+                        }
+                        switch(attitudeStatus.item.substr(j, 2)) {
+                            case "嘉獎":
+                                AttitudeCount.smallcite += parseInt(num);
+                                break;
+                            case "小功":
+                                AttitudeCount.middlecite += parseInt(num);
+                                break;
+                            case "大功":
+                                AttitudeCount.bigcite += parseInt(num);
+                                break;
+                            case "警告":
+                                AttitudeCount.smallfault += parseInt(num);
+                                break;
+                            case "小過":
+                                AttitudeCount.middlefault += parseInt(num);
+                                break;
+                            case "大過":
+                                AttitudeCount.bigfault += parseInt(num);
+                                break;
+                        }
+                        flag = 1;
+                    }
+                }
+            }
+            AttitudeStatus.count = AttitudeCount;
+            console.log(AttitudeStatus);
+            resolve(AttitudeStatus);
+        }).catch(function(error) {
+            reject(error);
+        });
+    });
+}
+
+module.exports = {
+
+    getAttitudeStatus: getAttitudeStatus
+};
