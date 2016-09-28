@@ -120,6 +120,7 @@ router.post('/register', function(req, res, next) {
     if(user.password == undefined || user.password == "") {
         res.status(406).json({"error" : "非法字元"});
     }
+    console.log("密碼不為空值");
     var hsahPassword = bcrypt.hashSync(user.password);
     var schoolAccount = (user.school_account != undefined) ? user.school_account : "";
     var schoolPwd = (user.school_pwd != undefined) ? user.school_pwd : "";
@@ -133,8 +134,10 @@ router.post('/register', function(req, res, next) {
     var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "night"]);
 
     Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkName, checkUserGroup]).then(function() {
+        console.log("無非法字元");
         return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name);
     }).then(function(result) {
+        console.log("學生驗證正確");
         var stuClass = "";
         var finishYear = "";
         if(user.user_group == "student") {
@@ -145,18 +148,23 @@ router.post('/register', function(req, res, next) {
             res.status(401).json({"error" : "帳號已被使用"});
         }).catch(function(error) {
             UserRepository.checkSameNick(user.nick, "").then(function(result) {
+                console.log("暱稱沒被使用");
                 return ClassRepository.getFinishYear(stuClass);
             }).then(function(result) {
                 if(user.user_group == "student") {
                     finishYear = result;
                 }
+                console.log("取得畢業年");
                 return UserRepository.createUser(user.email, hsahPassword, user.user_group,
                     schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
             }).then(function() {
+                console.log("成功建立使用者");
                 return createToken(user.email);
             }).then(function(result) {
+                console.log("取得token");
                 res.status(200).json({ "token" :  result});
             }).catch(function(error) {
+                console.log(error);
                 switch (error) {
                     case "暱稱已被使用":
                         res.status(401).json({"error" : error});
