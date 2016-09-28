@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'school_qa'
+    tableName: 'school_qas'
   });
   return School_qa;
 };

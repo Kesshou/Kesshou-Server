@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
                 // associations can be defined here
             }
         },
-        tableName: 'news_file'
+        tableName: 'news_files'
     });
     return News_file;
 };

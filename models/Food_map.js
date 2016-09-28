@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'food_map'
+    tableName: 'food_maps'
   });
   return Food_map;
 };

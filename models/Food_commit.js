@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'food_commit'
+    tableName: 'food_commits'
   });
   return Food_commit;
 };
