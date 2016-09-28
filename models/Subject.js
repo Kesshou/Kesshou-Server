@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Subject = sequelize.define('subject', {
+  var Subject = sequelize.define('Subject', {
     name: DataTypes.STRING,
     required: DataTypes.BOOLEAN,
     credit: DataTypes.INTEGER
