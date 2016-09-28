@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var School_qa = sequelize.define('school_qa', {
+  var School_qa = sequelize.define('School_qa', {
     question: DataTypes.STRING,
     answear: DataTypes.STRING
   }, {

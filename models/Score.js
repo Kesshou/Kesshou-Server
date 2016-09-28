@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Score = sequelize.define('score', {
+  var Score = sequelize.define('Score', {
     student_id: DataTypes.INTEGER,
     subject_id: DataTypes.INTEGER,
     title: DataTypes.STRING,

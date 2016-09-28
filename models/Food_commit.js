@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Food_commit = sequelize.define('food_commit', {
+  var Food_commit = sequelize.define('Food_commit', {
     author_id: DataTypes.INTEGER,
     map_id: DataTypes.INTEGER,
     content: DataTypes.STRING,
