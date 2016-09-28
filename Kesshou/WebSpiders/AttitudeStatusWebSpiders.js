@@ -37,21 +37,63 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
             };
             return request.getAsync(formAttitude);
         }).then(function(result) {
-            var attitudeStatus = [];
+            var AttitudeStatus = [];
+            var AttitudeCount = {
+                smallcite: 0,
+                smallfault: 0,
+                middlecite: 0,
+                middlefault: 0,
+                bigcite: 0,
+                bigfault: 0,
+            };
             var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"), "Big5"));
             var rows = $("table tr");
             for(var i = 2; i < rows.length; i++) {
-                var attitudeStatu = {};
+                var attitudeStatus = {};
                 var sub = rows.eq(i).children();
                 var date = sub.eq(3).text().trim();
-                attitudeStatu.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
-                attitudeStatu.item = sub.eq(5).text().trim();
-                attitudeStatu.text = sub.eq(6).text().trim();
-                attitudeStatus.push(attitudeStatu);
-
+                attitudeStatus.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
+                attitudeStatus.item = sub.eq(5).text().trim();
+                attitudeStatus.text = sub.eq(6).text().trim();
+                AttitudeStatus.push(attitudeStatus);
+                var flag = 0;
+                for(var j = 0; j < attitudeStatus.item.length; j++) {
+                    if(attitudeStatus.item[j] == "次") {
+                        flag = 0;
+                        continue;
+                    }
+                    var num = "";
+                    if(flag == 0) {
+                        for(var k = j + 2; attitudeStatus.item[k] != "次"; k++) {
+                            num += String.fromCharCode(attitudeStatus.item.substr(k, 1).charCodeAt(0) - 65248);
+                        }
+                        switch(attitudeStatus.item.substr(j, 2)) {
+                            case "嘉獎":
+                                AttitudeCount.smallcite += parseInt(num);
+                                break;
+                            case "小功":
+                                AttitudeCount.middlecite += parseInt(num);
+                                break;
+                            case "大功":
+                                AttitudeCount.bigcite += parseInt(num);
+                                break;
+                            case "警告":
+                                AttitudeCount.smallfault += parseInt(num);
+                                break;
+                            case "小過":
+                                AttitudeCount.middlefault += parseInt(num);
+                                break;
+                            case "大過":
+                                AttitudeCount.bigfault += parseInt(num);
+                                break;
+                        }
+                        flag = 1;
+                    }
+                }
             }
-            console.log(attitudeStatus);
-            resolve(attitudeStatus);
+            AttitudeStatus.count = AttitudeCount;
+            console.log(AttitudeStatus);
+            resolve(AttitudeStatus);
         }).catch(function(error) {
             reject(error);
         });
