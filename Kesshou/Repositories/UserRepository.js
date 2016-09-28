@@ -94,9 +94,11 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
             models.Account.create(NewAccount).then(function(account) {
                 resolve();
             }).catch(function(error) {
+                console.log(error);
                 reject(error);
             });
         }).catch(function(error) {
+            console.log(error);
             reject(error);
         });
     });
@@ -124,6 +126,7 @@ var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newE
         }).then(function(result){
             resolve();
         }).catch(function(error){
+            console.log(error);
             reject(error);
         });
     });
