@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Food_map = sequelize.define('Food_map', {
+  var Food_map = sequelize.define('food_map', {
     name: DataTypes.STRING,
     content: DataTypes.STRING,
     where: DataTypes.STRING,

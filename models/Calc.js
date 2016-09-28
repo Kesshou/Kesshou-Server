@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Calc = sequelize.define('Calc', {
+  var Calc = sequelize.define('calc', {
     date: DataTypes.DATE,
     content: DataTypes.STRING
   }, {
