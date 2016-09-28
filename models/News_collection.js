@@ -8,7 +8,8 @@ module.exports = function(sequelize, DataTypes) {
             associate: function(models) {
                 // associations can be defined here
             }
-        }
+        },
+        tableName: 'news_collection'
     });
     return News_collection;
 };

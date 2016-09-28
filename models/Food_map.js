@@ -12,7 +12,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // associations can be defined here
       }
-    }
+    },
+    tableName: 'food_map'
   });
   return Food_map;
 };
