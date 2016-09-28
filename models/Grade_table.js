@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'grade_table'
+    tableName: 'grade_tables'
   });
   return Grade_table;
 };

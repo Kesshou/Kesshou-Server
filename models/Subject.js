@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'subject'
+    tableName: 'subjects'
   });
   return Subject;
 };
