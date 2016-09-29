@@ -273,7 +273,7 @@ router.get('/confirmAccount', function(req, res, next) {
         return UserRepository.getUserPassword(account);
     }).then(function() {
         res.status(401).json({"status" : "帳號已被使用"});
-    }).catch(function() {
+    }).catch(function(error) {
         if(error == "非法字元") {
             res.status(406).json({"status" : error});
         } else {
