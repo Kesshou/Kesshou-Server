@@ -73,7 +73,7 @@ router.post('/login', function(req, res, next) {
     var user =  req.body;
 
     CheckCharactersService.checkEmail(user.account).then(function() {
-            return UserRepository.getUserPassword(user.account, "");
+            return UserRepository.getUserPassword(user.account);
         }).then(function(result) {
             if(undefined == user.password || !bcrypt.compareSync(user.password, result)) {
                 res.status(401).json({"error" : "密碼錯誤"});
@@ -126,55 +126,38 @@ router.post('/register', function(req, res, next) {
     var schoolPwd = (user.school_pwd != undefined) ? user.school_pwd : "";
     var name = (user.name != undefined) ? user.name : "";
 
-    var checkEmail = CheckCharactersService.checkEmail(user.email);
     var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
     var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
-    var checkNick = CheckCharactersService.checkIllegalChar(user.nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
     var checkName = CheckCharactersService.checkIllegalChar(name, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
     var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "night"]);
 
-    Promise.all([checkEmail, checkSchoolAccount, checkSchoolPwd, checkNick, checkName, checkUserGroup]).then(function() {
+    var stuClass = "";
+    var finishYear = "";
+
+    Promise.all([checkSchoolAccount, checkSchoolPwd, checkName, checkUserGroup]).then(function() {
         console.log("無非法字元");
         return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, name);
     }).then(function(result) {
         console.log("學生驗證正確");
-        var stuClass = "";
-        var finishYear = "";
-        if(user.user_group == "student") {
+
+        if(user.user_group != "night") {
             name = result[0];
             stuClass = result[1];
         }
-        UserRepository.getUserPassword(user.email, "").then(function(result) {
-            res.status(401).json({"error" : "帳號已被使用"});
-        }).catch(function(error) {
-            UserRepository.checkSameNick(user.nick, "").then(function(result) {
-                console.log("暱稱沒被使用");
-                return ClassRepository.getFinishYear(stuClass);
-            }).then(function(result) {
-                if(user.user_group == "student") {
-                    finishYear = result;
-                }
-                console.log("取得畢業年");
-                return UserRepository.createUser(user.email, hsahPassword, user.user_group,
-                    schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
-            }).then(function() {
-                console.log("成功建立使用者");
-                return createToken(user.email);
-            }).then(function(result) {
-                console.log("取得token");
-                res.status(200).json({ "token" :  result});
-            }).catch(function(error) {
-                console.log(error);
-                switch (error) {
-                    case "暱稱已被使用":
-                        res.status(401).json({"error" : error});
-                        break;
-                    default:
-                        res.status(500).json({"error" : error});
-                        break;
-                }
-            });
-        });
+        return ClassRepository.getFinishYear(stuClass);
+    }).then(function(result) {
+        if(user.user_group == "student") {
+            finishYear = result;
+        }
+        console.log("取得畢業年");
+        return UserRepository.createUser(user.email, hsahPassword, user.user_group,
+            schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
+    }).then(function() {
+        console.log("成功建立使用者");
+        return createToken(user.email);
+    }).then(function(result) {
+        console.log("取得token");
+        res.status(200).json({ "token" :  result});
     }).catch(function(error) {
         res.status(406).json({"error" : error});
     });
@@ -207,36 +190,17 @@ router.put('/updateinfo', function(req, res, next) {
                 var newPassword = (updateData.new_password != undefined) ? bcrypt.hashSync(updateData.new_password) : userInfo.pwd;
                 var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
 
-                var checkEmail = CheckCharactersService.checkEmail(newEmail);
-                var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
-                var checkNick = CheckCharactersService.checkIllegalChar(newNick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
-
                 if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
                     res.status(401).json({"error" : "帳號密碼錯誤"});
                 } else {
-                    Promise.all([checkEmail, checkSchoolPwd, checkNick]).then(function() {
+                    CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd).then(function() {
                         return CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name);
                     }).then(function(result) {
                         var newName = result;
-                        UserRepository.getUserPassword(newEmail, userInfo.email).then(function(result) {
-                            res.status(401).json({"error" : "帳號已被使用"});
-                        }).catch(function(error) {
-                            UserRepository.checkSameNick(newNick, userInfo.nick).then(function(result) {
-                                return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
-                            }).then(function() {
-                                RedisRepository.set(updateData.token, userInfo.email);
-                                res.status(200).json({ "success" :  "更新成功"});
-                            }).catch(function(error) {
-                                switch (error) {
-                                    case "暱稱已被使用":
-                                        res.status(401).json({"error" : error});
-                                        break;
-                                    default:
-                                        res.status(500).json({"error" : error});
-                                        break;
-                                }
-                            });
-                        });
+                        return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
+                    }).then(function() {
+                        RedisRepository.set(updateData.token, userInfo.email);
+                        res.status(200).json({ "success" :  "更新成功"});
                     }).catch(function(error) {
                         switch (error) {
                             case "非法字元":
@@ -259,5 +223,63 @@ router.put('/updateinfo', function(req, res, next) {
         res.status(500).json({"error" : error});
     });
 });
+
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to check user's nick.
+*Usage:
+    status code:
+        200: nick can be used.
+        401: nick is used.
+        406: nick has some illegal chars.
+        500: server error.
+    success: it is a string to tell you the nick can be used.
+    error: it is a string to explain the reason of error.
+*/
+router.get('/confirmNick', function(req, res, next) {
+    var nick = req.body.nick;
+    CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then (function() {
+        return UserRepository.checkSameNick(nick);
+    }).then(function() {
+        res.status(200).json({"status" : "暱稱無人使用"});
+    }).catch(function(error) {
+        if(error == "暱稱已被使用") {
+            res.status(401).json({"status" : error});
+        } else if(error == "非法字元") {
+            res.status(406).json({"status" : error});
+        } else {
+            res.status(500).json({"status" : "伺服器錯誤"});
+        }
+    });
+});
+
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to check user's account.
+*Usage:
+    status code:
+        200: account can be used.
+        401: account is used.
+        406: account has some illegal chars.
+        500: server error.
+    success: it is a string to tell you the account can be used.
+    error: it is a string to explain the reason of error.
+*/
+router.get('/confirmAccount', function(req, res, next) {
+    var account = req.body.account;
+    CheckCharactersService.checkEmail(account).then(function() {
+        return UserRepository.getUserPassword(account);
+    }).then(function() {
+        res.status(401).json({"status" : "帳號已被使用"});
+    }).catch(function(error) {
+        if(error == "非法字元") {
+            res.status(406).json({"status" : error});
+        } else {
+            res.status(200).json({"status" : "帳號無人使用"});
+        }
+    });
+})
 
 module.exports = router;
