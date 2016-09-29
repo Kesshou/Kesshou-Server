@@ -15,21 +15,17 @@ var models  = Promise.promisifyAll(require('../../models'));
         resolve: user's password.
         reject: "帳號有誤".
 */
-var getUserPassword = function(account, oldAccount) {
+var getUserPassword = function(account) {
     return new Promise(function(resolve, reject) {
-        if(oldAccount == account) {
-            reject("old");
-        } else {
-            models.Account.findOne({ where: {email: account} }).then(function(result){
-                if(result) {
-                    resolve(result.get("pwd"));
-                } else {
-                    reject("帳號有誤");
-                }
-            }).catch(function(error) {
+        models.Account.findOne({ where: {email: account} }).then(function(result){
+            if(result) {
+                resolve(result.get("pwd"));
+            } else {
                 reject("帳號有誤");
-            });
-        }
+            }
+        }).catch(function(error) {
+            reject("帳號有誤");
+        });
     });
 }
 
@@ -44,21 +40,17 @@ var getUserPassword = function(account, oldAccount) {
         resolve:
         reject: "暱稱已被使用".
 */
-var checkSameNick = function(nick, oldNick) {
+var checkSameNick = function(nick) {
     return new Promise(function(resolve, reject) {
-        if(nick == oldNick) {
-            resolve();
-        } else {
-            models.Account.findOne({ where: {nick: nick} }).then(function(result) {
-                if(result) {
-                    reject("暱稱已被使用");
-                } else {
-                    resolve();
-                }
-            }).catch(function(error) {
+        models.Account.findOne({ where: {nick: nick} }).then(function(result) {
+            if(result) {
+                reject("暱稱已被使用");
+            } else {
                 resolve();
-            });
-        }
+            }
+        }).catch(function(error) {
+            resolve();
+        });
     });
 }
 
