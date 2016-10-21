@@ -19,6 +19,8 @@ var router = express.Router();
             500: server error.
         curriculum: student's curriculum.
         error: it is a string to explain the reason of error.
+        code:
+            400: server error.
 */
 router.get('/', function(req, res, next) {
     var token = req.body.token;
@@ -30,7 +32,7 @@ router.get('/', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"curriculum" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : error});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
     });
 });
 

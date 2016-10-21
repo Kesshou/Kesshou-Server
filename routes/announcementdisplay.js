@@ -18,6 +18,8 @@ var router = express.Router();
             200: register successfully.
         announce: the announcement which was found.
         error: the reason of error.
+        code:
+            400:server error.
 */
 router.get('/announce', function(req, res, next) {
     var announce;
@@ -26,7 +28,7 @@ router.get('/announce', function(req, res, next) {
         AnnounceRepository.getAnnouncement("sort", sort).then(function(result) {
             res.status(200).json({"announce" : result});
         }).catch(function(error) {
-            res.status(500).json({"error" : error});
+            res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
         });
     } else {
         // RedisRepository.getAccount(req.body.token).then(function(result) {

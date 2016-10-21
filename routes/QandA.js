@@ -19,6 +19,8 @@ var router = express.Router();
             200: register successfully.
         QandA: school Q & A.
         error: the reason of error.
+        code:
+            400: server error.
 */
 router.get('/', function(req, res, next) {
     models.School_qa.findAll().then(function(result) {
@@ -28,7 +30,7 @@ router.get('/', function(req, res, next) {
         }
         res.status(200).json({"QandA" : QandA});
     }).catch(function(error) {
-        res.status(500).json({"error" : error});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
     });
 });
 

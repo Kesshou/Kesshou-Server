@@ -68,6 +68,11 @@ var createToken = function(account) {
             it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
         error(if login failed): it is a string to explain the reason of error.
+        code:
+            100: password doesn't match.
+            101: account doesn't match.
+            300: inputs have some illegal chars.
+            400: server error.
 */
 router.post('/login', function(req, res, next) {
     var user =  req.body;
@@ -76,7 +81,7 @@ router.post('/login', function(req, res, next) {
             return UserRepository.getUserPassword(user.account);
         }).then(function(result) {
             if(undefined == user.password || !bcrypt.compareSync(user.password, result)) {
-                res.status(401).json({"error" : "密碼錯誤"});
+                res.status(401).json({"error" : "密碼錯誤", "code", 100});
             } else {
                 createToken(user.account).then(function(result) {
                     res.status(200).json({ "token" :  result});
@@ -86,13 +91,13 @@ router.post('/login', function(req, res, next) {
         .catch(function(error) {
             switch (error) {
                 case "非法字元":
-                    res.status(406).json({"error" : error});
+                    res.status(406).json({"error" : error, "code" : 300});
                     break;
-                case "帳號有誤":
-                    res.status(401).json({"error" : error});
+                case "帳號錯誤":
+                    res.status(401).json({"error" : error, "code" : 101});
                     break;
                 default:
-                    res.status(500).json({"error" : error});
+                    res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
                     break;
             }
         });
@@ -114,11 +119,14 @@ router.post('/login', function(req, res, next) {
             it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
         error(if register failed): it is a string to explain the reason of error.
+        code:
+            300: inputs have some illegal chars.
+            400: server error.
 */
 router.post('/register', function(req, res, next) {
     var user =  req.body;
     if(user.password == undefined || user.password == "") {
-        res.status(406).json({"error" : "非法字元"});
+        res.status(406).json({"error" : "非法字元", "code" : 300});
     }
     console.log("密碼不為空值");
     var hsahPassword = bcrypt.hashSync(user.password);
@@ -159,7 +167,15 @@ router.post('/register', function(req, res, next) {
         console.log("取得token");
         res.status(200).json({ "token" :  result});
     }).catch(function(error) {
-        res.status(406).json({"error" : error});
+        switch(error) {
+            case "非法字元":
+                res.status(406).json({"error" : error, "code" : 300});
+                break;
+            default:
+                res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+                break;
+        }
+
     });
 });
 
@@ -177,6 +193,11 @@ router.post('/register', function(req, res, next) {
         500: server error.
     success(if update successfully): it is a string to tell you update successfully.
     error(if update failed): it is a string to explain the reason of error.
+    code:
+        100: password doesn't match.
+        102: school sccount or school password doesn't match.
+        300: inputs have some illegal chars.
+        400: server error.
 */
 router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
@@ -191,7 +212,7 @@ router.put('/updateinfo', function(req, res, next) {
                 var newEmail = (updateData.new_email != undefined) ? updateData.new_email : userInfo.email;
 
                 if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
-                    res.status(401).json({"error" : "帳號密碼錯誤"});
+                    res.status(401).json({"error" : "帳號密碼錯誤", "code" : 100});
                 } else {
                     CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd).then(function() {
                         return CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name);
@@ -204,11 +225,13 @@ router.put('/updateinfo', function(req, res, next) {
                     }).catch(function(error) {
                         switch (error) {
                             case "非法字元":
+                                res.status(406).json({"error" : error, "code" : 300});
+                                break;
                             case "學校驗證錯誤":
-                                res.status(406).json({"error" : error});
+                                res.status(406).json({"error" : error, "code" : 102});
                                 break;
                             default:
-                                res.status(500).json({"error" : error});
+                                res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
                                 break;
                         }
                     });
@@ -236,6 +259,10 @@ router.put('/updateinfo', function(req, res, next) {
         500: server error.
     success: it is a string to tell you the nick can be used.
     error: it is a string to explain the reason of error.
+    code
+        300: input has some illegal chars.
+        400: server error.
+        500: nick is used.
 */
 router.get('/confirmNick', function(req, res, next) {
     var nick = req.body.nick;
@@ -245,11 +272,11 @@ router.get('/confirmNick', function(req, res, next) {
         res.status(200).json({"status" : "暱稱無人使用"});
     }).catch(function(error) {
         if(error == "暱稱已被使用") {
-            res.status(401).json({"status" : error});
+            res.status(401).json({"status" : error, "code" : 500});
         } else if(error == "非法字元") {
-            res.status(406).json({"status" : error});
+            res.status(406).json({"status" : error, "code" : 300});
         } else {
-            res.status(500).json({"status" : "伺服器錯誤"});
+            res.status(500).json({"status" : "伺服器錯誤", "code" : 400});
         }
     });
 });
@@ -263,19 +290,21 @@ router.get('/confirmNick', function(req, res, next) {
         200: account can be used.
         401: account is used.
         406: account has some illegal chars.
-        500: server error.
     success: it is a string to tell you the account can be used.
     error: it is a string to explain the reason of error.
+    code:
+        300: input has some illegal chars.
+        500: account is used.
 */
 router.get('/confirmAccount', function(req, res, next) {
     var account = req.body.account;
     CheckCharactersService.checkEmail(account).then(function() {
         return UserRepository.getUserPassword(account);
     }).then(function() {
-        res.status(401).json({"status" : "帳號已被使用"});
+        res.status(401).json({"status" : "帳號已被使用", "code" : 501});
     }).catch(function(error) {
         if(error == "非法字元") {
-            res.status(406).json({"status" : error});
+            res.status(406).json({"status" : error, "code" : 300});
         } else {
             res.status(200).json({"status" : "帳號無人使用"});
         }

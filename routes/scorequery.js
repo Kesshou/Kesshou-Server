@@ -19,6 +19,8 @@ var router = express.Router();
             500: server error.
         absentState: an array, each item contains type, credit, score, makeup(optional), retake(optional), and qualify.
         error: it is a string to explain the reason of error.
+        code:
+            400: server error.
 */
 router.get('/historyscore', function(req, res, next) {
     var token = req.body.token;
@@ -32,7 +34,7 @@ router.get('/historyscore', function(req, res, next) {
         res.status(200).json({"score" : result});
     }).catch(function(error) {
         console.log(error);
-        res.status(500).json({"error" : error});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
     });
 });
 
@@ -47,6 +49,8 @@ router.get('/historyscore', function(req, res, next) {
             500: server error.
         absentState: an array, each item contains first_section, second_section, last_section, performance, and average.
         error: it is a string to explain the reason of error.
+        code:
+            400: server error.
 */
 router.get('/sectionalexamscore', function(req, res, next) {
     var token = req.body.token;
@@ -58,7 +62,7 @@ router.get('/sectionalexamscore', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"score" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : error});
+        res.status(500).json({"error" : "四盧器錯誤", "code" : 400});
     });
 })
 

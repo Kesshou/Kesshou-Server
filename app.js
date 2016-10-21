@@ -31,6 +31,14 @@ app.use('/actmanage', actmanage);
 app.use('/announcementdisplay', announcementdisplay);
 app.use('/qanda', qanda);
 
+/*
+*Author: blackkite0206233
+*Description: A middleware which is used to check token.
+*Usage:
+    error: token is expired.
+    code:
+        103: token is expired.
+*/
 app.use(function(req, res, next) {
     var token =req.body.token;
     RedisRepository.getAccount(token).then(function(result) {
@@ -38,7 +46,7 @@ app.use(function(req, res, next) {
             console.log("token正確");
             next();
         } else {
-            res.status(408).json({"error" : "token過期"});
+            res.status(408).json({"error" : "token過期", "code" : 103});
         }
     });
 });
