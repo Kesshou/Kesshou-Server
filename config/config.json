@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "root",
-    "password": "u,4aup3vm0 ",
+    "username": "",
+    "password": "",
     "database": "DaanX",
     "host": "127.0.0.1",
     "dialect": "mariadb",
