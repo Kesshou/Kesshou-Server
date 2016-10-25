@@ -81,7 +81,7 @@ router.post('/login', function(req, res, next) {
             return UserRepository.getUserPassword(user.account);
         }).then(function(result) {
             if(undefined == user.password || !bcrypt.compareSync(user.password, result)) {
-                res.status(401).json({"error" : "密碼錯誤", "code", 100});
+                res.status(401).json({"error" : "密碼錯誤", "code" : 100});
             } else {
                 createToken(user.account).then(function(result) {
                     res.status(200).json({ "token" :  result});
