@@ -14,6 +14,7 @@ var attitudestatus = require('./routes/attitudestatus');
 var absentstate = require('./routes/absentstate');
 var qanda = require('./routes/QandA');
 var curriculum = require('./routes/curriculum');
+var calendar = require('./routes/calendar');
 
 var app = express();
 
@@ -27,10 +28,10 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/actmanage', actmanage);
-app.use('/announcementdisplay', announcementdisplay);
-app.use('/qanda', qanda);
-
+app.use('/v1/actmanage', actmanage);
+app.use('/v1/announcementdisplay', announcementdisplay);
+app.use('/v1/qanda', qanda);
+app.use('/v1/calendar', calendar);
 /*
 *Author: blackkite0206233
 *Description: A middleware which is used to check token.
@@ -50,10 +51,10 @@ app.use(function(req, res, next) {
         }
     });
 });
-app.use('/scorequery', scorequery);
-app.use('/attitudestatus', attitudestatus);
-app.use('/absentstate', absentstate);
-app.use('/curriculum', curriculum);
+app.use('/v1/scorequery', scorequery);
+app.use('/v1/attitudestatus', attitudestatus);
+app.use('/v1/absentstate', absentstate);
+app.use('/v1/curriculum', curriculum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

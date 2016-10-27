@@ -37,7 +37,7 @@ var getUserPassword = function(account) {
     nick: user's nick.
     oldNick: if it didn't has oldNick, it is "".
     return:
-        resolve:
+        resolve: Nan.
         reject: "暱稱已被使用".
 */
 var checkSameNick = function(nick) {
@@ -66,7 +66,7 @@ var checkSameNick = function(nick) {
     schoolPwd: user's school password(optional).
     nick: user's nick.
     return:
-        resolve:
+        resolve: Nan.
         reject: error.
 */
 var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, finishYear) {
@@ -108,7 +108,7 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
     newEmail: user's new email.
     newName: user's new name.
     return:
-        resolve:
+        resolve: Nan.
         reject: error.
 */
 var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newEmail, newName) {

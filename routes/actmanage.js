@@ -87,8 +87,7 @@ router.post('/login', function(req, res, next) {
                     res.status(200).json({ "token" :  result});
                 });
             }
-        })
-        .catch(function(error) {
+        }).catch(function(error) {
             switch (error) {
                 case "非法字元":
                     res.status(406).json({"error" : error, "code" : 300});

@@ -1,3 +1,7 @@
+/*
+*Author: blackkite0206233
+*Description: This file is used to get student's attitude status. Used web spider.
+*/
 var Promise = require('bluebird');
 var request = Promise.promisifyAll(require("request"));
 var fs = Promise.promisifyAll(require("fs"));
@@ -8,6 +12,17 @@ var urlencode = require('urlencode');
 var j = request.jar();
 var ca;
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get student's attitude status. Used promise.
+*Usage:
+    schoolAccount: student's school account.
+    schoolPwd: student's school password.
+    return:
+        resolve: a json type attitude status.
+        reject: the reason of error.
+*/
 var getAttitudeStatus = function(schoolAccount, schoolPwd) {
     return new Promise(function(resolve, reject) {
         fs.readFileAsync(__dirname + "/cert/taivsca.crt").then(function(result) {
