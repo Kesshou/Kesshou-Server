@@ -24,7 +24,7 @@ var router = express.Router();
 */
 router.get('/', function(req, res, next) {
     var token = req.body.token;
-    RedisRepository.getSchoolData(token).then(function(result) {
+    RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;
         return AbsentStateWebSpiders.getAbsentState(schoolAccount, schoolPwd);

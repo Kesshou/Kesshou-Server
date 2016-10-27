@@ -5,8 +5,6 @@ var request = Promise.promisifyAll(require("request"));
 var iconv = require("iconv-lite");
 var cheerio = require("cheerio");
 var urlencode = require('urlencode');
-//var Sequelize = require('sequelize');
-//var sequelize = new Sequelize('DaanX', 'root', 'u,4aup3vm0 ', {host : '127.0.0.1', port : '3306', dialect : 'mariadb'});
 var models = Promise.promisifyAll(require('../../models'));
 
 var checkNewsExist = function (newsKey) {

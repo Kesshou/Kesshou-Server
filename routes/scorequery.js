@@ -26,7 +26,7 @@ router.get('/historyscore', function(req, res, next) {
     var token = req.body.token;
     var grade = req.body.grade;
     var semester = req.body.semester;
-    RedisRepository.getSchoolData(token).then(function(result) {
+    RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;
         return ScoreWebSpiders.getHistoryScore(schoolAccount, schoolPwd, grade, semester);
@@ -55,7 +55,7 @@ router.get('/historyscore', function(req, res, next) {
 router.get('/sectionalexamscore', function(req, res, next) {
     var token = req.body.token;
     var semester = req.body.semester;
-    RedisRepository.getSchoolData(token).then(function(result) {
+    RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;
         return ScoreWebSpiders.getSectionalExamScore(schoolAccount, schoolPwd, semester);

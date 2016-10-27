@@ -10,7 +10,7 @@ var Promise = require('bluebird');
 *Usage:
     input: a sentence which you want to check.
     return:
-        resolve:
+        resolve: Nan.
         reject: "非法字元".
 */
 var allowNumbersAndAlphabets = function(input) {

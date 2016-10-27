@@ -24,7 +24,7 @@ var router = express.Router();
 */
 router.get('/', function(req, res, next) {
     var token = req.body.token;
-    RedisRepository.getSchoolData(token).then(function(result) {
+    RedisRepository.getUserData(token).then(function(result) {
         var stuClass = result.class;
         var finishYear = result.finish_year;
         var Class = stuClass.substr(0, 2) + finishYear + stuClass.substr(3);

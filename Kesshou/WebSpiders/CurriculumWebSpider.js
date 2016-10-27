@@ -1,9 +1,24 @@
+/*
+*Author: blackkite0206233
+*Description: This file is used to get student's curriculum. Used web spider.
+*/
 var Promise = require("bluebird");
 var request = Promise.promisifyAll(require("request"));
 var cheerio = require("cheerio");
 var fs = require("fs");
 var iconv = require('iconv-lite');
 var urlencode = require('urlencode');
+
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get student curriculum.
+*Usage:
+    Class: student's class.
+    return:
+        resolve: a json type curriculum.
+        reject: the reason of error.
+*/
 var getCurriculum = function(Class) {
     console.log(urlencode(Class, 'big5'));
     return new Promise(function(resolve, reject) {

@@ -38,7 +38,6 @@ var set = function(token, account) {
     token: a sentence contains 20 random characters.
     return: account.
     reject: error.
-
 */
 var getAccount = function(token) {
     return new Promise(function(resolve, reject) {
@@ -48,7 +47,16 @@ var getAccount = function(token) {
     });
 }
 
-var getSchoolData = function(token) {
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to  get user's data.  Used promise.
+*Usage:
+    token: a sentence contains 20 random characters.
+    return: account.
+    reject: error.
+*/
+var getUserData = function(token) {
     return new Promise(function(resolve, reject) {
         getAccount(token).then(function(result) {
             return UserRepository.getUserInfo(result);
@@ -66,5 +74,5 @@ module.exports = {
 
         getAccount: getAccount,
 
-        getSchoolData: getSchoolData
+        getUserData: getUserData
 };

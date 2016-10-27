@@ -1,3 +1,7 @@
+/*
+*Author: blackkite0206233
+*Description: This file is used to get student's score. Used web spider.
+*/
 var Promise = require('bluebird');
 var request = Promise.promisifyAll(require("request"));
 var fs = Promise.promisifyAll(require("fs"));
@@ -8,6 +12,17 @@ var urlencode = require('urlencode');
 var j = request.jar();
 var ca;
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to login school's website.  Used promise.
+*Usage:
+    schoolAccount: student's school account.
+    schoolPwd: student's school password.
+    return:
+        resolve: a login cookie.
+        reject: the reason of error.
+*/
 var login = function(schoolAccount, schoolPwd) {
     return new Promise(function(resolve, reject) {
         fs.readFileAsync(__dirname + "/cert/taivsca.crt").then(function(result) {
@@ -34,6 +49,19 @@ var login = function(schoolAccount, schoolPwd) {
     });
 }
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get student's history score. Used promise.
+*Usage:
+    schoolAccount: student's school account.
+    schoolPwd: student's school password.
+    grade: student's grade(1, 2, 3 ("一年級", "二年級", "三年級"))
+    semester: semester(1, 2 ("上、下學期"))
+    return:
+        resolve: a json type history score.
+        reject: the reason of error.
+*/
 var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
     return new Promise(function(resolve, reject) {
         login(schoolAccount, schoolPwd).then(function(result) {
@@ -89,6 +117,18 @@ var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
     });
 }
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get student's exam score. Used promise.
+*Usage:
+    schoolAccount: student's school account.
+    schoolPwd: student's school password.
+    semester: semester(1, 2 ("上、下學期"))
+    return:
+        resolve: a json type exam score.
+        reject: the reason of error.
+*/
 var getSectionalExamScore = function(schoolAccount, schoolPwd, semester) {
     var scoreList = [];
     var score = {};
