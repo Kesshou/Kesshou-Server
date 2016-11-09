@@ -6,6 +6,9 @@ var express = require('express');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 var AnnounceRepository = require('../Kesshou/Repositories/AnnounceRepository');
 var UserRepository = require('../Kesshou/Repositories/UserRepository');
+
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
+
 var router = express.Router();
 
 /*
@@ -28,7 +31,7 @@ router.get('/announce', function(req, res, next) {
         AnnounceRepository.getAnnouncement("sort", sort).then(function(result) {
             res.status(200).json({"announce" : result});
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     } else {
         // RedisRepository.getAccount(req.body.token).then(function(result) {

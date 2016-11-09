@@ -3,8 +3,12 @@
 *Description: This file is the API of attitudestatus.
 */
 var express = require('express');
+
 var AttitudeStatusWebSpiders = require('../Kesshou/WebSpiders/AttitudeStatusWebSpiders');
+
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
+
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
 
 var router = express.Router();
 
@@ -32,7 +36,7 @@ router.get('/', function(req, res, next) {
         res.status(200).json({"attitudeStatus" : result});
     }).catch(function(error) {
         console.log(error);
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 

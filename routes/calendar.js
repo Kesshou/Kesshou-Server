@@ -4,7 +4,9 @@
 */
 var express = require('express');
 var ical = require('ical');
+
 var CalendarService = require('../Kesshou/Services/CalendarService');
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
 
 var router = express.Router();
 
@@ -27,7 +29,7 @@ router.get('/', function(req, res, next) {
     CalendarService.getClendar(calendarUrl).then(function(result) {
         res.status(200).json({"calendar" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 

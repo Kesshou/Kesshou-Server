@@ -7,6 +7,8 @@ var express = require('express');
 var Promise = require('bluebird');
 var models  = Promise.promisifyAll(require('../models'));
 
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
+
 var router = express.Router();
 
 /*
@@ -30,7 +32,7 @@ router.get('/', function(req, res, next) {
         }
         res.status(200).json({"QandA" : QandA});
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 

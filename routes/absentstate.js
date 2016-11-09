@@ -3,6 +3,9 @@
 *Description: This file is the API of absentstate.
 */
 var express = require('express');
+
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
+
 var AbsentStateWebSpiders = require('../Kesshou/WebSpiders/AbsentStateWebSpiders');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 
@@ -31,7 +34,7 @@ router.get('/', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"absentState" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 
