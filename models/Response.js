@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var responce = sequelize.define('responce', {
+  var response = sequelize.define('response', {
     article_id: DataTypes.INTEGER,
     sort: DataTypes.INTEGER,
     content: DataTypes.STRING,
@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       }
     },
-    tableName: 'responce'
+    tableName: 'response'
   });
-  return responce;
+  return response;
 };

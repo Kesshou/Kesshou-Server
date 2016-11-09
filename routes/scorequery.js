@@ -3,6 +3,9 @@
 *Description: This file is the API of scorequery.
 */
 var express = require('express');
+
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
+
 var ScoreWebSpiders = require('../Kesshou/WebSpiders/ScoreWebSpiders');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 
@@ -34,7 +37,7 @@ router.get('/historyscore', function(req, res, next) {
         res.status(200).json({"score" : result});
     }).catch(function(error) {
         console.log(error);
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 

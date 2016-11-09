@@ -3,8 +3,12 @@
 *Description: This file is the API of curriculum.
 */
 var express = require('express');
+
 var CurriculumWebSpider = require('../Kesshou/WebSpiders/CurriculumWebSpider');
+
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
+
+var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
 
 var router = express.Router();
 
@@ -32,7 +36,7 @@ router.get('/', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"curriculum" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 
