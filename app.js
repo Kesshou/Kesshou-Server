@@ -18,6 +18,8 @@ var calendar = require('./routes/calendar');
 
 var app = express();
 
+var version = 'v1';
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -28,10 +30,10 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/v1/actmanage', actmanage);
-app.use('/v1/announcementdisplay', announcementdisplay);
-app.use('/v1/qanda', qanda);
-app.use('/v1/calendar', calendar);
+app.use('/' + version + '/actmanage', actmanage);
+app.use('/' + version + '/announcementdisplay', announcementdisplay);
+app.use('/' + version + '/qanda', qanda);
+app.use('/' + version + '/calendar', calendar);
 /*
 *Author: blackkite0206233
 *Description: A middleware which is used to check token.
@@ -51,10 +53,10 @@ app.use(function(req, res, next) {
         }
     });
 });
-app.use('/v1/scorequery', scorequery);
-app.use('/v1/attitudestatus', attitudestatus);
-app.use('/v1/absentstate', absentstate);
-app.use('/v1/curriculum', curriculum);
+app.use('/' + version + '/scorequery', scorequery);
+app.use('/' + version + '/attitudestatus', attitudestatus);
+app.use('/' + version + '/absentstate', absentstate);
+app.use('/' + version + '/curriculum', curriculum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
