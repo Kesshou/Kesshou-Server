@@ -164,6 +164,7 @@ router.post('/register', function(req, res, next) {
             schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
     }).then(function() {
         return createToken(user.email);
+    }).then(function(result) {
         res.status(200).json({ "token" :  result});
     }).catch(function(error) {
         switch(error) {
