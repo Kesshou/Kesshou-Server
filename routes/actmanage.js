@@ -144,7 +144,7 @@ router.post('/register', function(req, res, next) {
     var checkSchoolAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
     var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
     var checkName = CheckCharactersService.checkIllegalChar(name, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
-    var checkNick = CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
+    var checkNick = CheckCharactersService.checkIllegalChar(user.nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]);
     var checkUserGroup = CheckCharactersService.checkData(user.user_group, ["student", "graduated", "night"]);
 
     var stuClass = "";
@@ -165,7 +165,7 @@ router.post('/register', function(req, res, next) {
         UserRepository.getUserPassword(user.email).then(function() {
             res.status(401).json({"status" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
         }).catch(function() {
-            UserRepository.checkSameNick(nick).then(function() {
+            UserRepository.checkSameNick(user.nick).then(function() {
                 return UserRepository.createUser(user.email, hsahPassword, user.user_group,
                     schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
             }).then(function() {
