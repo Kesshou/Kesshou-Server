@@ -24,7 +24,7 @@ var router = express.Router();
         code:
             400:server error.
 */
-router.get('/announce', function(req, res, next) {
+router.post('/announce', function(req, res, next) {
     var announce;
     var sort = req.body.sort;
     if(sort != "collect") {
