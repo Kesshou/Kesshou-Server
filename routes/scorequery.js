@@ -65,7 +65,7 @@ router.get('/sectionalexamscore', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"score" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : "四盧器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 })
 
