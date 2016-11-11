@@ -152,24 +152,24 @@ var getSectionalExamScore = function(schoolAccount, schoolPwd, semester) {
                 var sub = rows.eq(i).children();
                 switch (semester) {
                     case "1":
-                        if(sub.eq(6).text().trim()) {
+                        if(sub.eq(2).text().trim() || sub.eq(3).text().trim() || sub.eq(4).text().trim()) {
                             score.subject = sub.eq(0).text().trim();
-                            score.first_section = parseFloat(sub.eq(2).children().eq(0).text().trim());
-                            score.second_section = parseFloat(sub.eq(3).children().eq(0).text().trim());
-                            score.last_section = parseFloat(sub.eq(4).children().eq(0).text().trim());
-                            score.performance = parseFloat(sub.eq(5).children().eq(0).text().trim());
-                            score.average = parseFloat(sub.eq(6).children().eq(0).text().trim());
+                            score.first_section = parseFloat(sub.eq(2).text().trim());
+                            score.second_section = parseFloat(sub.eq(3).text().trim());
+                            score.last_section = parseFloat(sub.eq(4).text().trim());
+                            score.performance = parseFloat(sub.eq(5).text().trim());
+                            score.average = parseFloat(sub.eq(6).text().trim());
                             scoreList.push(score);
                         }
                         break;
                     case "2":
-                        if(sub.eq(11).text().trim()) {
+                        if(sub.eq(7).text().trim() || sub.eq(8).text().trim() || sub.eq(9).text().trim()) {
                             score.subject = sub.eq(0).text().trim();
-                            score.first_section = parseFloat(sub.eq(7).children().eq(0).text().trim());
-                            score.second_section = parseFloat(sub.eq(8).children().eq(0).text().trim());
-                            score.last_section = parseFloat(sub.eq(9).children().eq(0).text().trim());
-                            score.performance = parseFloat(sub.eq(10).children().eq(0).text().trim());
-                            score.average = parseFloat(sub.eq(11).children().eq(0).text().trim());
+                            score.first_section = parseFloat(sub.eq(7).text().trim());
+                            score.second_section = parseFloat(sub.eq(8).text().trim());
+                            score.last_section = parseFloat(sub.eq(9).text().trim());
+                            score.performance = parseFloat(sub.eq(10).text().trim());
+                            score.average = parseFloat(sub.eq(11).text().trim());
                             scoreList.push(score);
                         }
                         break;
