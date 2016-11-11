@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var RedisRepository = require('./Kesshou/Repositories/RedisRepository');
 
+var ErrorCodeService = require('./Kesshou/Services/ErrorCodeService');
+
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
 var announcementdisplay = require('./routes/announcementdisplay');
@@ -49,7 +51,7 @@ app.use(function(req, res, next) {
             console.log("token正確");
             next();
         } else {
-            res.status(408).json({"error" : "token過期", "code" : 103});
+            res.status(408).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
         }
     });
 });

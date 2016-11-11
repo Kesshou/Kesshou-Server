@@ -25,7 +25,7 @@ var router = express.Router();
         code:
             400: server error.
 */
-router.get('/historyscore', function(req, res, next) {
+router.post('/historyscore', function(req, res, next) {
     var token = req.body.token;
     var grade = req.body.grade;
     var semester = req.body.semester;
@@ -55,7 +55,7 @@ router.get('/historyscore', function(req, res, next) {
         code:
             400: server error.
 */
-router.get('/sectionalexamscore', function(req, res, next) {
+router.post('/sectionalexamscore', function(req, res, next) {
     var token = req.body.token;
     var semester = req.body.semester;
     RedisRepository.getUserData(token).then(function(result) {
@@ -65,7 +65,7 @@ router.get('/sectionalexamscore', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json({"score" : result});
     }).catch(function(error) {
-        res.status(500).json({"error" : "四盧器錯誤", "code" : 400});
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 })
 

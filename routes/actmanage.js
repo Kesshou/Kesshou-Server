@@ -291,7 +291,7 @@ router.put('/updateinfo', function(req, res, next) {
         400: server error.
         500: nick is used.
 */
-router.get('/confirmNick', function(req, res, next) {
+router.post('/confirmNick', function(req, res, next) {
     var nick = req.body.nick;
     CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then (function() {
         return UserRepository.checkSameNick(nick);
@@ -323,7 +323,7 @@ router.get('/confirmNick', function(req, res, next) {
         300: input has some illegal chars.
         500: account is used.
 */
-router.get('/confirmAccount', function(req, res, next) {
+router.post('/confirmAccount', function(req, res, next) {
     var account = req.body.account;
     CheckCharactersService.checkEmail(account).then(function() {
         return UserRepository.getUserPassword(account);
