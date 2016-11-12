@@ -183,6 +183,9 @@ router.post('/register', function(req, res, next) {
             case "非法字元":
                 res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
                 break;
+            case "學校驗證錯誤":
+                res.status(406).json({"error" : error, "code" : ErrorCodeService.schoolError});
+                break;
             default:
                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
                 break;
@@ -369,10 +372,13 @@ router.post('/confirmSchool', function(req, rea, next) {
         switch(error) {
             case "非法字元":
                 res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+                break;
             case "學校驗證錯誤":
                 res.status(406).json({"error" : error, "code" : ErrorCodeService.schoolError});
+                break;
             default:
                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                break;
         }
     });
 });
