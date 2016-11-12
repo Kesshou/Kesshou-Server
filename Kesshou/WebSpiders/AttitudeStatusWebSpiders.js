@@ -52,6 +52,7 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
             };
             return request.getAsync(formAttitude);
         }).then(function(result) {
+            var attitude = {};
             var AttitudeStatus = [];
             var AttitudeCount = {
                 smallcite: 0,
@@ -63,7 +64,7 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
             };
             var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"), "Big5"));
             var rows = $("table tr");
-            for(var i = 2; i < rows.length; i++) {
+            for(var i = 2; i < rows.length - 2; i++) {
                 var attitudeStatus = {};
                 var sub = rows.eq(i).children();
                 var date = sub.eq(3).text().trim();
@@ -101,14 +102,16 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
                             case "大過":
                                 AttitudeCount.bigfault += parseInt(num);
                                 break;
+                            default: break;
                         }
                         flag = 1;
                     }
                 }
             }
-            AttitudeStatus.count = AttitudeCount;
-            console.log(AttitudeStatus);
-            resolve(AttitudeStatus);
+            attitude.status = AttitudeStatus;
+            attitude.count = AttitudeCount;
+            console.log(attitude);
+            resolve(attitude);
         }).catch(function(error) {
             reject(error);
         });

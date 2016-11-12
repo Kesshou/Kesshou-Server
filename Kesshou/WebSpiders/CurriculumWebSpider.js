@@ -39,8 +39,8 @@ var getCurriculum = function(Class) {
 
             for (var i = 1; i < rows.length; i++) {
                 var timeString = rows.eq(i).children().eq(0).text();
-                var startTime = timeString.split('～')[0],
-    				endTime = timeString.split('～')[1];
+                var startTime = timeString.split('～')[0].tirm(),
+    				endTime = timeString.split('～')[1].tirm();
 
                 var cols = rows.eq(i).children();
 
@@ -54,8 +54,8 @@ var getCurriculum = function(Class) {
                     var subjectHtml = htmlString.match(/>.*(?=<br>)/),//[0].substr(1);
     					teacherHtml = htmlString.match(/<br>.*(?=<\/)/);//[0].substr(4);
                     if (subjectHtml && teacherHtml) {
-                        subject = $('<textarea />').html(subjectHtml[0].substr(1)).text();
-                        teacher = $('<textarea />').html(teacherHtml[0].substr(4)).text();
+                        subject = $('<textarea />').html(subjectHtml[0].substr(1)).text().tirm();
+                        teacher = $('<textarea />').html(teacherHtml[0].substr(4)).text().tirm();
                     } else {
                         break;
                     }

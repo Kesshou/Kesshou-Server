@@ -296,14 +296,14 @@ router.post('/confirmNick', function(req, res, next) {
     CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then (function() {
         return UserRepository.checkSameNick(nick);
     }).then(function() {
-        res.status(200).json({"status" : "暱稱無人使用"});
+        res.status(200).json({"success" : "暱稱無人使用"});
     }).catch(function(error) {
         if(error == "暱稱已被使用") {
-            res.status(401).json({"status" : error, "code" : ErrorCodeService.nickUsed});
+            res.status(401).json({"error" : error, "code" : ErrorCodeService.nickUsed});
         } else if(error == "非法字元") {
-            res.status(406).json({"status" : error, "code" : ErrorCodeService.illegalChar});
+            res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
         } else {
-            res.status(500).json({"status" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         }
     });
 });
@@ -328,14 +328,53 @@ router.post('/confirmAccount', function(req, res, next) {
     CheckCharactersService.checkEmail(account).then(function() {
         return UserRepository.getUserPassword(account);
     }).then(function() {
-        res.status(401).json({"status" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+        res.status(401).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
     }).catch(function(error) {
         if(error == "非法字元") {
-            res.status(406).json({"status" : error, "code" : ErrorCodeService.illegalChar});
+            res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
         } else {
-            res.status(200).json({"status" : "帳號無人使用"});
+            res.status(200).json({"success" : "帳號無人使用"});
         }
     });
-})
+});
+
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to check user's school account.
+*Usage:
+    status code:
+        200: school account is correct.
+        406: account has some illegal chars or the school account is incorrect..
+        500: server error.
+    success: it is a string to tell you the school account is correct.
+    error: it is a string to explain the reason of error.
+    code:
+        102: school account is incorrect.
+        300: input has some illegal chars.
+        400: server error.
+*/
+router.post('/confirmSchool', function(req, rea, next) {
+    var schoolAccount = req.body.schoolAccount;
+    var schoolPwd = req.body.schoolPwd;
+
+    var checkAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
+    var checkPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
+
+    Promise.all([checkAccount, schoolPwd]).then(function() {
+        return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd);
+    }).then(function() {
+        res.status(200).json({"success" : "學校驗證正確"});
+    }).catch(function(error) {
+        switch(error) {
+            case "非法字元":
+                res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+            case "學校驗證錯誤":
+                res.status(406).json({"error" : error, "code" : ErrorCodeService.schoolError});
+            default:
+                res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        }
+    });
+});
 
 module.exports = router;
