@@ -37,13 +37,11 @@ var getCurriculum = function(Class) {
                 classCurriculum['week' + i] = [];
             }
 
-            for (var i = 1; i < rows.length; i++) {
+            for (var i = 2; i < rows.length; i++) {
                 var timeString = rows.eq(i).children().eq(0).text();
-                var startTime = timeString.split('～')[0].tirm(),
-    				endTime = timeString.split('～')[1].tirm();
-
+                var startTime = timeString.split('～')[0].trim();
+    			var	endTime = timeString.split('～')[1].trim();
                 var cols = rows.eq(i).children();
-
                 if(cols.length == 2) //跳過午休
                     continue;
 
@@ -54,8 +52,8 @@ var getCurriculum = function(Class) {
                     var subjectHtml = htmlString.match(/>.*(?=<br>)/),//[0].substr(1);
     					teacherHtml = htmlString.match(/<br>.*(?=<\/)/);//[0].substr(4);
                     if (subjectHtml && teacherHtml) {
-                        subject = $('<textarea />').html(subjectHtml[0].substr(1)).text().tirm();
-                        teacher = $('<textarea />').html(teacherHtml[0].substr(4)).text().tirm();
+                        subject = $('<textarea />').html(subjectHtml[0].substr(1)).text().trim();
+                        teacher = $('<textarea />').html(teacherHtml[0].substr(4)).text().trim();
                     } else {
                         break;
                     }
