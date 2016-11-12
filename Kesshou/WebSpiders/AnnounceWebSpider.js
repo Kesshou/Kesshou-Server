@@ -14,17 +14,15 @@ var checkNewsExist = function (newsKey) {
             encoding: null,
             followAllRedirects: true
         };
-        request.getAsync(newsReq)
-            .then(function (res) {
-                var $ = cheerio.load(iconv.decode(new Buffer(res.body), "Big5", {decodeEntities: false}));
-                if($("div[align=center]").eq(1).text().length >10)
-                    reslove($);
-                else
-                    reject();
-            })
-            .catch(function(err){
-                console.log(err);
-            });
+        request.getAsync(newsReq).then(function (res) {
+            var $ = cheerio.load(iconv.decode(new Buffer(res.body), "Big5"), {decodeEntities: false});
+            if($("div[align=center]").eq(1).text().length >10)
+                reslove($);
+            else
+                reject();
+        }).catch(function(err){
+            console.log(err);
+        });
 
     });
 }
@@ -36,11 +34,10 @@ var getSort = function (title) {
             encoding: null,
             followAllRedirects: true
         };
-        request.getAsync(sortGet)
-            .then(function (res) {
-                var $ = cheerio.load(iconv.decode(new Buffer(res.body),"Big5"),{decodeEntities: false});
-                reslove($("table").find("tr").eq(3).children("td").eq(1).text().trim());
-            });
+        request.getAsync(sortGet).then(function (res) {
+            var $ = cheerio.load(iconv.decode(new Buffer(res.body),"Big5"),{decodeEntities: false});
+            reslove($("table").find("tr").eq(3).children("td").eq(1).text().trim());
+        });
     });
 }
 
@@ -58,39 +55,43 @@ var getNewsParser = function ($) {
         };
 
 
-        $("table").eq(1).children("tr").each(function () {
-            var items = $(this);
-            if (items.find("td").length > 1) {
-                var key = items.find("td").eq(0).text().trim();
-                var value = items.find("td").eq(1).text().trim();
-                var type = {
-                    "內　　容": "body",
-                    "公 佈 者": "author",
-                    "參考網址": "linked"
-                };
-                if(type[key]) {
-                    newsone[type[key]] = value;
-                }else if(key != "有效日期") {
-                    newsone.title = value;
-                    newsone.date = key;
+        $=$("table").eq(1);
+        for(var i=0;i<$.children("tr").length;i++){
+            var items=$.children("tr").eq(i);
+            if(items.find("td").length>1) {
+                switch (items.find("td").eq(0).text().trim()) {
+                    case "內　　容":
+                        newsone.body = items.find("td").eq(1).html().trim();
+                        break;
+                    case "公 佈 者":
+                        newsone.author = items.find("td").eq(1).text().trim();
+                        break;
+                    case "參考網址":
+                        newsone.linked = items.find("td").eq(1).text().trim();
+                        break;
+                    case "有效日期":
+                        break;
+                    default:
+                        newsone.title = items.find("td").eq(1).text().trim();
+                        newsone.date = items.find("td").eq(0).text().trim();
+                        break;
                 }
-            } else if(items.find("td").html().indexOf("img") >-1) {
-                items.find("img").each(function (i, item) {
-                    newsone.image.push("http://ta.taivs.tp.edu.tw/news/" + item.attr("src"));
-                });
-            } else if (items.find("td").text().indexOf("附件") >-1) {
-                items.find("a").each(function () {
-                    var item = $(this);
-                    newsone.file.push([item.text(),"http://ta.taivs.tp.edu.tw/news/"+item.attr("href")]);
-                })
+            }else{
+                if(items.find("td").html().indexOf("img")>-1){
+                    for(var y=0;y<items.find("img").length;y++) {
+                        newsone.image.push("http://ta.taivs.tp.edu.tw/news/" + items.find("img").eq(y).attr("src"));
+                    }
+                }else if(items.find("td").text().indexOf("附件")>-1){
+                    for(var y=0;y<items.find("a").length;y++){
+                        newsone.file.push([items.find("a").eq(y).text(),"http://ta.taivs.tp.edu.tw/news/"+items.find("a").eq(y).attr("href")]);
+                    }
+                }
             }
-        })
-
-        getSort(newsone.title)
-            .then(function (result) {
-                newsone.sort = result;
-                reslove(newsone);
-            });
+        }
+        getSort(newsone.title).then(function (result) {
+            newsone.sort = result;
+            reslove(newsone);
+        });
     });
 
 }
@@ -105,6 +106,7 @@ var repeater = function (startKey) {
         keyNotExist = 0;
         console.log(startKey+"存在！");
         getNewsParser($).then(function(newsone) {
+            console.log(newsone.image);
             console.log(newsone.file);
             var newsOne = newsone;
             var news = {
@@ -119,10 +121,10 @@ var repeater = function (startKey) {
                 models.News.findOne({ where: {title: newsOne.title} }).then(function(result) {
                     var id = result.get("id");
                     var promises = [];
-                    if(newsOne.img != undefined) {
-                        for(var i = 0; i < newsOne.img.length; i++) {
+                    if(newsOne.image != undefined) {
+                        for(var i = 0; i < newsOne.image.length; i++) {
                             var img = {
-                                "file_src" : newsOne.img[i],
+                                "file_src" : newsOne.image[i],
                                 "news_key" : id,
                                 "type" : "img"
                             };
