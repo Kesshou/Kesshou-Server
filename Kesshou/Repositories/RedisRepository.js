@@ -28,6 +28,28 @@ cache.on("error", function(err) {
 var set = function(token, account) {
     cache.set(token, account);
     cache.expire(token, existTime);
+    cache.set(account, token);
+    cache.expire(account, existTime);
+}
+
+var checkAccount = function(token, account) {
+    var Token = token;
+    var Account = account;
+    this.getAccount(Account).then(function(result) {
+        if(result) {
+            cache.delAsync(result).then(function() {
+                return cache.delAsync(Account);
+            }).then(function() {
+                set(Token, Account);
+            });
+        } else {
+            set(Token, Account);
+        }
+    });
+    // cache.set(token, account);
+    // cache.expire(token, existTime);
+    // cache.set(account, token);
+    // cache.expire(account, existTime);
 }
 
 /*
@@ -70,9 +92,11 @@ var getUserData = function(token) {
 
 module.exports = {
 
-        set: set,
+    set: set,
 
-        getAccount: getAccount,
+    checkAccount: checkAccount,
 
-        getUserData: getUserData
+    getAccount: getAccount,
+
+    getUserData: getUserData
 };
