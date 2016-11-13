@@ -1,9 +1,11 @@
 /*
 *Author: blackkite0206233,yoyo930021
-*Description: This file is used to control the user's data..
+*Description: This file is used to control the user's data.
 */
 var Promise = require('bluebird');
 var models  = Promise.promisifyAll(require('../../models'));
+
+var GroupRepository = require('./GroupRepository');
 
 /*
 *Author: blackkite0206233,yoyo930021
@@ -71,11 +73,11 @@ var checkSameNick = function(nick) {
 */
 var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, finishYear) {
     return new Promise(function(resolve, reject) {
-        models.Group.findOne({ where: {comment: userGroup} }).then(function(group){
+        GroupRepository.getGroupID(userGroup).then(function(group){
             var NewAccount = {
                 email: email,
                 pwd: password,
-                group_id: group.get("id"),
+                group_id: group,
                 school_account: schoolAccount,
                 school_pwd: schoolPwd,
                 nick: nick,

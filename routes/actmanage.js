@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt-nodejs');
 var UserRepository = require('../Kesshou/Repositories/UserRepository');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 var ClassRepository = require('../Kesshou/Repositories/ClassRepository');
+var GroupRepository = require('../Kesshou/Repositories/GroupRepository');
 
 var CheckCharactersService = require('../Kesshou/Services/CheckCharactersService');
 var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
@@ -49,7 +50,7 @@ var getUnusedToken = function() {
 var createToken = function(account) {
     return new Promise(function(resolve, reject) {
         getUnusedToken().then(function(result) {
-            RedisRepository.set(result, account);
+            RedisRepository.checkAccount(result, account);
             resolve(result);
         });
     })
@@ -333,6 +334,7 @@ router.post('/confirmAccount', function(req, res, next) {
     }).then(function() {
         res.status(401).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
     }).catch(function(error) {
+        console.log(error);
         if(error == "非法字元") {
             res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
         } else {
@@ -357,7 +359,7 @@ router.post('/confirmAccount', function(req, res, next) {
         300: input has some illegal chars.
         400: server error.
 */
-router.post('/confirmSchool', function(req, rea, next) {
+router.post('/confirmSchool', function(req, res, next) {
     var schoolAccount = req.body.schoolAccount;
     var schoolPwd = req.body.schoolPwd;
 
@@ -380,6 +382,30 @@ router.post('/confirmSchool', function(req, rea, next) {
                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
                 break;
         }
+    });
+});
+
+router.post('/getUserInfo', function(req, res, next) {
+    var token = req.body.token;
+    var user = {};
+    return new Promise(function(resolve, reject) {
+        RedisRepository.getUserData(token).then(function(result) {
+            if(result) {
+                user.name = result.name;
+                user.class = result.class;
+                user.nick = result.nick;
+                GroupRepository.getGroupName(result.group_id).then(function(result) {
+                    user.group = result;
+                    res.status(200).json({"user" : user});
+                }).catch(function(error) {
+                    res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                });
+            } else {
+                res.status(408).json({"error" : "token過期",  "code" : ErrorCodeService.tokenExpired});
+            }
+        }).catch(function(error) {
+            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        });
     });
 });
 
