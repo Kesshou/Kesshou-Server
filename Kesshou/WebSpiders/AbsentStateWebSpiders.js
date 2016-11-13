@@ -64,7 +64,7 @@ var getAbsentState = function(schoolAccount, schoolPwd) {
                         var date = sub.eq(3).text().trim();
                         absentState.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
                         absentState.type = sub.eq(j).text().trim();
-                        absentState.calss = classno[j - 5];
+                        absentState.class = classno[j - 5];
                         absentStates.push(absentState);
                     }
                 }

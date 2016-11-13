@@ -29,7 +29,7 @@ router.post('/announce', function(req, res, next) {
     var sort = req.body.sort;
     if(sort != "collect") {
         AnnounceRepository.getAnnouncement("sort", sort).then(function(result) {
-            res.status(200).json({"announce" : result});
+            res.status(200).json({result});
         }).catch(function(error) {
             res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });

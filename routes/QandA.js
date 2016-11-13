@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
         for(var i = 0; i < result.length; i++) {
             QandA.push(result[i].get());
         }
-        res.status(200).json({"QandA" : QandA});
+        res.status(200).json({QandA});
     }).catch(function(error) {
         res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
