@@ -365,7 +365,7 @@ router.post('/confirmSchool', function(req, rea, next) {
     var checkPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
 
     Promise.all([checkAccount, schoolPwd]).then(function() {
-        return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd);
+        return CheckStuWebSpider.checkStuAccount(schoolAccount, schoolPwd, "");
     }).then(function() {
         res.status(200).json({"success" : "學校驗證正確"});
     }).catch(function(error) {
