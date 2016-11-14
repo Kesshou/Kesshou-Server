@@ -34,7 +34,7 @@ router.post('/', function(req, res, next) {
         var Class = stuClass.substr(0, 2) + finishYear + stuClass.substr(3);
         return CurriculumWebSpider.getCurriculum(Class);
     }).then(function(result) {
-        res.status(200).json({result});
+        res.status(200).json(result);
     }).catch(function(error) {
         res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });

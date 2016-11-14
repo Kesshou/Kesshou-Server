@@ -27,7 +27,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     var calendarUrl = "https://calendar.google.com/calendar/ical/mail.taivs.tp.edu.tw_lg08uahp6viuq3fls6578vvgk8%40group.calendar.google.com/public/basic.ics";
     CalendarService.getClendar(calendarUrl).then(function(result) {
-        res.status(200).json({result});
+        res.status(200).json(result);
     }).catch(function(error) {
         res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
