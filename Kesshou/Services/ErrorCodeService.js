@@ -1,6 +1,7 @@
 module.exports = {
 
-    accountError: 100,
+    pwdError: 100,
+    accountError: 101,
     schoolError: 102,
     tokenExpired: 103,
     illegalChar: 300,
