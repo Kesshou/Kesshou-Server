@@ -175,7 +175,7 @@ router.post('/register', function(req, res, next) {
                 res.status(200).json({ "token" :  result});
             }).catch(function(error) {
                 if(error == "暱稱已被使用")
-                    res.status(.nickUsed).json({"status" : error, "code" : ErrorCodeService.nickUsed});
+                    res.status(200).json({"status" : error, "code" : ErrorCodeService.nickUsed});
                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
             });
         });
