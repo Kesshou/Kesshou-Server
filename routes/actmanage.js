@@ -396,7 +396,7 @@ router.post('/getUserInfo', function(req, res, next) {
                 user.nick = result.nick;
                 GroupRepository.getGroupName(result.group_id).then(function(result) {
                     user.group = result;
-                    res.status(200).json({"user" : user});
+                    res.status(200).json(user);
                 }).catch(function(error) {
                     res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
                 });
