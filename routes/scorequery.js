@@ -34,7 +34,7 @@ router.post('/historyscore', function(req, res, next) {
         var schoolPwd = result.school_pwd;
         return ScoreWebSpiders.getHistoryScore(schoolAccount, schoolPwd, grade, semester);
     }).then(function(result) {
-        res.status(200).json({result});
+        res.status(200).json(result);
     }).catch(function(error) {
         console.log(error);
         res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
