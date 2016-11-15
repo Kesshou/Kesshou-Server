@@ -51,7 +51,7 @@ app.use(function(req, res, next) {
             console.log("token正確");
             next();
         } else {
-            res.status(200).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
+            res.status(401).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
         }
     });
 });
