@@ -45,7 +45,7 @@ app.use('/' + version + '/calendar', calendar);
         103: token is expired.
 */
 app.use(function(req, res, next) {
-    var token =req.headers["Authorization"];
+    var token =req.get("Authorization");
     console.log(token);
     RedisRepository.getAccount(token).then(function(result) {
         if(result) {
