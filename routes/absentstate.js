@@ -26,7 +26,7 @@ var router = express.Router();
             400: server error.
 */
 router.get('/', function(req, res, next) {
-    var token = req.headers["Authorization"];
+    var token = req.get("Authorization");
     RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;

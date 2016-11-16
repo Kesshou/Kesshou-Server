@@ -218,7 +218,7 @@ router.post('/register', function(req, res, next) {
 router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
 
-    RedisRepository.getAccount(req.headers["Authorization"]).then(function(result) {
+    RedisRepository.getAccount(req.get("Authorization")).then(function(result) {
         if(result) {
             UserRepository.getUserInfo(result).then(function(result) {
                 var userInfo = result;
@@ -244,7 +244,7 @@ router.put('/updateinfo', function(req, res, next) {
                                 var newName = result;
                                 return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
                             }).then(function() {
-                                RedisRepository.set(req.headers["Authorization"], userInfo.email);
+                                RedisRepository.set(req.get("Authorization"), userInfo.email);
                                 res.status(200).json({ "success" :  "更新成功"});
                             }).catch(function(error) {
                                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
@@ -386,7 +386,7 @@ router.post('/confirmSchool', function(req, res, next) {
 });
 
 router.get('/getUserInfo', function(req, res, next) {
-    var token = req.headers["Authorization"];
+    var token = req.get("Authorization");
     var user = {};
     return new Promise(function(resolve, reject) {
         RedisRepository.getUserData(token).then(function(result) {
