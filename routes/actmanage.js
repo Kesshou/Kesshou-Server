@@ -164,7 +164,7 @@ router.post('/register', function(req, res, next) {
             finishYear = result;
         }
         UserRepository.getUserPassword(user.email).then(function() {
-            res.status(400).json({"status" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+            res.status(400).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
         }).catch(function() {
             UserRepository.checkSameNick(user.nick).then(function() {
                 return UserRepository.createUser(user.email, hsahPassword, user.user_group,
@@ -175,7 +175,7 @@ router.post('/register', function(req, res, next) {
                 res.status(200).json({ "token" :  result});
             }).catch(function(error) {
                 if(error == "暱稱已被使用")
-                    res.status(400).json({"status" : error, "code" : ErrorCodeService.nickUsed});
+                    res.status(400).json({"error" : error, "code" : ErrorCodeService.nickUsed});
                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
             });
         });
@@ -218,7 +218,7 @@ router.post('/register', function(req, res, next) {
 router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
 
-    RedisRepository.getAccount(updateData.token).then(function(result) {
+    RedisRepository.getAccount(req.headers["Authorization"]).then(function(result) {
         if(result) {
             UserRepository.getUserInfo(result).then(function(result) {
                 var userInfo = result;
@@ -238,13 +238,13 @@ router.put('/updateinfo', function(req, res, next) {
                         return UserRepository.checkSameNick(nick);
                     }).then(function() {
                         UserRepository.getUserPassword(newEmail).then(function() {
-                            res.status(400).json({"status" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+                            res.status(400).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
                         }).catch(function() {
                             CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name).then(function(result) {
                                 var newName = result;
                                 return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
                             }).then(function() {
-                                RedisRepository.set(updateData.token, userInfo.email);
+                                RedisRepository.set(req.headers["Authorization"], userInfo.email);
                                 res.status(200).json({ "success" :  "更新成功"});
                             }).catch(function(error) {
                                 res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
@@ -385,8 +385,8 @@ router.post('/confirmSchool', function(req, res, next) {
     });
 });
 
-router.post('/getUserInfo', function(req, res, next) {
-    var token = req.body.token;
+router.get('/getUserInfo', function(req, res, next) {
+    var token = req.headers["Authorization"];
     var user = {};
     return new Promise(function(resolve, reject) {
         RedisRepository.getUserData(token).then(function(result) {

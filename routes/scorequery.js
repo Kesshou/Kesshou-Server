@@ -25,10 +25,10 @@ var router = express.Router();
         code:
             400: server error.
 */
-router.post('/historyscore', function(req, res, next) {
-    var token = req.body.token;
-    var grade = req.body.grade;
-    var semester = req.body.semester;
+router.get('/historyscore/:grade/:semester', function(req, res, next) {
+    var token = req.headers["Authorization"];
+    var grade = req.params.grade;
+    var semester = req.params.semester;
     RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;
@@ -55,9 +55,9 @@ router.post('/historyscore', function(req, res, next) {
         code:
             400: server error.
 */
-router.post('/sectionalexamscore', function(req, res, next) {
-    var token = req.body.token;
-    var semester = req.body.semester;
+router.get('/sectionalexamscore/:semester', function(req, res, next) {
+    var token = req.headers["Authorization"];
+    var semester = req.params.semester;
     RedisRepository.getUserData(token).then(function(result) {
         var schoolAccount = result.school_account;
         var schoolPwd = result.school_pwd;
