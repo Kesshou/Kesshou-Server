@@ -46,6 +46,7 @@ app.use('/' + version + '/calendar', calendar);
 */
 app.use(function(req, res, next) {
     var token =req.headers["Authorization"];
+    console.log(toekn);
     RedisRepository.getAccount(token).then(function(result) {
         if(result) {
             console.log("token正確");
