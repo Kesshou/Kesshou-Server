@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     sort: DataTypes.STRING,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
+    hidden: DataTypes.BOOLEAN,
     date: DataTypes.DATE,
     memid: DataTypes.INTEGER
   }, {

@@ -334,7 +334,7 @@ router.post('/confirmAccount', function(req, res, next) {
     }).then(function() {
         res.status(200).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
     }).catch(function(error) {
-        console.log(error);
+        // console.log(error);
         if(error == "非法字元") {
             res.status(200).json({"error" : error, "code" : ErrorCodeService.illegalChar});
         } else {
