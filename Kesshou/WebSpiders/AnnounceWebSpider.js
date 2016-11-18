@@ -106,10 +106,11 @@ var repeater = function (startKey) {
         keyNotExist = 0;
         console.log(startKey+"存在！");
         getNewsParser($).then(function(newsone) {
-            console.log(newsone.image);
-            console.log(newsone.file);
+            // console.log(newsone.image);
+            // console.log(newsone.file);
             var newsOne = newsone;
             var news = {
+                "key" : startKey,
                 "title" : newsOne.title,
                 "date" : newsOne.date,
                 "body" : newsOne.body,
