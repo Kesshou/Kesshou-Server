@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/static',express.static( __dirname + '/public'));
 
 app.use('/' + version + '/actmanage', actmanage);
 app.use('/' + version + '/announcementdisplay', announcementdisplay);
@@ -45,13 +45,17 @@ app.use('/' + version + '/calendar', calendar);
         103: token is expired.
 */
 app.use(function(req, res, next) {
-    var token =req.body.token;
+    var token =req.get("Authorization");
     RedisRepository.getAccount(token).then(function(result) {
         if(result) {
             console.log("token正確");
             next();
         } else {
+<<<<<<< HEAD
             res.status(200).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
+=======
+            res.status(401).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
+>>>>>>> 7e9c12b1ec1dcb26f4ea3ce499ae0b7cc44e6bef
         }
     });
 });
