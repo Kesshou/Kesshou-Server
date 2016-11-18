@@ -31,8 +31,6 @@ var router = express.Router();
 */
 router.post('/getList', function(req, res, next) {
     var search = (req.body.search != undefined) ? req.body.search : "";
-    if(isNaN(search))
-        res.status(406).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
     if(search) {
         ForumlistRepository.searchForumlist(search).then(function(result) {
             res.status(200).json(result);
@@ -67,8 +65,6 @@ router.post('/getList', function(req, res, next) {
 router.post('/getArticle', function(req, res, next) {
     var forumlistId = req.body.formlistId;
     var search = (req.body.search != undefined) ? req.body.search : "";
-    if(isNaN(forumlistId) || isNaN(search))
-        res.status(406).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
     if(search) {
         ForumarticleRepository.searchForumarticle(forumlistId, search).then(function(result) {
             res.status(200).json(result);
@@ -102,8 +98,6 @@ router.post('/getArticle', function(req, res, next) {
 */
 router.post('/getResponse', function(req, res, next) {
     var articleId = req.body.articleId;
-    if(isNaN(articleId))
-        res.status(406).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
     ForumresponseRepository.getForumresponse(articleId).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
@@ -113,22 +107,22 @@ router.post('/getResponse', function(req, res, next) {
 
 router.post('/list', function(req, res, next) {
     var name = req.body.name;
-
-    CheckCharactersService.checkIllegalChar(name, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then(function() {
-        return ForumlistRepository.createForum(name);
-    }).then(function(reault) {
+    ForumlistRepository.createForum(name).then(function(reault) {
         res.status(200).json({"status" : "新增成功"});
     }).catch(function(error) {
-        if(error == "非法字元")
-            res.status(406).json({"error" : error, "code" : ErrorCodeService.illegalChar});
-        else
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
-    })
+        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+    });
 });
 
 router.post('/article', function(req, res, next) {
     var article = req.body;
-
+    var Article = {
+        forum_id: article.forumID,
+        title: article.title,
+        content: article.comtent,
+        hidden: 0,
+        
+    };
 });
 
 router.post('/response', function(req, res, next) {
