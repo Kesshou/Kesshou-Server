@@ -10,6 +10,7 @@ var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
 
 var CheckCharactersService = require('../Kesshou/Services/CheckCharactersService');
 var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
+var ImgurService = require('../Kesshou/Services/ImgurService');
 
 var router = express.Router();
 
@@ -122,10 +123,20 @@ router.post('/article', function(req, res, next) {
         content: article.comtent,
         hidden: 0,
     };
+
 });
 
 router.post('/response', function(req, res, next) {
     var response = req.body;
+});
+
+router.post('/addPicture', function(req, res, next) {
+    var pic = req.body.picture;
+    ImgurService.upload(pic).then(function(result) {
+        res.status(200).json("picture" : result);
+    }).catch(function(error) {
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+    });
 });
 
 module.exports = router;
