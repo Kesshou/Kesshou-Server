@@ -133,7 +133,7 @@ router.post('/response', function(req, res, next) {
 router.post('/addPicture', function(req, res, next) {
     var pic = req.body.picture;
     ImgurService.upload(pic).then(function(result) {
-        res.status(200).json("picture" : result);
+        res.status(200).json({"picture" : result});
     }).catch(function(error) {
         res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });

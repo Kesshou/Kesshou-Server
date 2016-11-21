@@ -55,6 +55,6 @@ module.exports = {
 
     searchForumarticle: searchForumarticle,
 
-    createForum: createForum
+    createArticle: createArticle
 
 };
