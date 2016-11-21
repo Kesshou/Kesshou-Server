@@ -36,7 +36,7 @@ router.get('/', function(req, res, next) {
         res.status(200).json(result);
     }).catch(function(error) {
         console.log(error);
-        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 

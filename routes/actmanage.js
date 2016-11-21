@@ -398,13 +398,13 @@ router.get('/getUserInfo', function(req, res, next) {
                     user.group = result;
                     res.status(200).json(user);
                 }).catch(function(error) {
-                    res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                    res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
                 });
             } else {
                 res.status(401).json({"error" : "token過期",  "code" : ErrorCodeService.tokenExpired});
             }
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     });
 });

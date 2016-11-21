@@ -22,7 +22,7 @@ var router = express.Router();
         status code:
             200: get forum list successfully.
             406: inputs have some illegal chars.
-            500: server error.
+            400: server error.
         forumlist: forum list.
         error: it is a string to explain the reason of error.
         code:
@@ -31,22 +31,17 @@ var router = express.Router();
 */
 router.post('/getList', function(req, res, next) {
     var search = (req.body.search != undefined) ? req.body.search : "";
-<<<<<<< HEAD
-=======
-    if(isNaN(search))
-        res.status(400).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
->>>>>>> 7e9c12b1ec1dcb26f4ea3ce499ae0b7cc44e6bef
     if(search) {
         ForumlistRepository.searchForumlist(search).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     } else {
         ForumlistRepository.getForumlist().then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     }
 });
@@ -60,7 +55,7 @@ router.post('/getList', function(req, res, next) {
         status code:
             200: get forum list successfully.
             406: inputs have some illegal chars.
-            500: server error.
+            400: server error.
         forumartivle: forum article.
         error: it is a string to explain the reason of error.
         code:
@@ -70,22 +65,17 @@ router.post('/getList', function(req, res, next) {
 router.post('/getArticle', function(req, res, next) {
     var forumlistId = req.body.formlistId;
     var search = (req.body.search != undefined) ? req.body.search : "";
-<<<<<<< HEAD
-=======
-    if(isNaN(forumlistId) || isNaN(search))
-        res.status(400).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
->>>>>>> 7e9c12b1ec1dcb26f4ea3ce499ae0b7cc44e6bef
     if(search) {
         ForumarticleRepository.searchForumarticle(forumlistId, search).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     } else {
         ForumarticleRepository.getForumarticle(forumlistId).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
         });
     }
 });
@@ -99,7 +89,7 @@ router.post('/getArticle', function(req, res, next) {
         status code:
             200: get forum list successfully.
             406: inputs have some illegal chars.
-            500: server error.
+            400: server error.
         forumartivle: forum article.
         error: it is a string to explain the reason of error.
         code:
@@ -108,39 +98,20 @@ router.post('/getArticle', function(req, res, next) {
 */
 router.post('/getResponse', function(req, res, next) {
     var articleId = req.body.articleId;
-<<<<<<< HEAD
-=======
-    if(isNaN(articleId))
-        res.status(400).json({"error" : "非法字元", "code" : ErrorCodeService.illegalChar});
->>>>>>> 7e9c12b1ec1dcb26f4ea3ce499ae0b7cc44e6bef
     ForumresponseRepository.getForumresponse(articleId).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 
 router.post('/list', function(req, res, next) {
     var name = req.body.name;
-<<<<<<< HEAD
     ForumlistRepository.createForum(name).then(function(reault) {
         res.status(200).json({"status" : "新增成功"});
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
-=======
-
-    CheckCharactersService.checkIllegalChar(name, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then(function() {
-        return ForumlistRepository.createForum(name);
-    }).then(function(reault) {
-        res.status(200).json({"success" : "新增成功"});
-    }).catch(function(error) {
-        if(error == "非法字元")
-            res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
-        else
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
-    })
->>>>>>> 7e9c12b1ec1dcb26f4ea3ce499ae0b7cc44e6bef
 });
 
 router.post('/article', function(req, res, next) {
@@ -150,7 +121,6 @@ router.post('/article', function(req, res, next) {
         title: article.title,
         content: article.comtent,
         hidden: 0,
-        
     };
 });
 

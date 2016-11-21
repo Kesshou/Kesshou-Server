@@ -37,7 +37,7 @@ router.get('/historyscore/:grade/:semester', function(req, res, next) {
         res.status(200).json(result);
     }).catch(function(error) {
         console.log(error);
-        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 
@@ -49,7 +49,7 @@ router.get('/historyscore/:grade/:semester', function(req, res, next) {
     return:
         status code:
             200: get sectional exam score successfully.
-            500: server error.
+            400: server error.
         absentState: an array, each item contains first_section, second_section, last_section, performance, and average.
         error: it is a string to explain the reason of error.
         code:
@@ -65,7 +65,7 @@ router.get('/sectionalexamscore/:semester', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
-        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 })
 
