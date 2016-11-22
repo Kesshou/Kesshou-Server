@@ -67,7 +67,7 @@ app.use(function(req, res, next) {
     // var err = new Error('Not Found');
     // err.status = 404;
     // next(err);
-    res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+    res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
 });
 
 // error handlers

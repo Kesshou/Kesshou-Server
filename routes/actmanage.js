@@ -389,16 +389,19 @@ router.get('/getUserInfo', function(req, res, next) {
     var token = req.get("Authorization");
     var user = {};
     return new Promise(function(resolve, reject) {
-        RedisRepository.getUserData(token).then(function(result) {
+        RedisRepository.getAccount(token).then(function(result) {
+            console.log(result);
             if(result) {
-                user.name = result.name;
-                user.class = result.class;
-                user.nick = result.nick;
-                GroupRepository.getGroupName(result.group_id).then(function(result) {
-                    user.group = result;
-                    res.status(200).json(user);
-                }).catch(function(error) {
-                    res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                UserRepository.getUserInfo(result).then(function(result) {
+                    user.name = result.name;
+                    user.class = result.class;
+                    user.nick = result.nick;
+                    GroupRepository.getGroupName(result.group_id).then(function(result) {
+                        user.group = result;
+                        res.status(200).json(user);
+                    }).catch(function(error) {
+                        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                    });
                 });
             } else {
                 res.status(401).json({"error" : "token過期",  "code" : ErrorCodeService.tokenExpired});
