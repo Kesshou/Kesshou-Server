@@ -6,6 +6,10 @@ var upload = function(pic) {
         url: "https://api.imgur.com/3/image",
         json: {
             image: pic
+        },
+        header: {
+            "Authorization": "bd7b71f2897844c",
+            "Content-Type": "application/json"
         }
     }
     return new Promise(function(resolve, reject) {
