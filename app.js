@@ -17,7 +17,7 @@ var absentstate = require('./routes/absentstate');
 var qanda = require('./routes/QandA');
 var curriculum = require('./routes/curriculum');
 var calendar = require('./routes/calendar');
-//var forum = require('./routes/forum');
+var forum = require('./routes/forum');
 
 var app = express();
 
@@ -61,7 +61,7 @@ app.use('/' + version + '/scorequery', scorequery);
 app.use('/' + version + '/attitudestatus', attitudestatus);
 app.use('/' + version + '/absentstate', absentstate);
 app.use('/' + version + '/curriculum', curriculum);
-//app.use('/' + version + '/forum', forum);
+app.use('/' + version + '/forum', forum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

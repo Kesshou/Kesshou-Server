@@ -38,7 +38,7 @@ var createArticle = function(article) {
         title: article.title,
         content: article.content,
         date: article.date,
-        memid, article.memid,
+        memid: article.memid,
         hidden: 0
     };
     return new Promise(function(resolve, reject) {
