@@ -34,7 +34,7 @@ var getCurriculum = function(Class) {
             var classCurriculum = {};
             var rows = $("table tr");
             for (var i = 1; i <= 5; i++) {
-                classCurriculum['week' + i] = [];
+                classCurriculum[i] = [];
             }
 
             for (var i = 2; i < rows.length; i++) {
@@ -63,7 +63,7 @@ var getCurriculum = function(Class) {
                         subject: subject,
                         teacher: teacher
                     }
-                    classCurriculum['week' + j].push(classInfo);
+                    classCurriculum[j].push(classInfo);
                 }
             }
             console.log(classCurriculum);
