@@ -33,7 +33,7 @@ var getCurriculum = function(Class) {
             var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"),"Big5"));
             var classCurriculum = [];
             var rows = $("table tr");
-            for (var i = 0; i <= 4; i++) {
+            for (var i = 1; i <= 5; i++) {
                 classCurriculum[i] = [];
             }
 
@@ -66,6 +66,7 @@ var getCurriculum = function(Class) {
                     classCurriculum[j].push(classInfo);
                 }
             }
+            classCurriculum.splice(0,1);
             console.log(classCurriculum);
             resolve(classCurriculum);
         }).catch(function(error) {
