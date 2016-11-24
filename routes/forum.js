@@ -65,6 +65,8 @@ router.post('/getList', function(req, res, next) {
 */
 router.post('/getArticle', function(req, res, next) {
     var forumlistId = req.body.formlistId;
+    if(forumlistId == undefined)
+        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
     var search = (req.body.search != undefined) ? req.body.search : "";
     if(search) {
         ForumarticleRepository.searchForumarticle(forumlistId, search).then(function(result) {
@@ -99,6 +101,8 @@ router.post('/getArticle', function(req, res, next) {
 */
 router.post('/getResponse', function(req, res, next) {
     var articleId = req.body.articleId;
+    if(articleId == undefined)
+        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
     ForumresponseRepository.getForumresponse(articleId).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
@@ -108,6 +112,8 @@ router.post('/getResponse', function(req, res, next) {
 
 router.post('/list', function(req, res, next) {
     var name = req.body.name;
+    if(name == undefined)
+        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
     ForumlistRepository.createForum(name).then(function(reault) {
         res.status(200).json({"status" : "新增成功"});
     }).catch(function(error) {
@@ -116,14 +122,21 @@ router.post('/list', function(req, res, next) {
 });
 
 router.post('/article', function(req, res, next) {
+    var token = req.get("Authorization");
     var article = req.body;
-    var Article = {
-        forum_id: article.forumID,
-        title: article.title,
-        content: article.comtent,
-        hidden: 0,
-    };
-
+    if(article.forumID == undefined || article.sort == undefined || article.title == undefined || article.content == undefined || article.date == undefined)
+        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+    RedisRepository.getUserInfo(token).then(function(result) {
+        article.memid = result.id;
+        return ForumarticleRepository.createArticle(article);
+    }).then(function(result) {
+        res.status(200).json({"status" : "新增成功"});
+    }).catch(function(error) {
+        if(error == "token過期")
+            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+        else
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+    });
 });
 
 router.post('/response', function(req, res, next) {

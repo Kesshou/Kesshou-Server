@@ -31,17 +31,18 @@ var searchForumarticle = function(forumlistId, title) {
     });
 }
 
-var createArticle = function(forumlistId, sort, title, content, date, memid) {
-    var article = {
-        forum_id: forumlistId,
-        sort: sort,
-        title: title,
-        content: content,
-        date: date,
-        memid, memid
+var createArticle = function(article) {
+    var Articles = {
+        forum_id: article.forumID,
+        sort: article.sort,
+        title: article.title,
+        content: article.content,
+        date: article.date,
+        memid, article.memid,
+        hidden: 0
     };
     return new Promise(function(resolve, reject) {
-        models.Article.create(article).then(function(result) {
+        models.Article.create(Articles).then(function(result) {
             resolve();
         }).catch(function(error) {
             reject();

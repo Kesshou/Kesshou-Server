@@ -5,6 +5,7 @@ module.exports = {
     schoolError: 102,
     tokenExpired: 103,
     illegalChar: 300,
+    emptyInput: 301,
     serverError: 400,
     nickUsed: 500,
     accountUsed: 501

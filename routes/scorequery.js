@@ -37,7 +37,10 @@ router.get('/historyscore/:grade/:semester', function(req, res, next) {
         res.status(200).json(result);
     }).catch(function(error) {
         console.log(error);
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        if(error == "token過期")
+            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+        else
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 
@@ -65,7 +68,10 @@ router.get('/sectionalexamscore/:semester', function(req, res, next) {
     }).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        if(error == "token過期")
+            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+        else
+            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 })
 

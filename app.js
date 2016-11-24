@@ -17,7 +17,7 @@ var absentstate = require('./routes/absentstate');
 var qanda = require('./routes/QandA');
 var curriculum = require('./routes/curriculum');
 var calendar = require('./routes/calendar');
-var forum = require('./routes/forum');
+//var forum = require('./routes/forum');
 
 var app = express();
 
@@ -48,19 +48,20 @@ app.use('/' + version + '/calendar', calendar);
 app.use(function(req, res, next) {
     var token =req.get("Authorization");
     RedisRepository.getAccount(token).then(function(result) {
-        if(result) {
-            console.log("token正確");
-            next();
-        } else {
-            res.status(401).json({"error" : "token過期", "code" : ErrorCodeService.tokenExpired});
-        }
+        console.log("token正確");
+        next();
+    }).catch(function(error) {
+        if(error == "token過期")
+            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+        else
+            res.status(40).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
     });
 });
 app.use('/' + version + '/scorequery', scorequery);
 app.use('/' + version + '/attitudestatus', attitudestatus);
 app.use('/' + version + '/absentstate', absentstate);
 app.use('/' + version + '/curriculum', curriculum);
-app.use('/' + version + '/forum', forum);
+//app.use('/' + version + '/forum', forum);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

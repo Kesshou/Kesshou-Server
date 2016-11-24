@@ -36,20 +36,14 @@ var checkAccount = function(token, account) {
     var Token = token;
     var Account = account;
     this.getAccount(Account).then(function(result) {
-        if(result) {
-            cache.delAsync(result).then(function() {
-                return cache.delAsync(Account);
-            }).then(function() {
-                set(Token, Account);
-            });
-        } else {
-            set(Token, Account);
-        }
+        return cache.delAsync(result);
+    }).then(function() {
+        return cache.delAsync(Account);
+    }).then(function() {
+        set(Token, Account);
+    }).catch(function() {
+        set(Token, Account);
     });
-    // cache.set(token, account);
-    // cache.expire(token, existTime);
-    // cache.set(account, token);
-    // cache.expire(account, existTime);
 }
 
 /*
@@ -64,7 +58,10 @@ var checkAccount = function(token, account) {
 var getAccount = function(token) {
     return new Promise(function(resolve, reject) {
         cache.getAsync(token).then(function(result) {
+            if(result)
                 resolve(result);
+            else
+                reject("token過期");
         });
     });
 }
