@@ -34,7 +34,7 @@ var getCurriculum = function(Class) {
             var classCurriculum = [];
             var rows = $("table tr");
             for (var i = 1; i <= 5; i++) {
-                classCurriculum.push([]);
+                classCurriculum[i] = [];
             }
 
             for (var i = 2; i < rows.length; i++) {
