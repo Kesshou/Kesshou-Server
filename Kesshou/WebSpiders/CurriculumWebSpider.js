@@ -31,10 +31,10 @@ var getCurriculum = function(Class) {
                 reject("伺服器錯誤");
             }
             var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"),"Big5"));
-            var classCurriculum = {};
+            var classCurriculum = [];
             var rows = $("table tr");
             for (var i = 1; i <= 5; i++) {
-                classCurriculum[i] = [];
+                classCurriculum.push([]);
             }
 
             for (var i = 2; i < rows.length; i++) {
