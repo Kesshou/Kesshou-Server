@@ -48,13 +48,12 @@ app.use('/' + version + '/calendar', calendar);
 app.use(function(req, res, next) {
     var token =req.get("Authorization");
     RedisRepository.getAccount(token).then(function(result) {
-        console.log("token正確");
         next();
     }).catch(function(error) {
         if(error == "token過期")
-            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+            res.status(401).json(ErrorCodeService.tokenExpired);
         else
-            res.status(40).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
     });
 });
 app.use('/' + version + '/scorequery', scorequery);
@@ -68,7 +67,7 @@ app.use(function(req, res, next) {
     // var err = new Error('Not Found');
     // err.status = 404;
     // next(err);
-    res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+    res.status(400).json(ErrorCodeService.serverError);
 });
 
 // error handlers

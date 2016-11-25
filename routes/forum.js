@@ -140,7 +140,11 @@ router.post('/article', function(req, res, next) {
 });
 
 router.post('/response', function(req, res, next) {
+    var token = req.get("Authorization");
     var response = req.body;
+    if(response.articleID == undefined || response.sort == undefined || response.content == undefined || response.date == undefined)
+        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+
 });
 
 router.post('/addPicture', function(req, res, next) {

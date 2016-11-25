@@ -38,9 +38,9 @@ router.get('/historyscore/:grade/:semester', function(req, res, next) {
     }).catch(function(error) {
         console.log(error);
         if(error == "token過期")
-            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+            res.status(401).json(ErrorCodeService.tokenExpired);
         else
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
     });
 });
 

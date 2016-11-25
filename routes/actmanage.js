@@ -80,13 +80,13 @@ router.post('/login', function(req, res, next) {
     var user =  req.body;
 
     if(user.account == undefined || user.password == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
 
     CheckCharactersService.checkEmail(user.account).then(function() {
             return UserRepository.getUserPassword(user.account);
         }).then(function(result) {
             if(!bcrypt.compareSync(user.password, result)) {
-                res.status(400).json({"error" : "密碼錯誤", "code" : ErrorCodeService.pwdError});
+                res.status(400).json(ErrorCodeService.pwdError);
             } else {
                 createToken(user.account).then(function(result) {
                     res.status(200).json({ "token" :  result});
@@ -95,13 +95,13 @@ router.post('/login', function(req, res, next) {
         }).catch(function(error) {
             switch (error) {
                 case "非法字元":
-                    res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+                    res.status(400).json(ErrorCodeService.illegalChar);
                     break;
                 case "帳號錯誤":
-                    res.status(400).json({"error" : error, "code" : ErrorCodeService.accountError});
+                    res.status(400).json(ErrorCodeService.accountError);
                     break;
                 default:
-                    res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                    res.status(500).json(ErrorCodeService.serverError);
                     break;
             }
         });
@@ -131,7 +131,7 @@ router.post('/register', function(req, res, next) {
     var user =  req.body;
 
     if(user.password == undefined || user.email == undefined || user.nick == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
 
     var hsahPassword = bcrypt.hashSync(user.password);
     var schoolAccount = (user.school_account != undefined) ? user.school_account : "";
@@ -161,7 +161,7 @@ router.post('/register', function(req, res, next) {
             finishYear = result;
         }
         UserRepository.getUserPassword(user.email).then(function() {
-            res.status(400).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+            res.status(400).json(ErrorCodeService.accountUsed);
         }).catch(function() {
             UserRepository.checkSameNick(user.nick).then(function() {
                 return UserRepository.createUser(user.email, hsahPassword, user.user_group,
@@ -172,20 +172,20 @@ router.post('/register', function(req, res, next) {
                 res.status(200).json({ "token" :  result});
             }).catch(function(error) {
                 if(error == "暱稱已被使用")
-                    res.status(400).json({"error" : error, "code" : ErrorCodeService.nickUsed});
-                res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                    res.status(400).json(ErrorCodeService.nickUsed);
+                res.status(500).json(ErrorCodeService.serverError);
             });
         });
     }).catch(function(error) {
         switch(error) {
             case "非法字元":
-                res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+                res.status(400).json(ErrorCodeService.illegalChar);
                 break;
             case "學校驗證錯誤":
-                res.status(400).json({"error" : error, "code" : ErrorCodeService.schoolError});
+                res.status(400).json(ErrorCodeService.schoolError);
                 break;
             default:
-                res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                res.status(500).json(ErrorCodeService.serverError);
                 break;
         }
 
@@ -228,13 +228,13 @@ router.put('/updateinfo', function(req, res, next) {
         var checkSchoolPwd = CheckCharactersService.allowNumbersAndAlphabets(newSchoolPwd);
 
         if (updateData.password == undefined || updateData.password == "" || !bcrypt.compareSync(updateData.password, userInfo.pwd)) {
-            res.status(400).json({"error" : "密碼錯誤", "code" : ErrorCodeService.pwdError});
+            res.status(400).json(ErrorCodeService.pwdError);
         } else {
             Promise.all([checkAccount, checkSchoolPwd, checkNick]).then(function() {
                 return UserRepository.checkSameNick(nick);
             }).then(function() {
                 UserRepository.getUserPassword(newEmail).then(function() {
-                    res.status(400).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+                    res.status(400).json(ErrorCodeService.accountUsed);
                 }).catch(function() {
                     CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name).then(function(result) {
                         var newName = result;
@@ -243,31 +243,31 @@ router.put('/updateinfo', function(req, res, next) {
                         RedisRepository.set(req.get("Authorization"), userInfo.email);
                         res.status(200).json({ "success" :  "更新成功"});
                     }).catch(function(error) {
-                        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                        res.status(500).json(ErrorCodeService.serverError);
                     });
                 });
             }).catch(function(error) {
                 switch (error) {
                     case "暱稱已被使用":
-                        res.status(400).json({"status" : error, "code" : ErrorCodeService.nickUsed});
+                        res.status(400).json(ErrorCodeService.nickUsed);
                         break;
                     case "非法字元":
-                        res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+                        res.status(400).json(ErrorCodeService.illegalChar);
                         break;
                     case "學校驗證錯誤":
-                        res.status(400).json({"error" : error, "code" : ErrorCodeService.schoolError});
+                        res.status(400).json(ErrorCodeService.schoolError);
                         break;
                     default:
-                        res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                        res.status(500).json(ErrorCodeService.serverError);
                         break;
                 }
             });
         }
     }).catch(function(error) {
         if(error == "token過期")
-            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+            res.status(401).json(ErrorCodeService.tokenExpired);
         else
-            res.status(500).json({"error" : error, "code" : ErrorCodeService.serverError});
+            res.status(500).json(ErrorCodeService.serverError);
     });
 });
 
@@ -291,18 +291,18 @@ router.put('/updateinfo', function(req, res, next) {
 router.post('/confirmNick', function(req, res, next) {
     var nick = req.body.nick;
     if(nick == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then (function() {
         return UserRepository.checkSameNick(nick);
     }).then(function() {
         res.status(200).json({"success" : "暱稱無人使用"});
     }).catch(function(error) {
         if(error == "暱稱已被使用") {
-            res.status(400).json({"error" : error, "code" : ErrorCodeService.nickUsed});
+            res.status(400).json(ErrorCodeService.nickUsed);
         } else if(error == "非法字元") {
-            res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+            res.status(400).json(ErrorCodeService.illegalChar);
         } else {
-            res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(500).json(ErrorCodeService.serverError);
         }
     });
 });
@@ -325,15 +325,15 @@ router.post('/confirmNick', function(req, res, next) {
 router.post('/confirmAccount', function(req, res, next) {
     var account = req.body.account;
     if(account == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     CheckCharactersService.checkEmail(account).then(function() {
         return UserRepository.getUserPassword(account);
     }).then(function() {
-        res.status(400).json({"error" : "帳號已被使用", "code" : ErrorCodeService.accountUsed});
+        res.status(400).json(ErrorCodeService.accountUsed);
     }).catch(function(error) {
         // console.log(error);
         if(error == "非法字元") {
-            res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+            res.status(400).json(ErrorCodeService.illegalChar);
         } else {
             res.status(200).json({"success" : "帳號無人使用"});
         }
@@ -360,7 +360,7 @@ router.post('/confirmSchool', function(req, res, next) {
     var schoolAccount = req.body.schoolAccount;
     var schoolPwd = req.body.schoolPwd;
     if(schoolAccount == undefined || schoolPwd == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     var checkAccount = CheckCharactersService.allowNumbersAndAlphabets(schoolAccount);
     var checkPwd = CheckCharactersService.allowNumbersAndAlphabets(schoolPwd);
 
@@ -371,13 +371,13 @@ router.post('/confirmSchool', function(req, res, next) {
     }).catch(function(error) {
         switch(error) {
             case "非法字元":
-                res.status(400).json({"error" : error, "code" : ErrorCodeService.illegalChar});
+                res.status(400).json(ErrorCodeService.illegalChar);
                 break;
             case "學校驗證錯誤":
-                res.status(400).json({"error" : error, "code" : ErrorCodeService.schoolError});
+                res.status(400).json(ErrorCodeService.schoolError);
                 break;
             default:
-                res.status(500).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                res.status(500).json(ErrorCodeService.serverError);
                 break;
         }
     });
@@ -400,9 +400,9 @@ router.get('/getUserInfo', function(req, res, next) {
             res.status(200).json(user);
         }).catch(function(error) {
             if(error == "token過期")
-                res.status(401).json({"error" : "token過期",  "code" : ErrorCodeService.tokenExpired});
+                res.status(401).json(ErrorCodeService.tokenExpired);
             else
-                res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+                res.status(400).json(ErrorCodeService.serverError);
         });
     });
 });

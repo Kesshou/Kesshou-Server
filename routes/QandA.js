@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
         }
         res.status(200).json(QandA);
     }).catch(function(error) {
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json(ErrorCodeService.serverError);
     });
 });
 
