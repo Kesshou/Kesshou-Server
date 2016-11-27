@@ -66,7 +66,6 @@ var getCurriculum = function(Class) {
                     classCurriculum['week' + j].push(classInfo);
                 }
             }
-            classCurriculum.splice(0,1);
             console.log(classCurriculum);
             resolve(classCurriculum);
         }).catch(function(error) {
