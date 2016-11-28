@@ -16,9 +16,6 @@ var router = express.Router();
     This function is the API which was used to return calendar.
 *Usage:
     return:
-        status code:
-            200: get calendar successfully.
-            500: server error.
         calendar: school's schedule.
         error: it is a string to explain the reason of error.
         code:

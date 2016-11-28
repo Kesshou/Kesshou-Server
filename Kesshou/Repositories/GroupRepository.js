@@ -5,6 +5,16 @@
 var Promise = require('bluebird');
 var models  = Promise.promisifyAll(require('../../models'));
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get group's id.
+*Usage:
+    groupName: user's group name.
+    return:
+        resolve: user's group id.
+        reject: error.
+*/
 var getGroupID = function(groupName) {
     return new Promise(function(resolve, reject) {
         models.Group.findOne({ where: {name: groupName} }).then(function(result) {
@@ -15,6 +25,16 @@ var getGroupID = function(groupName) {
     });
 }
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to get group's name.
+*Usage:
+    groupName: user's group id.
+    return:
+        resolve: user's group name.
+        reject: error.
+*/
 var getGroupName = function(groupID) {
     return new Promise(function(resolve, reject) {
         models.Group.findOne({ where: {id: groupID} }).then(function(result) {

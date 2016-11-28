@@ -17,12 +17,10 @@ var router = express.Router();
     This function is the API which was used to return absent state.
 *Usage:
     return:
-        status code:
-            200: get absent state successfully.
-            500: server error.
         absentState: contains data, type, and class.
         error: it is a string to explain the reason of error.
         code:
+            103: token is expired.
             400: server error.
 */
 router.get('/', function(req, res, next) {

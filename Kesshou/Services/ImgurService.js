@@ -1,6 +1,20 @@
+/*
+*Author: blackkite0206233
+*Description: This file is used to control picture via imgur API.
+*/
 var Promise = require('bluebird');
 var request = Promise.promisifyAll(require("request"));
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used toupload picture.  Used promise.
+*Usage:
+    pic: the picture which you want to upload.
+    return:
+        resolve: the picture code responsed by imgur API.
+        reject: the reason of error.
+*/
 var upload = function(pic) {
     var uploadPic = {
         url: "https://api.imgur.com/3/image",
@@ -16,7 +30,7 @@ var upload = function(pic) {
         request.postAsync(uploadPic).then(function(result) {
             resolve(result);
         }).catch(function(error) {
-            reject();
+            reject(error);
         })
     });
 }

@@ -17,8 +17,6 @@ var router = express.Router();
     This function is the API which was used to return announcement.
 *Usage:
     return:
-        status code:
-            200: register successfully.
         announce: the announcement which was found.
         error: the reason of error.
         code:

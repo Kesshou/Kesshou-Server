@@ -17,8 +17,6 @@ var router = express.Router();
     This function is the API which was used to return school Q & A.
 *Usage:
     return:
-        status code:
-            200: register successfully.
         QandA: school Q & A.
         error: the reason of error.
         code:

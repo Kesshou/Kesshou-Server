@@ -17,12 +17,10 @@ var router = express.Router();
     This function is the API which was used to return history score.
 *Usage:
     return:
-        status code:
-            200: get history score successfully.
-            500: server error.
-        absentState: an array, each item contains type, credit, score, makeup(optional), retake(optional), and qualify.
+        absentState: user's absent status.
         error: it is a string to explain the reason of error.
         code:
+            103: token is expired.
             400: server error.
 */
 router.get('/historyscore/:grade/:semester', function(req, res, next) {
@@ -50,12 +48,10 @@ router.get('/historyscore/:grade/:semester', function(req, res, next) {
     This function is the API which was used to return sectional exam score.
 *Usage:
     return:
-        status code:
-            200: get sectional exam score successfully.
-            400: server error.
-        absentState: an array, each item contains first_section, second_section, last_section, performance, and average.
+        absentState: user's absent status.
         error: it is a string to explain the reason of error.
         code:
+            103: token is expired.
             400: server error.
 */
 router.get('/sectionalexamscore/:semester', function(req, res, next) {

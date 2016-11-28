@@ -32,6 +32,14 @@ var set = function(token, account) {
     cache.expire(account, existTime);
 }
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is used to check if account is already in redis server.
+*Usage:
+    account: the user's account.
+    token: a sentence contains 20 random characters.
+*/
 var checkAccount = function(token, account) {
     var Token = token;
     var Account = account;
@@ -52,8 +60,9 @@ var checkAccount = function(token, account) {
     This function is used to check if the token is valid and get user's account from redis server.  Used promise.
 *Usage:
     token: a sentence contains 20 random characters.
-    return: account.
-    reject: error.
+    return:
+        resolve: account.
+        reject: token過期.
 */
 var getAccount = function(token) {
     return new Promise(function(resolve, reject) {
@@ -72,8 +81,9 @@ var getAccount = function(token) {
     This function is used to  get user's data.  Used promise.
 *Usage:
     token: a sentence contains 20 random characters.
-    return: account.
-    reject: error.
+    return:
+        resolve: account.
+        reject: the reason of error.
 */
 var getUserData = function(token) {
     return new Promise(function(resolve, reject) {

@@ -68,8 +68,7 @@ var checkSameNick = function(nick) {
     schoolPwd: user's school password(optional).
     nick: user's nick.
     return:
-        resolve: Nan.
-        reject: error.
+        reject: the reason of error.
 */
 var createUser = function (email, password, userGroup, schoolAccount, schoolPwd, nick, name, userClass, finishYear) {
     return new Promise(function(resolve, reject) {
@@ -110,8 +109,7 @@ var createUser = function (email, password, userGroup, schoolAccount, schoolPwd,
     newEmail: user's new email.
     newName: user's new name.
     return:
-        resolve: Nan.
-        reject: error.
+        reject: the reason of error.
 */
 var updateUserInfo = function (account, newSchoolPwd, newNick, newPassword, newEmail, newName) {
     return new Promise(function(resolve, reject){

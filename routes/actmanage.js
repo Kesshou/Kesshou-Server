@@ -60,12 +60,6 @@ var createToken = function(account) {
     This function is the API which was used to confirm user's account and password.
 *Usage:
     return:
-        status code:
-            200: login successfully.
-            401: your account or password is wrong.
-            406: your inputs have some illegal chars.
-            408: your token was expired.(just used at debug)
-            500: server error.
         token(if login successfully):
             it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
@@ -74,6 +68,7 @@ var createToken = function(account) {
             100: password doesn't match.
             101: account doesn't match.
             300: inputs have some illegal chars.
+            301: some essential input are empty.
             400: server error.
 */
 router.post('/login', function(req, res, next) {
@@ -113,19 +108,17 @@ router.post('/login', function(req, res, next) {
     This function is the API which was used to register a new user.
 *Usage:
     return:
-        status code:
-            200: register successfully.
-            401: this account has been used.
-            406: the input of school doesn't exist.
-            406: your inputs have some illegal chars.
-            500: server error.
         token(if register successfully):
             it is a string which was produced by random and it was used to confirmed whether
             the login time is expire or not.
         error(if register failed): it is a string to explain the reason of error.
         code:
+            102: the input of school doesn't exist.
             300: inputs have some illegal chars.
+            301: some essential input are empty.
             400: server error.
+            500: nick is used.
+            501: account is used.
 */
 router.post('/register', function(req, res, next) {
     var user =  req.body;
@@ -197,20 +190,16 @@ router.post('/register', function(req, res, next) {
 *Description:
     This function is the API which was used to update user's information.
 *Usage:
-    status code:
-        200: update successfully.
-        401: your account or password is wrong.
-        401: your token was expired.
-        406: the input of school doesn't exist.
-        406: your inputs have some illegal chars.
-        500: server error.
     success(if update successfully): it is a string to tell you update successfully.
     error(if update failed): it is a string to explain the reason of error.
     code:
         100: password doesn't match.
-        102: school sccount or school password doesn't match.
+        102: the input of school doesn't exist.
+        103: token is expired.
         300: inputs have some illegal chars.
         400: server error.
+        500: nick is used.
+        501: account is used.
 */
 router.put('/updateinfo', function(req, res, next) {
     var updateData =  req.body;
@@ -276,15 +265,11 @@ router.put('/updateinfo', function(req, res, next) {
 *Description:
     This function is the API which was used to check user's nick.
 *Usage:
-    status code:
-        200: nick can be used.
-        401: nick is used.
-        406: nick has some illegal chars.
-        500: server error.
     success: it is a string to tell you the nick can be used.
     error: it is a string to explain the reason of error.
     code
         300: input has some illegal chars.
+        301: some essential input are empty.
         400: server error.
         500: nick is used.
 */
@@ -312,14 +297,11 @@ router.post('/confirmNick', function(req, res, next) {
 *Description:
     This function is the API which was used to check user's account.
 *Usage:
-    status code:
-        200: account can be used.
-        401: account is used.
-        406: account has some illegal chars.
     success: it is a string to tell you the account can be used.
     error: it is a string to explain the reason of error.
     code:
         300: input has some illegal chars.
+        301: some essential input are empty.
         500: account is used.
 */
 router.post('/confirmAccount', function(req, res, next) {
@@ -345,15 +327,12 @@ router.post('/confirmAccount', function(req, res, next) {
 *Description:
     This function is the API which was used to check user's school account.
 *Usage:
-    status code:
-        200: school account is correct.
-        406: account has some illegal chars or the school account is incorrect..
-        500: server error.
     success: it is a string to tell you the school account is correct.
     error: it is a string to explain the reason of error.
     code:
         102: school account is incorrect.
         300: input has some illegal chars.
+        301: some essential input are empty.
         400: server error.
 */
 router.post('/confirmSchool', function(req, res, next) {
@@ -383,6 +362,18 @@ router.post('/confirmSchool', function(req, res, next) {
     });
 });
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to get user's information.
+*Usage:
+    success: user's information.
+    error: it is a string to explain the reason of error.
+    code:
+        103: token is expired
+        301: some essential input are empty.
+        400: server error.
+*/
 router.get('/getUserInfo', function(req, res, next) {
     var token = req.get("Authorization");
     var user = {};

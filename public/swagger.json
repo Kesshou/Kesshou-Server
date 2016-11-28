@@ -63,6 +63,12 @@
                             "$ref": "#/definitions/Error"
                         }
                     },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "400": {
                         "description": "伺服器錯誤",
                         "schema": {
@@ -140,6 +146,12 @@
                     },
                     "300": {
                         "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -302,6 +314,12 @@
                             "$ref": "#/definitions/Error"
                         }
                     },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "501": {
                         "description": "帳號已被使用",
                         "schema": {
@@ -345,6 +363,12 @@
                     },
                     "300": {
                         "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -409,6 +433,12 @@
                     },
                     "300": {
                         "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -649,12 +679,6 @@
                 ],
                 "description": "得到日曆",
                 "responses": {
-                    "103": {
-                        "description": "token過期",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
                     "200": {
                         "description": "ok",
                         "schema": {
@@ -750,12 +774,6 @@
                 ],
                 "description": "查詢學校",
                 "responses": {
-                    "103": {
-                        "description": "token過期",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
                     "200": {
                         "description": "ok",
                         "schema": {

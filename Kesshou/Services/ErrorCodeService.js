@@ -1,3 +1,7 @@
+/*
+*Author: blackkite0206233
+*Description: This file is used to set error response and code.
+*/
 module.exports = {
 
     pwdError: {error: "密碼錯誤", code: 100},

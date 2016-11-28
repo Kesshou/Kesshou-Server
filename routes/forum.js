@@ -20,14 +20,9 @@ var router = express.Router();
     This function is the API which was used to return forum list.
 *Usage:
     return:
-        status code:
-            200: get forum list successfully.
-            406: inputs have some illegal chars.
-            400: server error.
         forumlist: forum list.
         error: it is a string to explain the reason of error.
         code:
-            300: inputs have some illegal chars.
             400: server error.
 */
 router.post('/getList', function(req, res, next) {
@@ -53,14 +48,10 @@ router.post('/getList', function(req, res, next) {
     This function is the API which was used to return forum article.
 *Usage:
     return:
-        status code:
-            200: get forum list successfully.
-            406: inputs have some illegal chars.
-            400: server error.
-        forumartivle: forum article.
+        forumarticle: forum article.
         error: it is a string to explain the reason of error.
         code:
-            300: inputs have some illegal chars.
+            301: some essential input are empty.
             400: server error.
 */
 router.post('/getArticle', function(req, res, next) {
@@ -89,14 +80,10 @@ router.post('/getArticle', function(req, res, next) {
     This function is the API which was used to return forum article.
 *Usage:
     return:
-        status code:
-            200: get forum list successfully.
-            406: inputs have some illegal chars.
-            400: server error.
-        forumartivle: forum article.
+        forumresponse: forum article's response.
         error: it is a string to explain the reason of error.
         code:
-            300: inputs have some illegal chars.
+            301: some essential input are empty.
             400: server error.
 */
 router.post('/getResponse', function(req, res, next) {
@@ -110,6 +97,18 @@ router.post('/getResponse', function(req, res, next) {
     });
 });
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to create a new forum list.
+*Usage:
+    return:
+        status: successful message.
+        error: it is a string to explain the reason of error.
+        code:
+            301: some essential input are empty.
+            400: server error.
+*/
 router.post('/list', function(req, res, next) {
     var name = req.body.name;
     if(name == undefined)
@@ -121,6 +120,18 @@ router.post('/list', function(req, res, next) {
     });
 });
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to create a new forum article.
+*Usage:
+    return:
+        status: successful message.
+        error: it is a string to explain the reason of error.
+        code:
+            301: some essential input are empty.
+            400: server error.
+*/
 router.post('/article', function(req, res, next) {
     var token = req.get("Authorization");
     var article = req.body;
@@ -139,6 +150,18 @@ router.post('/article', function(req, res, next) {
     });
 });
 
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to create a new article response.
+*Usage:
+    return:
+        status: successful message.
+        error: it is a string to explain the reason of error.
+        code:
+            301: some essential input are empty.
+            400: server error.
+*/
 router.post('/response', function(req, res, next) {
     var token = req.get("Authorization");
     var response = req.body;
@@ -157,12 +180,26 @@ router.post('/response', function(req, res, next) {
     });
 });
 
-router.post('/addPicture', function(req, res, next) {
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to upload picture.
+*Usage:
+    return:
+        picture: picture's code.
+        error: it is a string to explain the reason of error.
+        code:
+            301: some essential input are empty.
+            400: server error.
+*/
+router.post('/uploadPicture', function(req, res, next) {
     var pic = req.body.picture;
+    if(pic == undefined)
+        res.status(400).json(ErrorCodeService.emptyInput);
     ImgurService.upload(pic).then(function(result) {
         res.status(200).json({"picture" : result});
     }).catch(function(error) {
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json(ErrorCodeService.serverError);
     });
 });
 

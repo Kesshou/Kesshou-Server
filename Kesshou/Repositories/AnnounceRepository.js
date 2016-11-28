@@ -13,8 +13,8 @@ var models  = Promise.promisifyAll(require('../../models'));
     field: the field which you want to designate.
     value: the value which you hope the field's value is match
     return:
-        resolve(if execute successfully): the announce which was found.
-        reject(if execute failed): the error message.
+        resolve: the announce which was found.
+        reject: the reason of error.
 */
 var getAnnouncement = function(field, value) {
     return new Promise(function(resolve, reject) {
@@ -48,8 +48,6 @@ var getAnnouncement = function(field, value) {
         to the announcement object.  Used promise.
 *Usage:
     news: the announcement's id.
-    return:
-        resolve(if execute successfully): Nan.
 */
 var getAnnouncementFile = function(news) {
     return new Promise(function(resolve, reject) {

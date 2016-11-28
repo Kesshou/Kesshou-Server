@@ -56,8 +56,8 @@ var login = function(schoolAccount, schoolPwd) {
 *Usage:
     schoolAccount: student's school account.
     schoolPwd: student's school password.
-    grade: student's grade(1, 2, 3 ("一年級", "二年級", "三年級"))
-    semester: semester(1, 2 ("上、下學期"))
+    grade: student's grade.
+    semester: semester.
     return:
         resolve: a json type history score.
         reject: the reason of error.
@@ -124,7 +124,7 @@ var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
 *Usage:
     schoolAccount: student's school account.
     schoolPwd: student's school password.
-    semester: semester(1, 2 ("上、下學期"))
+    semester: semester.
     return:
         resolve: a json type exam score.
         reject: the reason of error.
