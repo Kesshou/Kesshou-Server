@@ -45,7 +45,7 @@ var createArticle = function(article) {
         models.Article.create(Articles).then(function(result) {
             resolve();
         }).catch(function(error) {
-            reject();
+            reject(error);
         });
     });
 }

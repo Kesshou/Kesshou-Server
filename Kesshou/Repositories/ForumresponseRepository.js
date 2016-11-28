@@ -18,9 +18,9 @@ var getForumresponse = function(articleId) {
     });
 }
 
-var createResponse = function(articleId, sort, content, date, memid) {
-    var response = {
-        article_id: articleId,
+var createResponse = function(response) {
+    var Responses = {
+        response_id: responseID,
         sort: sort,
         content: content,
         date: date,
@@ -30,7 +30,7 @@ var createResponse = function(articleId, sort, content, date, memid) {
         models.Response.create(response).then(function(result) {
             resolve();
         }).catch(function(error) {
-            reject();
+            reject(error);
         });
     });
 }

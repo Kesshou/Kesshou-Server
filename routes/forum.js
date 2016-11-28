@@ -36,13 +36,13 @@ router.post('/getList', function(req, res, next) {
         ForumlistRepository.searchForumlist(search).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
         });
     } else {
         ForumlistRepository.getForumlist().then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
         });
     }
 });
@@ -66,19 +66,19 @@ router.post('/getList', function(req, res, next) {
 router.post('/getArticle', function(req, res, next) {
     var forumlistId = req.body.formlistId;
     if(forumlistId == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     var search = (req.body.search != undefined) ? req.body.search : "";
     if(search) {
         ForumarticleRepository.searchForumarticle(forumlistId, search).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
         });
     } else {
         ForumarticleRepository.getForumarticle(forumlistId).then(function(result) {
             res.status(200).json(result);
         }).catch(function(error) {
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
         });
     }
 });
@@ -102,22 +102,22 @@ router.post('/getArticle', function(req, res, next) {
 router.post('/getResponse', function(req, res, next) {
     var articleId = req.body.articleId;
     if(articleId == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     ForumresponseRepository.getForumresponse(articleId).then(function(result) {
         res.status(200).json(result);
     }).catch(function(error) {
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json(ErrorCodeService.serverError);
     });
 });
 
 router.post('/list', function(req, res, next) {
     var name = req.body.name;
     if(name == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     ForumlistRepository.createForum(name).then(function(reault) {
         res.status(200).json({"status" : "新增成功"});
     }).catch(function(error) {
-        res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+        res.status(400).json(ErrorCodeService.serverError);
     });
 });
 
@@ -125,7 +125,7 @@ router.post('/article', function(req, res, next) {
     var token = req.get("Authorization");
     var article = req.body;
     if(article.forumID == undefined || article.sort == undefined || article.title == undefined || article.content == undefined || article.date == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
+        res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {
         article.memid = result.id;
         return ForumarticleRepository.createArticle(article);
@@ -133,9 +133,9 @@ router.post('/article', function(req, res, next) {
         res.status(200).json({"status" : "新增成功"});
     }).catch(function(error) {
         if(error == "token過期")
-            res.status(401).json({"error" : error, "code" : ErrorCodeService.tokenExpired});
+            res.status(401).json(ErrorCodeService.tokenExpired);
         else
-            res.status(400).json({"error" : "伺服器錯誤", "code" : ErrorCodeService.serverError});
+            res.status(400).json(ErrorCodeService.serverError);
     });
 });
 
@@ -143,8 +143,18 @@ router.post('/response', function(req, res, next) {
     var token = req.get("Authorization");
     var response = req.body;
     if(response.articleID == undefined || response.sort == undefined || response.content == undefined || response.date == undefined)
-        res.status(400).json({"error" : "未輸入必要參數", "code" : ErrorCodeService.emptyInput});
-
+        res.status(400).json(ErrorCodeService.emptyInput);
+    RedisRepository.getUserInfo(token).then(function(result) {
+        response.memid = result.id;
+        return ForumresponseRepository.createResponse(response);
+    }).then(function(result) {
+        res.status(200).json({"status" : "新增成功"});
+    }).catch(function(error) {
+        if(error == "token過期")
+            res.status(401).json(ErrorCodeService.tokenExpired);
+        else
+            res.status(400).json(ErrorCodeService.serverError);
+    });
 });
 
 router.post('/addPicture', function(req, res, next) {
