@@ -32,6 +32,26 @@ var getUserPassword = function(account) {
 }
 
 /*
+*Author: blackkite0206233
+*Description:
+    This function is used to get the use's data via user's id.  Used promise.
+*Usage:
+    id: user's id.
+    return:
+        resolve: user's data.
+        reject: the reason of error.
+*/
+var getUserById = function(id) {
+    return new Promise(function(resolve, reject) {
+        models.Account.findOne({ where: {id: id} }).then(function(result) {
+            resolve(result.get());
+        }).catch(function(error) {
+            reject(error);
+        });
+    });
+}
+
+/*
 *Author: blackkite0206233,yoyo930021
 *Description:
     This function is used to check if database has the same nick.  Used promise.
@@ -42,8 +62,10 @@ var getUserPassword = function(account) {
         resolve: Nan.
         reject: "暱稱已被使用".
 */
-var checkSameNick = function(nick) {
+var checkSameNick = function(nick, oldNick) {
     return new Promise(function(resolve, reject) {
+        if(nick == oldNick && oldNick != "")
+            resolve();
         models.Account.findOne({ where: {nick: nick} }).then(function(result) {
             if(result) {
                 reject("暱稱已被使用");
@@ -149,6 +171,8 @@ var getUserInfo = function (account) {
 module.exports = {
 
     getUserPassword: getUserPassword,
+
+    getUserById: getUserById,
 
     checkSameNick: checkSameNick,
 

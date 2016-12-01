@@ -96,7 +96,7 @@ router.post('/login', function(req, res, next) {
                     res.status(400).json(ErrorCodeService.accountError);
                     break;
                 default:
-                    res.status(500).json(ErrorCodeService.serverError);
+                    res.status(400).json(ErrorCodeService.serverError);
                     break;
             }
         });
@@ -156,7 +156,7 @@ router.post('/register', function(req, res, next) {
         UserRepository.getUserPassword(user.email).then(function() {
             res.status(400).json(ErrorCodeService.accountUsed);
         }).catch(function() {
-            UserRepository.checkSameNick(user.nick).then(function() {
+            UserRepository.checkSameNick(user.nick, "").then(function() {
                 return UserRepository.createUser(user.email, hsahPassword, user.user_group,
                     schoolAccount, schoolPwd, user.nick, name, stuClass, finishYear);
             }).then(function() {
@@ -166,7 +166,7 @@ router.post('/register', function(req, res, next) {
             }).catch(function(error) {
                 if(error == "暱稱已被使用")
                     res.status(400).json(ErrorCodeService.nickUsed);
-                res.status(500).json(ErrorCodeService.serverError);
+                res.status(400).json(ErrorCodeService.serverError);
             });
         });
     }).catch(function(error) {
@@ -178,7 +178,7 @@ router.post('/register', function(req, res, next) {
                 res.status(400).json(ErrorCodeService.schoolError);
                 break;
             default:
-                res.status(500).json(ErrorCodeService.serverError);
+                res.status(400).json(ErrorCodeService.serverError);
                 break;
         }
 
@@ -220,11 +220,23 @@ router.put('/updateinfo', function(req, res, next) {
             res.status(400).json(ErrorCodeService.pwdError);
         } else {
             Promise.all([checkAccount, checkSchoolPwd, checkNick]).then(function() {
-                return UserRepository.checkSameNick(nick);
+                return UserRepository.checkSameNick(nick, userInfo.nick);
             }).then(function() {
-                UserRepository.getUserPassword(newEmail).then(function() {
-                    res.status(400).json(ErrorCodeService.accountUsed);
-                }).catch(function() {
+                if(newEmail != userInfo.email) {
+                    UserRepository.getUserPassword(newEmail).then(function() {
+                        res.status(400).json(ErrorCodeService.accountUsed);
+                    }).catch(function() {
+                        CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name).then(function(result) {
+                            var newName = result;
+                            return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
+                        }).then(function() {
+                            RedisRepository.set(req.get("Authorization"), userInfo.email);
+                            res.status(200).json({ "success" :  "更新成功"});
+                        }).catch(function(error) {
+                            res.status(400).json(ErrorCodeService.serverError);
+                        });
+                    });
+                } else {
                     CheckStuWebSpider.checkStuAccount(userInfo.school_account, newSchoolPwd, userInfo.name).then(function(result) {
                         var newName = result;
                         return UserRepository.updateUserInfo(userInfo.email, newSchoolPwd, newNick, newPassword, newEmail, newName);
@@ -232,9 +244,9 @@ router.put('/updateinfo', function(req, res, next) {
                         RedisRepository.set(req.get("Authorization"), userInfo.email);
                         res.status(200).json({ "success" :  "更新成功"});
                     }).catch(function(error) {
-                        res.status(500).json(ErrorCodeService.serverError);
+                        res.status(400).json(ErrorCodeService.serverError);
                     });
-                });
+                }
             }).catch(function(error) {
                 switch (error) {
                     case "暱稱已被使用":
@@ -247,7 +259,7 @@ router.put('/updateinfo', function(req, res, next) {
                         res.status(400).json(ErrorCodeService.schoolError);
                         break;
                     default:
-                        res.status(500).json(ErrorCodeService.serverError);
+                        res.status(400).json(ErrorCodeService.serverError);
                         break;
                 }
             });
@@ -256,7 +268,7 @@ router.put('/updateinfo', function(req, res, next) {
         if(error == "token過期")
             res.status(401).json(ErrorCodeService.tokenExpired);
         else
-            res.status(500).json(ErrorCodeService.serverError);
+            res.status(400).json(ErrorCodeService.serverError);
     });
 });
 
@@ -278,7 +290,7 @@ router.post('/confirmNick', function(req, res, next) {
     if(nick == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     CheckCharactersService.checkIllegalChar(nick, ["<", ">", ".", "/", "\\", ";", "\'", ":", "\"", "-", "#"]).then (function() {
-        return UserRepository.checkSameNick(nick);
+        return UserRepository.checkSameNick(nick, "");
     }).then(function() {
         res.status(200).json({"success" : "暱稱無人使用"});
     }).catch(function(error) {
@@ -287,7 +299,7 @@ router.post('/confirmNick', function(req, res, next) {
         } else if(error == "非法字元") {
             res.status(400).json(ErrorCodeService.illegalChar);
         } else {
-            res.status(500).json(ErrorCodeService.serverError);
+            res.status(400).json(ErrorCodeService.serverError);
         }
     });
 });
@@ -356,7 +368,7 @@ router.post('/confirmSchool', function(req, res, next) {
                 res.status(400).json(ErrorCodeService.schoolError);
                 break;
             default:
-                res.status(500).json(ErrorCodeService.serverError);
+                res.status(400).json(ErrorCodeService.serverError);
                 break;
         }
     });

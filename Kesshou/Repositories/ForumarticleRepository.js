@@ -55,6 +55,26 @@ var searchForumarticle = function(forumlistId, title) {
 /*
 *Author: blackkite0206233
 *Description:
+    This function is used to get article content via article's id.  Used promise.
+*Usage:
+    articleid: article's id.
+    return:
+        resolve: forum's article.
+        reject: the reason of error.
+*/
+var getArticleById = function(articleid) {
+    return new Promise(function(resolve, reject) {
+        nodels.Article.findOne({ where: {id: articleid} }).then(function(result) {
+            resolve(result.get());
+        }).catch(function(error) {
+            reject(error);
+        })
+    });
+}
+
+/*
+*Author: blackkite0206233
+*Description:
     This function is used to create a new article.  Used promise.
 *Usage:
     article: article content.
@@ -85,6 +105,8 @@ module.exports = {
     getForumarticle: getForumarticle,
 
     searchForumarticle: searchForumarticle,
+
+    getArticleById: getArticleById,
 
     createArticle: createArticle
 

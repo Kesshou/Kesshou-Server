@@ -7,6 +7,7 @@ var ForumlistRepository = require('../Kesshou/Repositories/ForumlistRepository')
 var ForumarticleRepository = require('../Kesshou/Repositories/ForumarticleRepository');
 var ForumresponseRepository = require('../Kesshou/Repositories/ForumresponseRepository');
 var RedisRepository = require('../Kesshou/Repositories/RedisRepository');
+var UserRepository = require('../Kesshou/Repositories/UserRepository');
 
 var CheckCharactersService = require('../Kesshou/Services/CheckCharactersService');
 var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
@@ -45,7 +46,7 @@ router.post('/getList', function(req, res, next) {
 /*
 *Author: blackkite0206233
 *Description:
-    This function is the API which was used to return forum article.
+    This function is the API which was used to return article list.
 *Usage:
     return:
         forumarticle: forum article.
@@ -54,8 +55,8 @@ router.post('/getList', function(req, res, next) {
             301: some essential input are empty.
             400: server error.
 */
-router.post('/getArticle', function(req, res, next) {
-    var forumlistId = req.body.formlistId;
+router.post('/getAllArticle', function(req, res, next) {
+    var forumlistId = req.body.listId;
     if(forumlistId == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     var search = (req.body.search != undefined) ? req.body.search : "";
@@ -73,6 +74,33 @@ router.post('/getArticle', function(req, res, next) {
         });
     }
 });
+
+/*
+*Author: blackkite0206233
+*Description:
+    This function is the API which was used to return article content.
+*Usage:
+    return:
+        article: article content.
+        error: it is a string to explain the reason of error.
+        code:
+            301: some essential input are empty.
+            400: server error.
+*/
+router.post('/getOneArticle', function(req, res, next) {
+    var articleID = req.body.articleID;
+    if(articleID == undefined)
+        res.status(400).json(ErrorCodeService.emptyInput);
+    ForumarticleRepository.getArticleById(articleID).then(function(result) {
+        var article = result;
+        return UserRepository.getUserById(article.memid);
+    }).then(function(result) {
+        article.nick = result.nick;
+        res.status(200).json(article);
+    }).catch(function(error) {
+        res.status(400).json(ErrorCodeService.serverError);
+    });
+})
 
 /*
 *Author: blackkite0206233
@@ -135,7 +163,8 @@ router.post('/list', function(req, res, next) {
 router.post('/article', function(req, res, next) {
     var token = req.get("Authorization");
     var article = req.body;
-    if(article.forumID == undefined || article.sort == undefined || article.title == undefined || article.content == undefined || article.date == undefined)
+    if(article.forumID == undefined || article.sort == undefined ||
+        article.title == undefined || article.content == undefined || article.date == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {
         article.memid = result.id;
@@ -165,7 +194,8 @@ router.post('/article', function(req, res, next) {
 router.post('/response', function(req, res, next) {
     var token = req.get("Authorization");
     var response = req.body;
-    if(response.articleID == undefined || response.sort == undefined || response.content == undefined || response.date == undefined)
+    if(response.articleID == undefined || response.sort == undefined ||
+        response.content == undefined || response.date == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {
         response.memid = result.id;
