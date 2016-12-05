@@ -39,7 +39,7 @@ var getForumliist = function() {
 */
 var searchForumlist = function(name) {
     return new Promise(function(resolve, reject) {
-        models.Forum.findAll({ where: {name: name} }).then(function(result) {
+        models.Forum.findAll({ where: {name: {$like: '%' + name + '%'}} }).then(function(result) {
             var ForumLists = [];
             for(var i = 0; i < result.length; i++)
                 ForumLists.push(result[i].get());

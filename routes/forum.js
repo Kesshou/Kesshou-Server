@@ -194,11 +194,11 @@ router.post('/article', function(req, res, next) {
 router.post('/response', function(req, res, next) {
     var token = req.get("Authorization");
     var response = req.body;
-    if(response.articleID == undefined || response.sort == undefined ||
-        response.content == undefined || response.date == undefined)
+    if(response.articleID == undefined || response.content == undefined || response.date == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {
         response.memid = result.id;
+        response.sort = 0;
         return ForumresponseRepository.createResponse(response);
     }).then(function(result) {
         res.status(200).json({"status" : "新增成功"});
@@ -210,6 +210,57 @@ router.post('/response', function(req, res, next) {
     });
 });
 
+router.post('/like', function(req, res, next) {
+    var like = req.body;
+    var token = req.get("Authorization");
+    if(like.articleid == undefined || like.sort == undefined || like.date == undefined)
+        res.status(400).json(ErrorCodeService.emptyInput);
+    CheckCharactersService.checkData(like.sort, [2, 3]).then(function() {
+        return RedisRepository.getUserInfo(token);
+    }).then(function(result) {
+        var response = {
+            articleID: like.articleid,
+            memid: result.id,
+            content: like.articleid,
+            sort: like.sort,
+            date: like.date
+        };
+        return ForumresponseRepository.like(response);
+    }).then(function() {
+        res.status(200).json({"status" : "ok"});
+    }).catch(function(error) {
+        if(error == "非法字元")
+            res.status(400).json(ErrorCodeService.illegalChar);
+        else if(errpr == "token過期")
+            res.status(401).json(ErrorCodeService.tokenExpired);
+        else
+            res.status(400).json(ErrorCodeService.serverError);
+    });
+});
+
+router.post('/vote', function(req, res, next) {
+    var vote = req.body;
+    var token = req.get("Authorization");
+    if(vote.articleID == undefined || vote.content == undefined || vote.date == undefined)
+        res.status(400).json(ErrorCodeService.emptyInput);
+    RedisRepository.getUserInfo(token).then(function(result) {
+        var response = {
+            articleID: vote.articleID,
+            memid: result.id,
+            content: vote.content,
+            sort: 1,
+            date: vote.date
+        };
+        return ForumresponseRepository.vote(response);
+    }).then(function() {
+        res.status(200).json({"status" : "ok"});
+    }).catch(function(error) {
+        if(error == "token過期")
+            res.status(401).json(ErrorCodeService.tokenExpired);
+        else
+            res.status(400).json(ErrorCodeService.serverError);
+    });
+});
 /*
 *Author: blackkite0206233
 *Description:
@@ -232,5 +283,6 @@ router.post('/uploadPicture', function(req, res, next) {
         res.status(400).json(ErrorCodeService.serverError);
     });
 });
+
 
 module.exports = router;

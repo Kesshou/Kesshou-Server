@@ -39,11 +39,12 @@ var getForumresponse = function(articleId) {
 */
 var createResponse = function(response) {
     var Responses = {
-        response_id: responseID,
-        sort: sort,
-        content: content,
-        date: date,
-        memid: memid
+        article_id: response.articleID,
+        sort: response.sort,
+        content: response.content,
+        date: response.date,
+        memid: response.memid,
+        hidden: 0
     }
     return new Promise(function(resolve, reject) {
         models.Response.create(response).then(function(result) {
@@ -54,10 +55,77 @@ var createResponse = function(response) {
     });
 }
 
+var like = function(response) {
+    var Responses = {
+        article_id: response.articleID,
+        sort: response.sort,
+        content: response.content,
+        date: response.date,
+        memid: response.memid,
+        hidden: 0
+    }
+    return new Promise(function(resolve, reject) {
+        models.Response.findAll({where: {article_id: Responses.article_id, sort: Responses.sort,
+                                                                content: Responses.content, memid: Responses.memid}}).then(function(result) {
+            if(result) {
+                models.Response.destroy({where: {article_id: Responses.article_id, sort: Responses.sort,
+                                                                        content: Responses.content, memid: Responses.memid}}).then(function() {
+                    resolve();
+                }).catch(function(error) {
+                    reject(error);
+                });
+            } else {
+                models.Response.create(response).then(function(result) {
+                    resolve();
+                }).catch(function(error) {
+                    reject(error);
+                });
+            }
+        }).catch(function(error) {
+            reject(error);
+        })
+    });
+}
+
+var vote = function(response) {
+    var Responses = {
+        article_id: response.articleID,
+        sort: response.sort,
+        content: response.content,
+        date: response.date,
+        memid: response.memid,
+        hidden: 0
+    }
+    return new Promise(function(resolve, reject) {
+        models.Response.findAll({where: {article_id: Responses.article_id, sort: Responses.sort,
+                                                                memid: Responses.memid}}).then(function(result) {
+            if(result) {
+                result.update(Responses).then(function() {
+                    resolve();
+                }).catch(function(error) {
+                    reject(error);
+                });
+            } else {
+                models.Response.create(Responses).then(function(result) {
+                    resolve();
+                }).catch(function(error) {
+                    reject(error);
+                });
+            }
+        }).catch(function(error) {
+            reject(error);
+        })
+    });
+}
+
 module.exports = {
 
     getForumresponse: getForumresponse,
 
-    createResponse: createResponse
+    createResponse: createResponse,
+
+    like: like,
+
+    vote: vote
 
 };

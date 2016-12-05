@@ -41,7 +41,7 @@ var getForumarticle = function(forumlistId) {
 */
 var searchForumarticle = function(forumlistId, title) {
     return new Promise(function(resolve, reject) {
-        models.Article.findAll({ where: {forum_id: forumlistId, title: title} }).then(function(result) {
+        models.Article.findAll({ where: {forum_id: forumlistId, title: {$like: '%' + title + '%'}} }).then(function(result) {
             var FormArticles = [];
             for(var i = 0; i < result.length; i++)
                 FormArticles.push(result[i].get());
