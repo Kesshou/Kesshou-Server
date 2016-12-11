@@ -98,7 +98,7 @@ var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
                     case "2":
                         if(sub.eq(7).text().trim()) {
                             score.subject = sub.eq(0).text().trim();
-                            score.type = (sub.eq(7).text().trim().substr(0, 1) == "必");
+                            score.type = sub.eq(7).text().trim().substr(0, 1);
                             score.credit = sub.eq(8).text().trim().substr(1);
                             score.score = parseFloat(sub.eq(9).children().eq(0).text().trim());
                             score.qualify = parseFloat(sub.eq(12).children().eq(0).text().trim());
