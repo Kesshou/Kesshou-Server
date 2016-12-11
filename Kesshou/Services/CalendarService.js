@@ -18,13 +18,15 @@ var Promise = require('bluebird');
 var getClendar = function(url) {
     return new Promise(function(resolve, reject) {
         ical.fromURL(url, {}, function(err, data) {
+            console.log(data);
             if(err) {
                 reject(err);
             } else {
                 var calenders = [];
                 for(var i in data) {
                     var calendar = {
-                        date : data[i].start.getFullYear() + "/" + (data[i].start.getMonth() + 1) + "/" + data[i].start.getDate(),
+                        start : data[i].start.getFullYear() + "/" + (data[i].start.getMonth() + 1) + "/" + data[i].start.getDate(),
+                        end : data[i].end.getFullYear() + "/" + (data[i].end.getMonth() + 1) + "/" + data[i].end.getDate(),
                         content : data[i].summary
                     }
                     calenders.push(calendar);
