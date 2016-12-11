@@ -22,13 +22,13 @@ var upload = function(pic) {
             image: pic
         },
         header: {
-            "Authorization": "bd7b71f2897844c",
+            "Authorization": "Client-ID bd7b71f2897844c",
             "Content-Type": "application/json"
         }
     }
     return new Promise(function(resolve, reject) {
         request.postAsync(uploadPic).then(function(result) {
-            resolve(result);
+            resolve(result.data.link);
         }).catch(function(error) {
             reject(error);
         })

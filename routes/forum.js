@@ -261,6 +261,7 @@ router.post('/vote', function(req, res, next) {
             res.status(400).json(ErrorCodeService.serverError);
     });
 });
+
 /*
 *Author: blackkite0206233
 *Description:
