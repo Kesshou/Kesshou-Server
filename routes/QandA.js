@@ -3,9 +3,7 @@
 *Description: This file is the API of school Q & A.
 */
 var express = require('express');
-//var QandARepositories = require('../Kesshou/Repositories/QandARepositories');
-var Promise = require('bluebird');
-var models  = Promise.promisifyAll(require('../models'));
+var QandARepositories = require('../Kesshou/Repositories/QandARepositories');
 
 var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
 
@@ -23,12 +21,8 @@ var router = express.Router();
             400: server error.
 */
 router.get('/', function(req, res, next) {
-    models.School_qa.findAll().then(function(result) {
-        var QandA = [];
-        for(var i = 0; i < result.length; i++) {
-            QandA.push(result[i].get());
-        }
-        res.status(200).json(QandA);
+    QandARepositories.getQandA().then(function(result) {
+        res.status(200).json(result);
     }).catch(function(error) {
         res.status(400).json(ErrorCodeService.serverError);
     });
