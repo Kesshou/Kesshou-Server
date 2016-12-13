@@ -100,7 +100,7 @@ var keyNotExist=0;
 var keyNotExistLimit=15;
 
 var keySave=33349;
-models.News.max(key).then(function(max) {
+models.News.max("key").then(function(max) {
     if(max>keySave) keySave=max+1;
 });
 
