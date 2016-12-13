@@ -11,7 +11,7 @@ var ErrorCodeService = require('./Kesshou/Services/ErrorCodeService');
 
 var actmanage = require('./routes/actmanage');
 var scorequery = require('./routes/scorequery');
-var announcementdisplay = require('./routes/announcementdisplay');
+var announce = require('./routes/announce');
 var attitudestatus = require('./routes/attitudestatus');
 var absentstate = require('./routes/absentstate');
 var qanda = require('./routes/QandA');
@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use('/static',express.static( __dirname + '/public'));
 
 app.use('/' + version + '/actmanage', actmanage);
-app.use('/' + version + '/announcementdisplay', announcementdisplay);
+app.use('/' + version + '/announce', announce);
 app.use('/' + version + '/qanda', qanda);
 app.use('/' + version + '/calendar', calendar);
 /*
