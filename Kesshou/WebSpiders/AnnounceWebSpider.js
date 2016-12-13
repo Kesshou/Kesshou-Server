@@ -146,6 +146,7 @@ var repeater = function (startKey) {
                     if(promises != undefined) {
                         Promise.all(promises);
                     }
+                    console.log(startKey+"寫入完畢");
                 });
             });
         });
