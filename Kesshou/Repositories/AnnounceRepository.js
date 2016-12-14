@@ -3,6 +3,7 @@
 *Description: This file is used to control the announcement data.
 */
 var Promise = require('bluebird');
+var cheerio = require("cheerio");
 var models  = Promise.promisifyAll(require('../../models'));
 
 /*
@@ -27,6 +28,7 @@ var getAnnouncement = function(field, value) {
                 for(var i = 0; i < result.length; i++) {
                     announce.push(result[i].get());
                     promises.push(getAnnouncementFile(announce[i]));
+                    promises.push(getAnnouncementSummary(announce[i]));
                 }
                 Promise.all(promises).then(function(result) {
                     console.log(announce);
@@ -60,6 +62,21 @@ var getAnnouncementFile = function(news) {
             news.file = "";
             resolve();
         });
+    });
+}
+
+/*
+*Author: yoyo930021
+*Description:
+    This function is add body convert to summary.
+*Usage:
+    news: the announcement's id.
+*/
+var getAnnouncementSummary = function(news) {
+    return new Promise(function(resolve, reject) {
+        var $ = cheerio.load(iconv.decode(new Buffer(news.body), "Big5"), {decodeEntities: false});
+        news.summary = $.text().trim();
+        resolve();
     });
 }
 
