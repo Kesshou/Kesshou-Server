@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
     key: DataTypes.INTEGER,
     title: DataTypes.STRING,
     date: DataTypes.STRING,
-    body: DataTypes.STRING,
+    body: DataTypes.TEXT,
     linked: DataTypes.STRING,
     author: DataTypes.STRING,
     lifttime: DataTypes.STRING,

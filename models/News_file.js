@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
         news_key: DataTypes.INTEGER,
         type: DataTypes.STRING,
         file_name: DataTypes.STRING,
-        file_src: DataTypes.STRING,
+        file_src: DataTypes.STRING(10000),
     }, {
         classMethods: {
             associate: function(models) {
