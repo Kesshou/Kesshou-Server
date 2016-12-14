@@ -20,7 +20,7 @@ var getAnnouncement = function(field, value) {
     return new Promise(function(resolve, reject) {
         var whereObj = {};
         whereObj[field] = value;
-        models.News.findAll({ where: whereObj }).then(function(result) {
+        models.News.findAll({ where: whereObj, order: [['id', 'DESC']] }).then(function(result) {
             var announce = [];
             var promises = [];
             if (announce) {
