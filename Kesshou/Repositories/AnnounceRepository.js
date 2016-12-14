@@ -74,7 +74,7 @@ var getAnnouncementFile = function(news) {
 */
 var getAnnouncementSummary = function(news) {
     return new Promise(function(resolve, reject) {
-        var $ = cheerio.load(iconv.decode(new Buffer(news.body), "Big5"), {decodeEntities: false});
+        var $ = cheerio.load(news.body, {decodeEntities: false});
         news.summary = $.text().trim();
         resolve();
     });
