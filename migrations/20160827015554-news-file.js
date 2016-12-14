@@ -23,7 +23,7 @@ module.exports = {
             },
             file_src: {
                 allowNull: false,
-                type: Sequelize.STRING
+                type: Sequelize.STRING(10000)
             },
             createdAt: {
                 allowNull: false,
