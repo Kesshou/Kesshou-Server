@@ -14,7 +14,9 @@ var scorequery = require('./routes/scorequery');
 var announce = require('./routes/announce');
 var attitudestatus = require('./routes/attitudestatus');
 var absentstate = require('./routes/absentstate');
+var feedback = require('./routes/feedback');
 var qanda = require('./routes/QandA');
+var relatedlink = require('./routes/relatedlink');
 var curriculum = require('./routes/curriculum');
 var calendar = require('./routes/calendar');
 var forum = require('./routes/forum');
@@ -36,7 +38,9 @@ app.use('/static',express.static( __dirname + '/public'));
 app.use('/' + version + '/actmanage', actmanage);
 app.use('/' + version + '/announce', announce);
 app.use('/' + version + '/qanda', qanda);
+app.use('/' + version + '/relatedlink', relatedlink);
 app.use('/' + version + '/calendar', calendar);
+
 /*
 *Author: blackkite0206233
 *Description: A middleware which is used to check token.
@@ -61,6 +65,7 @@ app.use('/' + version + '/attitudestatus', attitudestatus);
 app.use('/' + version + '/absentstate', absentstate);
 app.use('/' + version + '/curriculum', curriculum);
 app.use('/' + version + '/forum', forum);
+app.use('/' + version + '/feedback', feedback);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
