@@ -100,6 +100,10 @@ var keyNotExist=0;
 var keyNotExistLimit=15;
 
 var keySave=33349;
+models.News.max("key").then(function(max) {
+    if(max>keySave) keySave=max+1;
+    repeater(keySave);
+});
 
 var repeater = function (startKey) {
     return checkNewsExist(startKey).then(function ($) {
@@ -146,6 +150,7 @@ var repeater = function (startKey) {
                     if(promises != undefined) {
                         Promise.all(promises);
                     }
+                    console.log(startKey+"寫入完畢");
                 });
             });
         });
@@ -160,4 +165,3 @@ var repeater = function (startKey) {
         return repeater(startKey+1);
     });
 }
-repeater(keySave);
