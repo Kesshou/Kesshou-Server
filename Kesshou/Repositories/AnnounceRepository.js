@@ -54,8 +54,9 @@ var getAnnouncement = function(field, value) {
 var getAnnouncementFile = function(news) {
     return new Promise(function(resolve, reject) {
         models.News_file.findAll({ where: {news_key: news.id} }).then(function(result) {
+            news.file = [];
             for(var i = 0; i < result.length; i++) {
-                news.file = result[i].get();
+                news.file.push(result[i].get());
             }
             resolve();
         }).catch(function(error) {
