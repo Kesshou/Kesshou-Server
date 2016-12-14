@@ -61,7 +61,7 @@ var getNewsParser = function ($) {
             if(items.find("td").length>1) {
                 switch (items.find("td").eq(0).text().trim()) {
                     case "內　　容":
-                        newsone.body = items.find("td").eq(1).html().trim();
+                        newsone.body = items.find("td").eq(1).html();
                         break;
                     case "公 佈 者":
                         newsone.author = items.find("td").eq(1).text().trim();
