@@ -16,7 +16,7 @@ var models  = Promise.promisifyAll(require('../../models'));
 */
 var getRelatedLink = function() {
     return new Promise(function(resolve, reject) {
-        models.Relatedlink.findAll().then(function(result){
+        models.RelatedLink.findAll().then(function(result){
             var Relatedlink = [];
             for(var i = 0; i < result.length; i++) {
                 Relatedlink.push(result[i].get());
