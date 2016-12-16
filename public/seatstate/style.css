@@ -1,0 +1,582 @@
+/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd,
+q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt,
+dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot,
+thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption,
+footer, header, hgroup, menu, nav, output, ruby, section, summary, time,
+mark, audio, video {
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup,
+menu, nav, section {
+    display: block
+}
+
+body {
+    line-height: 1
+}
+
+ol, ul {
+    list-style: none
+}
+
+blockquote, q {
+    quotes: none
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+    content: none
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    color: #3B3B3B;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+    padding: 0px;
+    letter-spacing: -2px;
+    font-family: 'Arvo', serif;
+    font-weight: normal;
+    color: #107710;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 2.4em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+p, ul, ol {
+    margin-top: 10px;
+    line-height: 180%;
+}
+
+ul, ol {}
+
+a {
+    text-decoration: none;
+    color: #107710;
+}
+
+a:hover {}
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+table td, table th {
+    text-align: center;
+    border: 1px solid rgb(204, 204, 204);
+    padding: 10px 14px 10px 14px;
+}
+
+table th {
+    border: 1px solid rgb(163, 163, 163);
+    background: rgb(51, 51, 51);
+    color: rgb(238, 238, 238);
+    font-weight: bold;
+}
+
+/* Header */
+
+#header {
+    height: 100px;
+    clear: both;
+    width: 1200px;
+    margin: 0px auto;
+}
+
+/* Logo */
+#logo {
+    margin: 0px;
+    padding: 30px 0px;
+    color: #000000;
+}
+
+#logo h1, #logo p {
+    margin: 0;
+    padding: 0;
+}
+
+#logo h1 {
+    margin: 0px;
+    padding: 0px;
+    font-size: 3em;
+    color: #323030;
+}
+
+#logo h1 span {
+    color: #107710;
+}
+
+#logo p {
+    margin: 0px;
+    padding: 0px;
+    text-transform: uppercase;
+    font-family: 'Arvo', serif;
+    color: #3B3B3B;
+}
+
+#logo p a {
+    color: #3B3B3B;
+}
+
+#logo a {
+    border: none;
+    background: none;
+    text-decoration: none;
+    color: #323030;
+}
+
+/* login */
+
+#login {
+    padding: 0px;
+}
+
+#login form {
+    margin: 0px;
+    padding: 0px;
+}
+
+#login fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.login-text {
+    width: 170px;
+    outline: none;
+    background: #F5F0E7;
+    border: 1px solid #D7D0C0;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-family: 'Open Sans', sans-serif;
+    color: #454545;
+}
+
+.errormsg {
+    margin: 0.5em 0px 0px;
+    display: block;
+    color: rgb(221, 75, 57);
+    line-height: 17px;
+}
+
+/*
+#login-submit {
+	width: 62px;
+	height: 22px;
+	display: none;
+	border: none;
+	color: #FFFFFF;
+}
+*/
+
+/* Admin Login */
+#login_admin {
+    width: 200px;
+    margin-left: 500px;
+}
+
+#login_admin .title {
+    height: 38px;
+    width: ��00px;
+    margin: 0 auto 10px auto;
+    padding: 2px 0 0 0px;
+    font-size: 32px;
+}
+
+/* Menu */
+
+#menu-wrapper {
+    overflow: hidden;
+    height: 56px;
+    background: #000000;
+    border-top: 1px solid #3D2729;
+}
+
+#menu {
+    width: 1200px;
+    height: 55px;
+    margin: 0px auto;
+    padding: 0px;
+}
+
+#menu ul {
+    margin: 0;
+    padding: 10px 0px 0px 0px;
+    list-style: none;
+    line-height: normal;
+}
+
+#menu li {
+    float: left;
+    border-right: 1px solid #543E40;
+}
+
+#menu a {
+    display: block;
+    letter-spacing: 1px;
+    margin: 0px 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-align: center;
+    font-family: 'Arvo', serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #FFFFFF;
+    border: none;
+}
+
+#menu a:hover, #menu .current_page_item a {
+    background: #107710;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+#menu .current_page_item a {
+    background: #107710;
+    border-radius: 8px;
+}
+
+/* Page */
+
+#page {
+    overflow: hidden;
+    width: 1285px;
+    height: 100%;
+    margin: 0px auto;
+    padding: 30px 0px;
+}
+
+/* Content */
+#content_full {
+    float: left;
+    width: 1200px;
+    height: 100%;
+    margin-bottom: 15px;
+    padding: 30px 40px;
+    border: 1px solid #E7DFD7;
+    border-radius: 8px;
+    background: #F8F8F8;
+}
+
+#content {
+    float: left;
+    width: 1020px;
+    height: 100%;
+}
+
+.post {
+    margin-bottom: 15px;
+    padding: 30px 40px;
+    border: 1px solid #E7DFD7;
+    border-radius: 8px;
+    background: #F8F8F8;
+}
+
+.post .title {
+    height: 38px;
+    margin-bottom: 10px;
+    padding: 2px 0 0 0px;
+    font-size: 32px;
+}
+
+.post .title a {
+    border: none;
+    color: #107710;
+}
+
+.post .meta {
+    margin-bottom: 30px;
+    padding: 5px 0px 15px 0px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.post .meta .detail {
+    float: left;
+}
+
+.post .meta .posted {
+    float: right;
+}
+
+.post .meta a {}
+
+.post .entry {
+    padding-bottom: 20px;
+    text-align: justify;
+}
+
+.post .entry .subtitle {
+    color: brown;
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.content_large {
+    color: blue;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/*
+.links {
+	display: inline-block;
+	height: 30px;
+	padding: 30px 0px 0px 0px;
+	font-size: 14px;
+	font-weight: normal;
+	color: #1C1C1C;
+}
+*/
+.button
+{
+    padding: 8px 20px;
+    background: #0a7aba;
+    border-radius: 5px;
+    /*text-transform: uppercase;*/
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+/* Sidebar */
+
+#sidebar {
+    float: left;
+    width: 180px;
+    margin-right: 20px;
+    padding: 40px 30px 0px 30px;
+    color: #787878;
+    border: 1px solid #E7DFD7;
+    border-radius: 8px;
+    background: #F8F8F8;
+}
+
+#sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#sidebar li {
+    margin: 0;
+    padding: 0;
+}
+
+#sidebar li ul {
+    margin: 0px 0px;
+    padding-bottom: 50px;
+}
+
+#sidebar li li {
+    border-bottom: 1px solid #E7DFD7;
+    margin: 0px 0px;
+    padding: 10px 0px;
+    border-left: none;
+}
+
+#sidebar li li a {
+    color: #3B3B3B;
+}
+
+#sidebar li li span {
+    display: block;
+    padding: 0;
+    font-size: 11px;
+    font-style: italic;
+}
+
+#sidebar h2 {
+    padding-bottom: 20px;
+    font-size: 1.8em;
+    color: #107710;
+}
+
+#sidebar p {
+    margin: 0px 0px 40px 0px;
+    padding: 0px;
+    text-align: justify;
+}
+
+#sidebar a {
+    border: none;
+}
+
+#sidebar a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+
+#footer {
+    height: 50px;
+    margin: 0 auto;
+    padding: 0px 0 15px 0;
+    background: #F8F8F8;
+    border-top: 5px solid #E7DFD7;
+    font-family: 'Arvo', serif;
+}
+
+#footer p {
+    margin: 0;
+    padding-top: 20px;
+    line-height: normal;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #A0A0A0;
+}
+
+#footer a {
+    color: #8A8A8A;
+}
+
+/*
+#banner {
+	width: 1200px;
+	margin: 40px auto 0px auto;
+}
+
+#banner img
+{
+	border-radius: 8px;
+}
+*/
+
+/* Seat Table */
+#seatTable {
+    border-collapse: collapse;
+}
+
+#seatTable td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid;
+    padding: 10px 14px 10px 14px;
+    background: #f1e5d3;
+    cursor: pointer;
+}
+
+#seatTable td:nth-child(2n) {
+    border-right: 3px solid;
+}
+
+#seatTable td:first-child {
+    border-left: 3px solid;
+}
+
+#seatTable td:nth-child(9) {
+    /*border-left: 26px #dedbc8 solid;*/
+    border-left: 3px solid;
+}
+
+#seatTable .firstRowRight:nth-child(2n + 1) {
+    border-right: 3px solid;
+}
+
+#seatTable .firstRowRight:nth-child(2n) {
+    border: 1px solid; /* ��#seatTable td */
+}
+
+#seatTable .firstRowRight:nth-child(10n) {
+    border-left: 3px solid;
+}
+
+#seatTable tr:nth-child(3n), #seatTable tr:nth-child(3n + 1) {
+    border-bottom: hidden;
+}
+
+#seatTable tr:last-child {
+    border-bottom: 3px solid;
+}
+
+#seatTable .aisle {
+    /*background-color: #dedbc8;*/
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px;
+}
+
+#seatTable .empty td {
+    border: 0;
+    padding: 0;
+    height: 5px;
+}
+
+#seatTable .entry {
+    background-color: #9b6646;
+    border-radius: 5px 5px 0 0;
+    color: white;
+    font-size: 16px;
+}
+
+#seatTable .bookable {
+    font-weight: bold;
+    background-color: #95fdb5;
+}
+
+#seatTable .reserved {
+    background-color: #7b7b7b;
+}
+
+#seatTable .booked {
+    background-color: #62a1db;
+}
+
+#seatTable .myseat {
+    background-color: #0effee;
+    /*border: red solid;*/
+}
+
+#seatTable .blocked {
+    background-color: pink;
+}
+
+/* system title */
+.syserror {
+    margin: 0.5em 0px 0px;
+    display: block;
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.nodata {
+    margin: 0.5em 0px 0px;
+    display: block;
+    color: blue;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
