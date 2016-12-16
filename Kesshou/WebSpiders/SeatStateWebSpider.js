@@ -40,12 +40,12 @@ var getSeatState = function () {
                 decodeEntities: false
             });
             var seatState = "<!DOCTYPE html><html>" +
-            "<head><meta charset=\"utf-8\" /><title>大安高工圖書館自修室座位管理系統</title><link href=\"/v1/static/seatsate/style.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" +
-	        "<link rel=\"stylesheet\" type=\"text/css\" href=\"/v1/static/seatsate/jquery.confirm.css\" />" +
-	        "<link rel=\"stylesheet\" type=\"text/css\" href=\"/v1/static/seatsate/jquery-ui-1.10.4.min.css\" />" +
-	        "<script src=\"/v1/static/seatsate/jquery-1.11.1.min.js\"></script>" +
-	        "<script src=\"/v1/static/seatsate/jquery-ui-1.10.4.min.js\"></script>" +
-	        "<script src=\"/v1/static/seatsate/jquery.confirm.js\"></script>" +
+            "<head><meta charset=\"utf-8\" /><title>大安高工圖書館自修室座位管理系統</title><link href=\"/v1/static/seatstate/style.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" +
+	        "<link rel=\"stylesheet\" type=\"text/css\" href=\"/v1/static/seatstate/jquery.confirm.css\" />" +
+	        "<link rel=\"stylesheet\" type=\"text/css\" href=\"/v1/static/seatstate/jquery-ui-1.10.4.min.css\" />" +
+	        "<script src=\"/v1/static/seatstate/jquery-1.11.1.min.js\"></script>" +
+	        "<script src=\"/v1/static/seatstate/jquery-ui-1.10.4.min.js\"></script>" +
+	        "<script src=\"/v1/static/seatstate/jquery.confirm.js\"></script>" +
             "</head>"
              + "<body>" + $("#content").html() + "</body></html>";
             resolve(seatState);
