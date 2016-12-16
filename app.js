@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
-app.use('/static',express.static( __dirname + '/public'));
+app.use('/' + version + '/static',express.static( __dirname + '/public'));
 
 app.use('/' + version + '/actmanage', actmanage);
 app.use('/' + version + '/announce', announce);
