@@ -21,7 +21,13 @@ var getSeatState = function () {
     return new Promise(function (resolve, reject) {
         var formSeatState = {
             url: "https://libregist.taivs.tp.edu.tw/currstat",
-            encoding: "binary"
+            encoding: "binary",
+            agent: new https.Agent({
+                host: 'libregist.taivs.tp.edu.tw',
+                port: '443',
+                path: '/',
+                rejectUnauthorized: false
+            })
         };
         request.getAsync(formSeatState).then(function (result) {
             if (!result.body) {
