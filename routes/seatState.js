@@ -26,6 +26,7 @@ router.get('/', function(req, res, next) {
     SeatStateWebSpider.getSeatState().then(function(result) {
         res.status(200).end(result);
     }).catch(function(error) {
+        console.log(error);
         res.status(400).json(ErrorCodeService.serverError);
     });
 });
