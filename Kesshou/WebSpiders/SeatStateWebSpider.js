@@ -20,7 +20,7 @@ var urlencode = require('urlencode');
 var getSeatState = function () {
     return new Promise(function (resolve, reject) {
         var formSeatState = {
-            url: "http://libregist.taivs.tp.edu.tw/currstat",
+            url: "https://libregist.taivs.tp.edu.tw/currstat",
             encoding: "binary"
         };
         request.getAsync(formSeatState).then(function (result) {
@@ -33,6 +33,7 @@ var getSeatState = function () {
             var seatState = "<!DOCTYPE html><html>" + $("head").html() + "<body>" + $("#content").html() + "</body></html>";
             resolve(seatState);
         }).catch(function (error) {
+            console.log(error);
             reject("伺服器錯誤");
         });
     });
