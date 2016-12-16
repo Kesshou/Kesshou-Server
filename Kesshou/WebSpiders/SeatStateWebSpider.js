@@ -3,6 +3,7 @@
  *Description: This file is used to get student's SeatState. Used web spider.
  */
 var Promise = require("bluebird");
+var https = require("https");
 var request = Promise.promisifyAll(require("request"));
 var cheerio = require("cheerio");
 var iconv = require('iconv-lite');
