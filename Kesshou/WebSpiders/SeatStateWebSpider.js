@@ -19,15 +19,17 @@ var urlencode = require('urlencode');
 */
 var getSeatState = function () {
     return new Promise(function (resolve, reject) {
+        var agentOptions = {
+            host: 'libregist.taivs.tp.edu.tw',
+            port: '443',
+            path: '/',
+            rejectUnauthorized: false
+        };
+        var agent = new https.Agent(agentOptions);
         var formSeatState = {
             url: "https://libregist.taivs.tp.edu.tw/currstat",
             encoding: "binary",
-            agent: new https.Agent({
-                host: 'libregist.taivs.tp.edu.tw',
-                port: '443',
-                path: '/',
-                rejectUnauthorized: false
-            })
+            agent: agent
         };
         request.getAsync(formSeatState).then(function (result) {
             if (!result.body) {
