@@ -25,7 +25,6 @@ router.post('/', function(req, res, next) {
     var feedback = req.body;
     feedback.checked = 0;
     var token = req.get("Authorization");
-    console.log(token);
     if(feedback.feedClass == undefined || feedback.commit == undefined || feedback.system == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {

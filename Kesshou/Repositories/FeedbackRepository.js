@@ -15,6 +15,7 @@ var models  = Promise.promisifyAll(require('../../models'));
 */
 var postFeedback = function(feedback) {
     return new Promise(function(resolve, reject) {
+        console.log(feedback);
         models.Feedback.create(feedback).then(function(){
             resolve();
         }).catch(function(error) {
