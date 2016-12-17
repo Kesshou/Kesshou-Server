@@ -33,6 +33,7 @@ router.post('/', function(req, res, next) {
     }).then(function() {
         res.status(200).json({"success" : "ok"});
     }).catch(function(error) {
+        console.log(error);
         res.status(400).json(ErrorCodeService.serverError);
     });
 });
