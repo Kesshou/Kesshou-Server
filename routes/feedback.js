@@ -28,6 +28,7 @@ router.post('/', function(req, res, next) {
     if(feedback.feedClass == undefined || feedback.commit == undefined || feedback.system == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
     RedisRepository.getUserInfo(token).then(function(result) {
+        console.log(result);
         feedback.stu_id = result.id;
         return FeedbackRepository.postFeedback(feedback);
     }).then(function() {
