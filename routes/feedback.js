@@ -27,12 +27,13 @@ router.post('/', function(req, res, next) {
     var token = req.get("Authorization");
     if(feedback.feedClass == undefined || feedback.commit == undefined || feedback.system == undefined)
         res.status(400).json(ErrorCodeService.emptyInput);
-    RedisRepository.getUserInfo(token).then(function(result) {
+    RedisRepository.getUserData(token).then(function(result) {
         feedback.stu_id = result.id;
         return FeedbackRepository.postFeedback(feedback);
     }).then(function() {
         res.status(200).json({"success" : "ok"});
     }).catch(function(error) {
+        if(error == "token過期") res.status(401).json(ErrorCodeService.tokenExpired);
         res.status(400).json(ErrorCodeService.serverError);
     });
 });
