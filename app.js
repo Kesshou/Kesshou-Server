@@ -20,6 +20,7 @@ var relatedlink = require('./routes/relatedlink');
 var curriculum = require('./routes/curriculum');
 var calendar = require('./routes/calendar');
 var forum = require('./routes/forum');
+var seatstate = require('./routes/seatState');
 
 var app = express();
 
@@ -33,13 +34,14 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
-app.use('/static',express.static( __dirname + '/public'));
+app.use('/' + version + '/static',express.static( __dirname + '/public'));
 
 app.use('/' + version + '/actmanage', actmanage);
 app.use('/' + version + '/announce', announce);
 app.use('/' + version + '/qanda', qanda);
 app.use('/' + version + '/relatedlink', relatedlink);
 app.use('/' + version + '/calendar', calendar);
+app.use('/' + version + '/seatstate', seatstate);
 
 /*
 *Author: blackkite0206233

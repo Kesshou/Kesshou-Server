@@ -18,6 +18,7 @@ var postFeedback = function(feedback) {
         models.Feedback.create(feedback).then(function(){
             resolve();
         }).catch(function(error) {
+            console.log(error);
             reject(error);
         });
     });
