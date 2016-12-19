@@ -87,6 +87,7 @@ router.post('/login', function(req, res, next) {
                 });
             }
         }).catch(function(error) {
+            console.log(error);
             switch (error) {
                 case "非法字元":
                     res.status(400).json(ErrorCodeService.illegalChar);
