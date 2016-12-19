@@ -409,4 +409,33 @@ router.get('/getUserInfo', function(req, res, next) {
     });
 });
 
+/*
+*Author: yoyo930021
+*Description:
+    This function is the API which was used to set user's is_noti and fcm_token.
+*Usage:
+    success: ok.
+    error: it is a string to explain the reason of error.
+    code:
+        103: token is expired
+        301: some essential input are empty.
+        400: server error.
+*/
+router.post('/setNoti', function(req, res, next) {
+    var token = req.get("Authorization");
+    var noti = req.body;
+    if(noti.fcm_token == undefined || noti.is_noti ==  undefined)
+        res.status(400).json(ErrorCodeService.emptyInput);
+    RedisRepository.getAccount(token).then(function(result){
+        return UserRepository.setNoti(result,noti.fcm_token,noti.is_noti);
+    }).then(function () {
+        res.status(200).json({"success" : "ok"});
+    }).catch(function(error) {
+        if(error == "token過期")
+            res.status(401).json(ErrorCodeService.tokenExpired);
+        else
+            res.status(400).json(ErrorCodeService.serverError);
+    });
+});
+
 module.exports = router;

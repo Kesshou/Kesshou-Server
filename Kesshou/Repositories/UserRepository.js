@@ -168,6 +168,31 @@ var getUserInfo = function (account) {
 
 }
 
+/*
+*Author: yoyo930021
+*Description:
+    This function is used to set user's noti.  Used promise.
+*Usage:
+    account: user's account.
+    fcm_noti: fcm's token.
+    is_noti: is want noti? 
+    return:
+        reject: error.
+*/
+var setNoti = function (account,fcm_noti,is_noti) {
+    return new Promise(function (resolve, reject) {
+        models.Account.findOne({where: {email: account}}).then(function (result) {
+            return result.update({fcm_noti: fcm_noti, is_noti: is_noti});
+        }).then(function (result) {
+            resolve();
+        }).catch(function (error) {
+            console.log(error);
+            reject(error);
+        });
+    });
+}
+
+
 module.exports = {
 
     getUserPassword: getUserPassword,
@@ -180,5 +205,7 @@ module.exports = {
 
     updateUserInfo: updateUserInfo,
 
-    getUserInfo: getUserInfo
+    getUserInfo: getUserInfo,
+
+    setNoti: setNoti
 };

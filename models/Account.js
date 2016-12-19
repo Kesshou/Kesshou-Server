@@ -9,7 +9,9 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     nick: DataTypes.STRING,
     class: DataTypes.STRING,
-    finish_year: DataTypes.INTEGER
+    finish_year: DataTypes.INTEGER,
+    fcm_token: DataTypes.STRING(1000),
+    is_noti: DataTypes.BOOLEAN
   }, {
     classMethods: {
       associate: function(models) {

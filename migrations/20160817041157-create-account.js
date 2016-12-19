@@ -47,6 +47,16 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      fcm_token: {
+        allowNull: false,
+        defaultValue: "",
+        type: Sequelize.STRING(1000)
+      },
+      is_noti: {
+        allowNull: false,
+        defaultValue: false,
+        type: Sequelize.BOOLEAN
       }
     });
   },
