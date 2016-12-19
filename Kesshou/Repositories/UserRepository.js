@@ -26,6 +26,7 @@ var getUserPassword = function(account) {
                 reject("帳號有誤");
             }
         }).catch(function(error) {
+            console.log(error);
             reject("帳號有誤");
         });
     });

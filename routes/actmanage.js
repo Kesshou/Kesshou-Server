@@ -92,7 +92,7 @@ router.post('/login', function(req, res, next) {
                 case "非法字元":
                     res.status(400).json(ErrorCodeService.illegalChar);
                     break;
-                case "帳號錯誤":
+                case "帳號有誤":
                     res.status(400).json(ErrorCodeService.accountError);
                     break;
                 default:
