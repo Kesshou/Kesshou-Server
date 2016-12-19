@@ -180,10 +180,10 @@ var getUserInfo = function (account) {
     return:
         reject: error.
 */
-var setNoti = function (account,fcm_noti,is_noti) {
+var setNoti = function (account,fcm_token,is_noti) {
     return new Promise(function (resolve, reject) {
         models.Account.findOne({where: {email: account}}).then(function (result) {
-            return result.update({fcm_noti: fcm_noti, is_noti: is_noti});
+            return result.update({fcm_token: fcm_token, is_noti: is_noti});
         }).then(function (result) {
             resolve();
         }).catch(function (error) {
