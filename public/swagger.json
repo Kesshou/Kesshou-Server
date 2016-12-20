@@ -1,0 +1,1051 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "木棉手札2.0的api詳細文件 \n\n**請注意本文`status code`為自訂放在`json`中  而不是 `http status code`**\n",
+        "version": "1.0.0",
+        "title": "木棉手札2.0 API"
+    },
+    "host": "dev.dacsc.club",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v1",
+    "paths": {
+        "/actmanage/login": {
+            "post": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "登入",
+                "parameters": [
+                    {
+                        "name": "Login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "title": "Login",
+                            "type": "object",
+                            "required": [
+                                "account",
+                                "password"
+                            ],
+                            "properties": {
+                                "account": {
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "format": "password",
+                                    "minLength": 20,
+                                    "maxLength": 20
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "帳號錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/actmanage/register": {
+            "post": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "註冊",
+                "parameters": [
+                    {
+                        "name": "Register",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "email",
+                                "password",
+                                "user_group",
+                                "nick"
+                            ],
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "format": "password"
+                                },
+                                "user_group": {
+                                    "type": "string",
+                                    "enum": [
+                                        "student",
+                                        "graduated",
+                                        "night"
+                                    ]
+                                },
+                                "school_account": {
+                                    "type": "string"
+                                },
+                                "school_pwd": {
+                                    "type": "string",
+                                    "format": "password"
+                                },
+                                "nick": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "102": {
+                        "description": "學校帳密驗證錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "暱稱已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "501": {
+                        "description": "帳號已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/actmanage/updateinfo": {
+            "put": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "修改資料",
+                "parameters": [
+                    {
+                        "name": "UpdateInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "title": "UpdateInfo",
+                            "type": "object",
+                            "required": [
+                                "password"
+                            ],
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "format": "password"
+                                },
+                                "new_school_pwd": {
+                                    "type": "string",
+                                    "format": "password"
+                                },
+                                "new_nick": {
+                                    "type": "string"
+                                },
+                                "new_password": {
+                                    "type": "string",
+                                    "format": "password"
+                                },
+                                "new_email": {
+                                    "type": "string",
+                                    "format": "email"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "100": {
+                        "description": "密碼錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "102": {
+                        "description": "學校帳密驗證錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/StatusResponse"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "暱稱已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "501": {
+                        "description": "帳號已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/actmanage/confirmAccount": {
+            "post": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "檢查帳號是否重複",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "title": "account",
+                            "type": "object",
+                            "required": [
+                                "account"
+                            ],
+                            "properties": {
+                                "account": {
+                                    "type": "string",
+                                    "format": "email"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "帳號無人使用",
+                        "schema": {
+                            "$ref": "#/definitions/StatusResponse"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "501": {
+                        "description": "帳號已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/actmanage/confirmNick": {
+            "post": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "檢查暱稱是否重複",
+                "parameters": [
+                    {
+                        "name": "nick",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "title": "nick",
+                            "type": "object",
+                            "required": [
+                                "nick"
+                            ],
+                            "properties": {
+                                "nick": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "暱稱無人使用",
+                        "schema": {
+                            "$ref": "#/definitions/StatusResponse"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "暱稱已被使用",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/actmanage/confirmSchool": {
+            "post": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "檢查學校帳號的有效性",
+                "parameters": [
+                    {
+                        "name": "SchoolAccountPwd",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "title": "SchoolAccountPwd",
+                            "type": "object",
+                            "required": [
+                                "schoolAccount",
+                                "schoolPwd"
+                            ],
+                            "properties": {
+                                "schoolAccount": {
+                                    "type": "string"
+                                },
+                                "schoolPwd": {
+                                    "type": "string",
+                                    "format": "password"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "102": {
+                        "description": "學校帳號驗證錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "學校帳號驗證成功",
+                        "schema": {
+                            "$ref": "#/definitions/StatusResponse"
+                        }
+                    },
+                    "300": {
+                        "description": "非法字元",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "301": {
+                        "description": "未輸入必要參數",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/actmanage/getUserInfo": {
+            "get": {
+                "tags": [
+                    "actmanage"
+                ],
+                "description": "取得學生資訊",
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "學生資訊",
+                        "schema": {
+                            "title": "Info",
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "nick": {
+                                    "type": "string"
+                                },
+                                "class": {
+                                    "type": "string"
+                                },
+                                "group": {
+                                    "description": "用戶組別",
+                                    "type": "string",
+                                    "enum": [
+                                        "student",
+                                        "graduated",
+                                        "night"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/scorequery/historyscore/{grade}/{semester}": {
+            "get": {
+                "tags": [
+                    "scorequery"
+                ],
+                "description": "得到歷年成績",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "grade",
+                        "required": true,
+                        "description": "幾年級",
+                        "type": "number"
+                    },
+                    {
+                        "in": "path",
+                        "name": "semester",
+                        "required": true,
+                        "description": "第幾學期",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/HistoryScoreResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/scorequery/sectionalexamscore/{semester}": {
+            "get": {
+                "tags": [
+                    "scorequery"
+                ],
+                "description": "得到段考成績",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "semester",
+                        "required": true,
+                        "description": "第幾學期",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SectionalExamResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/attitudestatus": {
+            "get": {
+                "tags": [
+                    "attitudestatus"
+                ],
+                "description": "得到獎懲紀錄",
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/AttitudeStatusResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/absentstate": {
+            "get": {
+                "tags": [
+                    "absentstate"
+                ],
+                "description": "得到出勤紀錄",
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AbsentstateResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/calendar": {
+            "get": {
+                "tags": [
+                    "calendar"
+                ],
+                "description": "得到日曆",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CalenderResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/curriculum": {
+            "get": {
+                "tags": [
+                    "curriculum"
+                ],
+                "description": "查詢課表",
+                "responses": {
+                    "103": {
+                        "description": "token過期",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "week1": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TimeTableResponse"
+                                    }
+                                },
+                                "week2": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TimeTableResponse"
+                                    }
+                                },
+                                "week3": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TimeTableResponse"
+                                    }
+                                },
+                                "week4": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TimeTableResponse"
+                                    }
+                                },
+                                "week5": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TimeTableResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        },
+        "/QandA": {
+            "get": {
+                "tags": [
+                    "QandA"
+                ],
+                "description": "查詢學校",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/QandAResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "伺服器錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token_Auth": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Token_Auth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "description": "錯誤訊息"
+                },
+                "code": {
+                    "type": "number",
+                    "description": "錯誤代碼"
+                }
+            }
+        },
+        "Token": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "format": "token"
+                }
+            }
+        },
+        "StatusResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "string"
+                }
+            }
+        },
+        "HistoryScoreResponse": {
+            "type": "object",
+            "required": [
+                "subject",
+                "type",
+                "credit",
+                "score",
+                "qualify"
+            ],
+            "properties": {
+                "subject": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "必",
+                        "選"
+                    ]
+                },
+                "credit": {
+                    "type": "number",
+                    "description": "學分"
+                },
+                "score": {
+                    "type": "number"
+                },
+                "makeup": {
+                    "type": "number",
+                    "description": "重考"
+                },
+                "retake": {
+                    "type": "number",
+                    "description": "重修"
+                },
+                "qualify": {
+                    "type": "number"
+                }
+            }
+        },
+        "SectionalExamResponse": {
+            "type": "object",
+            "required": [
+                "subject",
+                "first_section",
+                "second_section",
+                "last_section",
+                "performance",
+                "average"
+            ],
+            "properties": {
+                "subject": {
+                    "type": "string"
+                },
+                "first_section": {
+                    "type": "number"
+                },
+                "second_section": {
+                    "type": "number"
+                },
+                "last_section": {
+                    "type": "number"
+                },
+                "performance": {
+                    "type": "number"
+                },
+                "average": {
+                    "type": "number"
+                }
+            }
+        },
+        "AttitudeStatusResponse": {
+            "type": "object",
+            "required": [
+                "status",
+                "count"
+            ],
+            "properties": {
+                "status": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Attitude"
+                    }
+                },
+                "count": {
+                    "type": "object",
+                    "required": [
+                        "smallcite",
+                        "smallfault",
+                        "middlecite",
+                        "middlefault",
+                        "bigcite",
+                        "bigfault"
+                    ],
+                    "properties": {
+                        "smallcite": {
+                            "type": "number"
+                        },
+                        "smallfault": {
+                            "type": "number"
+                        },
+                        "middlecite": {
+                            "type": "number"
+                        },
+                        "middlefault": {
+                            "type": "number"
+                        },
+                        "bigcite": {
+                            "type": "number"
+                        },
+                        "bigfault": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "Attitude": {
+            "type": "object",
+            "required": [
+                "date",
+                "item",
+                "text"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "item": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "AbsentstateResponse": {
+            "type": "object",
+            "required": [
+                "date",
+                "type",
+                "class"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "class": {
+                    "type": "string"
+                }
+            }
+        },
+        "CalenderResponse": {
+            "type": "object",
+            "required": [
+                "date",
+                "content"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "TimeTableResponse": {
+            "type": "object",
+            "required": [
+                "start",
+                "end",
+                "subject",
+                "teacher"
+            ],
+            "properties": {
+                "start": {
+                    "type": "string"
+                },
+                "end": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "teacher": {
+                    "type": "string"
+                }
+            }
+        },
+        "QandAResponse": {
+            "type": "object",
+            "required": [
+                "question",
+                "answear"
+            ],
+            "properties": {
+                "question": {
+                    "type": "string"
+                },
+                "answear": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

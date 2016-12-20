@@ -38,3 +38,9 @@ jspm_packages
 
 # WebStorm .idea
 .idea/
+
+#test
+test/
+
+#config
+config
