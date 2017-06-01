@@ -112,7 +112,7 @@ var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
             console.log(scoreList);
             resolve(scoreList);
         }).catch(function(error) {
-            reject(errr);
+            reject(error);
         });
     });
 }
