@@ -38,6 +38,5 @@ var getCalendar = function(url) {
 }
 
 module.exports = {
-
-    getClendar: getClendar
+    getCalendar: getCalendar
 }
