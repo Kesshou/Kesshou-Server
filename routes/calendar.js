@@ -3,7 +3,6 @@
 *Description: This file is the API of calendar.
 */
 var express = require('express');
-var ical = require('ical');
 
 var CalendarService = require('../Kesshou/Services/CalendarService');
 var ErrorCodeService = require('../Kesshou/Services/ErrorCodeService');
