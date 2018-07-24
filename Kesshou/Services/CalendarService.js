@@ -2,7 +2,7 @@
 *Author: blackkite0206233
 *Description: This file is used to parse the ical file.
 */
-var ical = require('ical');
+var ical = require('node-ical');
 var Promise = require('bluebird');
 
 /*
@@ -15,7 +15,7 @@ var Promise = require('bluebird');
         resolve: a json type calendar.
         reject: the reason of error.
 */
-var getClendar = function(url) {
+var getCalendar = function(url) {
     return new Promise(function(resolve, reject) {
         ical.fromURL(url, {}, function(err, data) {
             console.log(data);
