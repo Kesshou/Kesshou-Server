@@ -10,7 +10,6 @@ var cheerio = require("cheerio");
 var urlencode = require('urlencode');
 
 var j = request.jar();
-var ca;
 
 /*
 *Author: blackkite0206233
@@ -25,23 +24,17 @@ var ca;
 */
 var login = function(schoolAccount, schoolPwd) {
     return new Promise(function(resolve, reject) {
-        fs.readFileAsync(__dirname + "/cert/taivsca.crt").then(function(result) {
-            ca = result;
-            var formLogin = {
-                url: "https://stuinfo.taivs.tp.edu.tw/Reg_Stu.ASP",
-                form: {
-                    "txtS_NO": schoolAccount,
-                    "txtPerno": schoolPwd
-                },
-                jar: j,
-                agentOptions: {
-                    ca: ca,
-                },
-                encoding: "binary",
-                followAllRedirects: true
-            };
-            return request.postAsync(formLogin);
-        }).then(function(result) {
+        var formLogin = {
+            url: "https://stuinfo.taivs.tp.edu.tw/Reg_Stu.ASP",
+            form: {
+                "txtS_NO": schoolAccount,
+                "txtPerno": schoolPwd
+            },
+            jar: j,
+            encoding: "binary",
+            followAllRedirects: true
+        };
+        request.postAsync(formLogin).then(function (result) {
             resolve(result);
         }).catch(function(error) {
             reject(error);
@@ -69,9 +62,6 @@ var getHistoryScore = function(schoolAccount, schoolPwd, grade, semester) {
                 url: "https://stuinfo.taivs.tp.edu.tw/stusn.asp",
                 form: {
                     "GRA": grade,
-                },
-                agentOptions: {
-                    ca: ca,
                 },
                 encoding: "binary",
                 jar: j
@@ -136,9 +126,6 @@ var getSectionalExamScore = function(schoolAccount, schoolPwd, semester) {
         login(schoolAccount, schoolPwd).then(function(result) {
             var formScore = {
                 url: "https://stuinfo.taivs.tp.edu.tw/stscore.asp",
-                agentOptions: {
-                    ca: ca,
-                },
                 encoding: "binary",
                 jar: j
             };

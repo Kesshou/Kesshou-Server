@@ -7,10 +7,8 @@ var request = Promise.promisifyAll(require("request"));
 var fs = Promise.promisifyAll(require("fs"));
 var iconv = require("iconv-lite");
 var cheerio = require("cheerio");
-var urlencode = require('urlencode');
 
 var j = request.jar();
-var ca;
 
 /*
 *Author: blackkite0206233
@@ -25,28 +23,19 @@ var ca;
 */
 var getAbsentState = function(schoolAccount, schoolPwd) {
     return new Promise(function(resolve, reject) {
-        fs.readFileAsync(__dirname + "/cert/taivsca.crt").then(function(result) {
-            ca = result;
-            var formLogin = {
-                url: "https://stuinfo.taivs.tp.edu.tw/Reg_Stu.ASP",
-                form: {
-                    "txtS_NO": schoolAccount,
-                    "txtPerno": schoolPwd
-                },
-                jar: j,
-                agentOptions: {
-                    ca: ca,
-                },
-                encoding: "binary",
-                followAllRedirects: true
-            };
-            return request.postAsync(formLogin);
-        }).then(function(result) {
+        var formLogin = {
+            url: "https://stuinfo.taivs.tp.edu.tw/Reg_Stu.ASP",
+            form: {
+                "txtS_NO": schoolAccount,
+                "txtPerno": schoolPwd
+            },
+            jar: j,
+            encoding: "binary",
+            followAllRedirects: true
+        };
+        request.postAsync(formLogin).then(function(result) {
             var formAbsent = {
                 url: "https://stuinfo.taivs.tp.edu.tw/work.asp",
-                agentOptions: {
-                    ca: ca,
-                },
                 encoding: "binary",
                 jar: j
             };

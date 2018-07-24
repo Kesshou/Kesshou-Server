@@ -34,9 +34,6 @@ var checkStuAccount = function(stu_id, stu_pwd, name) {
                     "txtPerno": stu_pwd
                 },
                 jar: j,
-                agentOptions: {
-                    ca: fs.readFileSync(__dirname + "/cert/taivsca.crt"),
-                },
                 encoding: "binary",
                 followAllRedirects: true
             };
@@ -44,9 +41,6 @@ var checkStuAccount = function(stu_id, stu_pwd, name) {
             var formI = {
                 url: "https://stuinfo.taivs.tp.edu.tw/stu_0.ASP",
                 jar: j,
-                agentOptions: {
-                    ca: fs.readFileSync(__dirname + "/cert/taivsca.crt"),
-                },
                 encoding: "binary"
             };
             request.post(formLogin, function(err, res, body) {
