@@ -43,17 +43,18 @@ var getAbsentState = function(schoolAccount, schoolPwd) {
         }).then(function(result) {
             var classno = ["早", "升", "一", "二", "三", "四", "午", "五", "六", "七", "八", "降", "九", "十"]
             var absentStates = [];
-            var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"), "Big5"));
+            var decodeHtml = iconv.decode(new Buffer(result.body, "binary"), "Big5");
+            var $ = cheerio.load(decodeHtml);
             var rows = $("table tr");
             for(var i = 2; i < rows.length; i++) {
                 var sub = rows.eq(i).children();
-                for(var j = 5; j <= sub.length; j++) {
+                for(var j = 6; j <= sub.length; j++) {
                     if(sub.eq(j).text().trim()) {
                         var absentState = {};
-                        var date = sub.eq(3).text().trim();
+                        var date = sub.eq(4).text().trim();
                         absentState.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
                         absentState.type = sub.eq(j).text().trim();
-                        absentState.class = classno[j - 5];
+                        absentState.class = classno[j - 6];
                         absentStates.push(absentState);
                     }
                 }

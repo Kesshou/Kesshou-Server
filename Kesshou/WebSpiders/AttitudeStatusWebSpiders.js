@@ -51,15 +51,16 @@ var getAttitudeStatus = function(schoolAccount, schoolPwd) {
                 bigcite: 0,
                 bigfault: 0,
             };
-            var $ = cheerio.load(iconv.decode(new Buffer(result.body, "binary"), "Big5"));
+            var decodeHtml = iconv.decode(new Buffer(result.body, "binary"), "Big5");
+            var $ = cheerio.load(decodeHtml);
             var rows = $("table tr");
             for(var i = 2; i < rows.length - 2; i++) {
                 var attitudeStatus = {};
                 var sub = rows.eq(i).children();
-                var date = sub.eq(3).text().trim();
+                var date = sub.eq(4).text().trim();
                 attitudeStatus.date = (parseInt(date.substr(0, 3)) + 1911).toString() + date.substr(3).replace(".", "/").replace(".", "/");
-                attitudeStatus.item = sub.eq(5).text().trim();
-                attitudeStatus.text = sub.eq(6).text().trim();
+                attitudeStatus.item = sub.eq(6).text().trim();
+                attitudeStatus.text = sub.eq(7).text().trim();
                 AttitudeStatus.push(attitudeStatus);
                 var flag = 0;
                 for(var j = 0; j < attitudeStatus.item.length; j++) {
